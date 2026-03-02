@@ -1,0 +1,36 @@
+{
+  "model": "google/flan-t5-base",
+  "dataset": "CoLA",
+  "ootb_accuracy": 0.71,
+  "ootb_correct": 71,
+  "ootb_total": 100,
+  "sample_size": 30,
+  "num_perturbations": 10,
+  "seed": 2266,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.8666666666666667,
+      "correct_count": 26,
+      "num_samples": 30
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.8666666666666667,
+      "correct_count": 26,
+      "num_samples": 30
+    },
+    "structure": {
+      "avg_variation_ratio": 0.042424242424242434,
+      "accuracy": 0.8666666666666667,
+      "correct_count": 26,
+      "num_samples": 30
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.8666666666666667,
+      "correct_count": 26,
+      "num_samples": 30
+    }
+  }
+}
