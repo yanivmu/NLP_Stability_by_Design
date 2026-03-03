@@ -33,15 +33,47 @@ An NLP research project investigating how **Small Language Models** respond to *
 
 ## Project Structure
 
-```
-├── interface.py                    # Project blueprint/interfaces
-├── data_analysis.py                # Core module: data loading, parsing, metrics
-├── run_flan_qasc_experiment.py     # Experiment: Flan-T5 on QASC
-├── run_pythia_cola_experiment.py   # Experiment: Pythia on CoLA
-├── data_demo.py                    # Demo script showing the pipeline
-├── sensitivity_results_*.json      # Saved experiment results
-└── sensetivity_article_project/    # Reference implementation (not part of main project)
-```
+```text
+NLP_Project_Sensitivity/
+│
+├── data/                          # Datasets
+│   ├── processed/                 # Formatted data with facts/context
+│   └── raw/                       # Raw QASC/CoLA datasets
+│
+├── outputs/                       # Generated results
+│   ├── figures/                   # Generated graphs and plots
+│   ├── logs/                      # Slurm .out and .err files
+│   └── results/                   # Saved sensitivity_results_*.json files
+│       ├── flan/                  # Results for Flan-T5
+│       ├── llama/                 # Results for LLaMA
+│       └── pythia/                # Results for Pythia
+│
+├── reference_paper_code/          # Reference implementation (not part of main execution)
+│   └── sensetivity_article_project/
+│       ├── datasets/              # Original paper datasets
+│       ├── figures/               # Original paper figures
+│       ├── prompts/               # Original paper prompts (Control, CoT, etc.)
+│       └── ...                    # Original codebase (.py, .ipynb, .csv)
+│
+├── slurm_scripts/                 # Slurm batch scripts for TAU cluster execution
+│
+├── src/                           # Core source code modules
+│   ├── data_analysis.py           # Data loading, parsing, OOTB checks, VR calculation
+│   ├── data_demo.py               # Interactive demo showing the pipeline
+│   ├── interface.py               # Abstract interfaces defining the project architecture
+│   │
+│   ├── flan/                      # Execution scripts for Flan-T5 experiments
+│   │   ├── run_flan_cola_experiment.py
+│   │   └── run_flan_qasc_experiment.py
+│   │
+│   ├── llama/                     # Execution scripts for LLaMA experiments
+│   │   ├── run_llama_cola_experiment.py
+│   │   └── run_llama_qasc_experiment.py
+│   │
+│   └── pythia/                    # Execution scripts for Pythia experiments
+│       └── run_pythia_cola_experiment.py
+│
+└── README.md                      # Project documentation
 
 ## File Descriptions
 
