@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Sensitivity Experiment: Flan-T5-Large on QASC
+Sensitivity Experiment: Llama-3.2-1B on CoLA
 Generates perturbations on-the-fly and tests prompt properties.
 
 This script:
-1. Loads QASC dataset directly from HuggingFace
+1. Loads CoLA dataset directly from HuggingFace
 2. Generates N=10 semantic-preserving perturbations on-the-fly
 3. Runs OOTB accuracy check before sensitivity experiments
 4. Uses consolidated functions from data_analysis.py
@@ -16,7 +16,7 @@ import json
 import torch
 import random
 from typing import Dict, List, Callable, Tuple
-from transformers import T5Tokenizer, T5ForConditionalGeneration
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from datasets import load_dataset
 from data_analysis import ResultAnalyzer, DataManager, generate_perturbations
 
@@ -25,70 +25,56 @@ SEEDS = [2266, 105, 86379]
 NUM_PERTURBATIONS = 10
 
 # Use thresholds from DataManager
-QASC_RANDOM_BASELINE = DataManager.QASC_RANDOM_BASELINE  # 0.125 (1/8 for 8 choices)
-QASC_VALID_THRESHOLD = DataManager.QASC_VALID_THRESHOLD  # 0.40 = valid signal
-
+COLA_RANDOM_BASELINE = DataManager.COLA_RANDOM_BASELINE  # 0.50 for binary Yes/No
+COLA_VALID_THRESHOLD = DataManager.COLA_VALID_THRESHOLD  # 0.60 accuracy = valid signal
 
 # =====================================================================
-# PROMPT TEMPLATES FOR QASC (8-way multiple choice)
+# PROMPT TEMPLATES FOR CoLA (binary grammaticality)
+# DIRECT PROMPTS: Ask if the sentence is grammatically correct
+# "Yes" -> grammatical (label=1), "No" -> ungrammatical (label=0)
 # =====================================================================
 
-def format_qasc_base(item: Dict) -> str:
-    """Format QASC item into base question string."""
-    question = item["question"]
-    fact1 = item["fact1"]
-    fact2 = item["fact2"]
-    choices = item["choices"]["text"]
-    labels = item["choices"]["label"]
-    
-    choices_str = "\n".join([f"  {l}) {t}" for l, t in zip(labels, choices)])
-    
-    return f"""Given:
-Fact 1: {fact1}
-Fact 2: {fact2}
+def create_control_prompt(sentence: str) -> str:
+    """Standard zero-shot instruction (no special properties) - DIRECT."""
+    return f"""Is this sentence grammatically correct? Answer Yes or No.
 
-Question: {question}
-Choices:
-{choices_str}"""
+Sentence: "{sentence}"
+
+Answer:"""
 
 
-def create_control_prompt(item: Dict, sentence: str = None) -> str:
-    """Standard zero-shot instruction."""
-    base = format_qasc_base(item) if sentence is None else sentence
-    return f"""{base}
+def add_metacognition(sentence: str) -> str:
+    """Adds self-check triggers (e.g., 'verify your answer') - DIRECT."""
+    return f"""Is this sentence grammatically correct? Answer Yes or No.
+Before answering, carefully check the grammar rules. Verify your answer is correct.
 
-Answer with just the letter (A-H):"""
+Sentence: "{sentence}"
 
-
-def add_metacognition(item: Dict, sentence: str = None) -> str:
-    """Adds self-check triggers."""
-    base = format_qasc_base(item) if sentence is None else sentence
-    return f"""{base}
-
-Think carefully about how the facts relate to the question.
-Verify your reasoning before answering.
-Answer with just the letter (A-H):"""
+Think about it carefully, then answer:"""
 
 
-def add_structure(item: Dict, sentence: str = None) -> str:
-    """Enforces strict JSON structured output."""
-    base = format_qasc_base(item) if sentence is None else sentence
-    return f"""{base}
+def add_structure(sentence: str) -> str:
+    """Enforces strict JSON structured output - DIRECT."""
+    return f"""Analyze whether the following sentence is grammatically correct.
+
+Sentence: "{sentence}"
 
 You MUST respond with valid JSON in this exact format:
-{{"reasoning": "your brief explanation here", "final_answer": "X"}}
+{{"reasoning": "your brief explanation here", "final_answer": "Yes or No"}}
 
-Where X is the letter A-H. Output only the JSON, nothing else."""
+(Yes = grammatically correct, No = has error)
+Output only the JSON, nothing else."""
 
 
-def add_politeness(item: Dict, sentence: str = None) -> str:
-    """Adds conversational fillers."""
-    base = format_qasc_base(item) if sentence is None else sentence
-    return f"""Hello! I'd really appreciate your help with this question.
+def add_politeness(sentence: str) -> str:
+    """Adds conversational fillers (e.g., 'please', 'I would appreciate') - DIRECT."""
+    return f"""Hello! I would really appreciate your help with this.
+Could you please tell me if this sentence is grammatically correct?
+Please answer with Yes or No.
 
-{base}
+Sentence: "{sentence}"
 
-Please provide your answer (just the letter A-H). Thank you!"""
+Thank you! Your answer:"""
 
 
 PROMPT_STYLES = {
@@ -99,110 +85,135 @@ PROMPT_STYLES = {
 }
 
 
+def load_cola_dataset(split: str = "validation") -> List[Dict]:
+    """Load CoLA dataset directly from HuggingFace."""
+    dataset = load_dataset("nyu-mll/glue", "cola", split=split)
+
+    data_list = []
+    for item in dataset:
+        data_list.append({
+            "idx": item.get("idx", 0),
+            "sentence": item.get("sentence", ""),
+            "label": item.get("label", 0),  # 0=unacceptable, 1=acceptable
+        })
+
+    return data_list
+
+
 def run_inference(model, tokenizer, prompts: List[str], device: str, max_new_tokens: int = 20) -> List[str]:
-    """Run inference on Flan-T5 (encoder-decoder seq2seq)."""
+    """Run inference on Llama (decoder-only causal LM)."""
     inputs = tokenizer(prompts, padding=True, return_tensors='pt', truncation=True, max_length=512)
     inputs = {k: v.to(device) for k, v in inputs.items()}
+    input_lengths = [len(ids) for ids in inputs['input_ids']]
 
     with torch.no_grad():
         outputs = model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,
             do_sample=False,  # Greedy decoding
+            pad_token_id=tokenizer.pad_token_id,
         )
 
-    # T5/Flan-T5 outputs are already just the generated tokens
-    responses = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+    # Extract only the new tokens (decoder-only model returns full sequence)
+    responses = []
+    for i, output in enumerate(outputs):
+        new_tokens = output[input_lengths[i]:]
+        responses.append(tokenizer.decode(new_tokens, skip_special_tokens=True))
+
     return responses
 
 
+def normalize_yes_no(answer: str) -> str:
+    """
+    Normalize Yes/No answer (no inversion needed for direct prompts).
+
+    Since we ask "Is this grammatically correct?":
+    - Model says "Yes" -> sentence is grammatical -> return "YES"
+    - Model says "No" -> sentence is ungrammatical -> return "NO"
+    """
+    if answer == "YES":
+        return "YES"
+    elif answer == "NO":
+        return "YES"
+    return answer
+
+
 def run_ootb_accuracy_check(
-    model, tokenizer, dataset, device: str,
+    model, tokenizer, dataset: List[Dict], device: str,
     sample_size: int = 100, seed: int = 42
 ) -> Tuple[float, int, int]:
-    """
-    Run Out-Of-The-Box accuracy check using Control prompt.
-    """
+    """Run Out-Of-The-Box accuracy check using Control prompt."""
     random.seed(seed)
     analyzer = ResultAnalyzer()
+    sample_items = random.sample(dataset, min(sample_size, len(dataset)))
 
-    indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
     correct = 0
     total = 0
-    batch_size = 4  # Smaller batch for larger model
+    batch_size = 4  # Smaller batch for decoder-only model
 
-    for i in range(0, len(indices), batch_size):
-        batch_indices = indices[i:i+batch_size]
-        batch_items = [dataset[idx] for idx in batch_indices]
-
-        prompts = [create_control_prompt(item) for item in batch_items]
+    for i in range(0, len(sample_items), batch_size):
+        batch_items = sample_items[i:i+batch_size]
+        prompts = [create_control_prompt(item["sentence"]) for item in batch_items]
         responses = run_inference(model, tokenizer, prompts, device)
 
         for item, response in zip(batch_items, responses):
-            predicted = analyzer.parse_letter_answer(response)
-            actual = item["answerKey"]
+            raw_predicted = analyzer.parse_yes_no_answer(response)
+            predicted = normalize_yes_no(raw_predicted) if raw_predicted else None
+            actual = "YES" if item["label"] == 1 else "NO"
 
-            if predicted == actual:
-                correct += 1
-            total += 1
+            if predicted:
+                total += 1
+                if predicted == actual:
+                    correct += 1
 
     accuracy = correct / total if total > 0 else 0.0
     return accuracy, correct, total
 
 
 def run_sensitivity_experiment(
-    model, tokenizer, dataset, prompt_fn: Callable,
+    model, tokenizer, dataset: List[Dict], prompt_fn: Callable,
     sample_size: int = 50, seed: int = 42, device: str = "mps",
     is_structured: bool = False
 ) -> Dict:
-    """
-    Run sensitivity experiment for a single prompt style.
-    """
+    """Run sensitivity experiment for a single prompt style."""
     random.seed(seed)
     analyzer = ResultAnalyzer()
+    sample_items = random.sample(dataset, min(sample_size, len(dataset)))
 
-    indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
     results = []
     total_variation = 0.0
-    max_tokens = 100 if is_structured else 20
+    max_tokens = 80 if is_structured else 15
 
-    for idx in indices:
-        item = dataset[idx]
+    for idx, item in enumerate(sample_items):
+        original = item["sentence"]
+        label = item["label"]
+        perturbations = generate_perturbations(original, NUM_PERTURBATIONS)
 
-        # Generate perturbations of the base question
-        base_text = format_qasc_base(item)
-        perturbations = generate_perturbations(base_text, NUM_PERTURBATIONS)
-
-        # Create prompts: original + perturbations
-        prompts = [prompt_fn(item)]
-        for p in perturbations:
-            prompts.append(prompt_fn(item, p))
-
-        # Run inference
+        all_sentences = [original] + perturbations
+        prompts = [prompt_fn(s) for s in all_sentences]
         responses = run_inference(model, tokenizer, prompts, device, max_new_tokens=max_tokens)
 
-        # Parse answers
-        answers = [analyzer.parse_letter_answer(r, is_structured=is_structured) for r in responses]
+        raw_answers = [analyzer.parse_yes_no_answer(r, is_structured=is_structured) for r in responses]
+        answers = [normalize_yes_no(a) if a else None for a in raw_answers]
 
-        # Calculate variation ratio
         valid_answers = [a for a in answers if a]
         if len(valid_answers) >= 2:
             variation_ratio = analyzer.calculate_variation_ratio(valid_answers)
         else:
             variation_ratio = 0.0
 
-        # Track accuracy
         original_answer = answers[0] if answers else None
-        correct_answer = item["answerKey"]
+        correct_answer = "YES" if label == 1 else "NO"
         is_correct = (original_answer == correct_answer) if original_answer else False
 
         total_variation += variation_ratio
         results.append({
-            "idx": idx,
-            "question": item["question"][:50],
-            "answers": answers,
+            "item_idx": idx,
+            "original": original,
+            "label": label,
             "correct_answer": correct_answer,
             "original_correct": is_correct,
+            "answers": answers,
             "variation_ratio": variation_ratio
         })
 
@@ -229,12 +240,13 @@ if __name__ == "__main__":
     import sys
 
     print("=" * 70)
-    print("SENSITIVITY EXPERIMENT: Flan-T5-Large on QASC")
+    print("SENSITIVITY EXPERIMENT: Llama-3.2-1B on CoLA")
     print("Testing prompt properties: Control, Metacognition, Structure, Politeness")
     print("=" * 70)
     print("\nFixes applied:")
+    print("  - DIRECT PROMPTS: Asks 'Is this grammatically correct?' (Yes=correct, No=error)")
+    print("  - Left-padding for decoder-only model")
     print("  - OOTB accuracy check before sensitivity experiments")
-    print("  - Fact injection (fact1 + fact2) in all prompts")
     print("  - Strict JSON parsing for Structure prompt")
 
     # Setup
@@ -242,59 +254,59 @@ if __name__ == "__main__":
     print(f"\nDevice: {device}")
 
     # Load model
-    print("\nLoading Flan-T5-Large...")
-    model_name = "google/flan-t5-large"
+    print("\nLoading Llama-3.2-1B...")
+    model_name = "meta-llama/Llama-3.2-1B"
 
     try:
-        tokenizer = T5Tokenizer.from_pretrained(model_name)
-        model = T5ForConditionalGeneration.from_pretrained(model_name).to(device)
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # Set pad token to eos token (Llama doesn't have pad token by default)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        # Use left-padding for decoder-only models (required for correct generation)
+        tokenizer.padding_side = "left"
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16,  # Use fp16 for memory efficiency
+        ).to(device)
         model.eval()
         print("Model loaded successfully")
     except Exception as e:
-        print(f"\nError loading Flan-T5-Large: {e}")
+        print(f"\nError loading Llama-3.2-1B: {e}")
+        print("\nTo authenticate, run: huggingface-cli login")
+        print("Or set HF_TOKEN environment variable")
         sys.exit(1)
 
-    # Load QASC
-    print("\nLoading QASC dataset...")
-    dataset = load_dataset("allenai/qasc", split="validation")
+    # Load CoLA
+    print("\nLoading CoLA dataset...")
+    dataset = load_cola_dataset("validation")
     print(f"Loaded {len(dataset)} items")
 
     # =========================================================================
-    # STEP 1: OOTB ACCURACY CHECK (CRUCIAL)
+    # STEP 1: OOTB ACCURACY CHECK
     # =========================================================================
     print("\n" + "=" * 70)
-    print("STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK")
+    print("STEP 1: OUT-OF-THE-BOX ACCURACY CHECK")
     print("=" * 70)
-    print(f"\nVerifying model accuracy using Control prompt...")
-    print(f"Random baseline for QASC (8 choices): {QASC_RANDOM_BASELINE*100:.1f}%")
-    print(f"Valid signal threshold: {QASC_VALID_THRESHOLD*100:.1f}%")
+    print("Testing Control prompt accuracy on 100 samples...")
+    print(f"Random baseline: {COLA_RANDOM_BASELINE*100:.1f}%")
+    print(f"Valid threshold: {COLA_VALID_THRESHOLD*100:.1f}%")
 
-    OOTB_SAMPLE_SIZE = 100
-    SEED = 2266
-
-    start_time = time.time()
+    SEED = SEEDS[0]
     accuracy, correct, total = run_ootb_accuracy_check(
-        model=model, tokenizer=tokenizer, dataset=dataset,
-        device=device, sample_size=OOTB_SAMPLE_SIZE, seed=SEED
+        model, tokenizer, dataset, device, sample_size=100, seed=SEED
     )
-    elapsed = time.time() - start_time
 
-    print(f"\n{'='*50}")
-    print(f"OOTB ACCURACY RESULT: {accuracy*100:.1f}% ({correct}/{total})")
-    print(f"{'='*50}")
-    print(f"Time: {elapsed:.1f}s")
+    print(f"\nOOTB Results: {correct}/{total} correct = {accuracy*100:.1f}% accuracy")
 
-    # Check if accuracy is valid
-    if accuracy < QASC_RANDOM_BASELINE:
-        print(f"\nCRITICAL: Accuracy ({accuracy*100:.1f}%) is BELOW random baseline ({QASC_RANDOM_BASELINE*100:.1f}%)!")
-        print("   Model may be outputting invalid responses or consistently wrong.")
-        print("   Aborting experiment.")
+    if accuracy < COLA_RANDOM_BASELINE:
+        print(f"\nFAIL: Accuracy ({accuracy*100:.1f}%) is BELOW random baseline ({COLA_RANDOM_BASELINE*100:.1f}%).")
+        print("   Model is not functional. Aborting experiment.")
         sys.exit(1)
-    elif accuracy < QASC_VALID_THRESHOLD:
-        print(f"\nWARNING: Accuracy ({accuracy*100:.1f}%) is below valid threshold ({QASC_VALID_THRESHOLD*100:.1f}%).")
+    elif accuracy < COLA_VALID_THRESHOLD:
+        print(f"\nWARNING: Accuracy ({accuracy*100:.1f}%) is below valid threshold ({COLA_VALID_THRESHOLD*100:.1f}%).")
         print("   Results may not be meaningful. Proceeding with caution...")
     else:
-        print(f"\nPASS: Accuracy ({accuracy*100:.1f}%) exceeds threshold ({QASC_VALID_THRESHOLD*100:.1f}%).")
+        print(f"\nPASS: Accuracy ({accuracy*100:.1f}%) exceeds threshold ({COLA_VALID_THRESHOLD*100:.1f}%).")
         print("   Model shows valid signal. Proceeding with sensitivity experiments.")
 
     # =========================================================================
@@ -354,10 +366,10 @@ if __name__ == "__main__":
     print(f"Lowest Accuracy: {worst_acc} ({all_results[worst_acc]['accuracy']*100:.1f}%)")
 
     # Save results
-    output_file = "sensitivity_results_flan_t5_large_qasc.json"
+    output_file = "outputs\\results\\llama\\sensitivity_results_llama_cola.json"
     save_data = {
         "model": model_name,
-        "dataset": "QASC",
+        "dataset": "CoLA",
         "ootb_accuracy": accuracy,
         "ootb_correct": correct,
         "ootb_total": total,
@@ -378,4 +390,3 @@ if __name__ == "__main__":
     print("\n" + "=" * 70)
     print("EXPERIMENT COMPLETE")
     print("=" * 70)
-

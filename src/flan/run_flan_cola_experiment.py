@@ -415,7 +415,7 @@ if __name__ == "__main__":
     print(f"Lowest Accuracy: {worst_acc} ({all_results[worst_acc]['accuracy']*100:.1f}%)")
 
     # Save results
-    output_file = "sensitivity_results_flan_cola.json"
+    output_file = "outputs\\results\\flan\\sensitivity_results_flan_cola.json"
     save_data = {
         "model": model_name,
         "dataset": "CoLA",

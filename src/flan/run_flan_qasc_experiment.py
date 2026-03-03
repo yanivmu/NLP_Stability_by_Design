@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 """
-Sensitivity Experiment: Pythia-410M on CoLA
-Tests prompt sensitivity using on-the-fly perturbation generation.
-Evaluates different prompt properties: Control, Metacognition, Structure, Politeness.
+Sensitivity Experiment: Flan-T5-Base on QASC
+Generates perturbations on-the-fly and tests prompt properties.
 
 This script:
-1. Loads CoLA dataset directly from HuggingFace (no external dependencies)
+1. Loads QASC dataset directly from HuggingFace
 2. Generates N=10 semantic-preserving perturbations on-the-fly
 3. Runs OOTB accuracy check before sensitivity experiments
 4. Uses consolidated functions from data_analysis.py
+
+Prompt properties tested: Control, Metacognition, Structure, Politeness
 """
 
 import json
 import torch
 import random
 from typing import Dict, List, Callable, Tuple
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, T5ForConditionalGeneration
 from datasets import load_dataset
 from data_analysis import ResultAnalyzer, DataManager, generate_perturbations
 
@@ -24,53 +25,70 @@ SEEDS = [2266, 105, 86379]
 NUM_PERTURBATIONS = 10
 
 # Use thresholds from DataManager
-COLA_RANDOM_BASELINE = DataManager.COLA_RANDOM_BASELINE  # 0.50 for binary Yes/No
-COLA_VALID_THRESHOLD = DataManager.COLA_VALID_THRESHOLD  # 0.60 accuracy = valid signal
+QASC_RANDOM_BASELINE = DataManager.QASC_RANDOM_BASELINE  # 0.125 (1/8 for 8 choices)
+QASC_VALID_THRESHOLD = DataManager.QASC_VALID_THRESHOLD  # 0.40 = valid signal
+
 
 # =====================================================================
-# PROMPT TEMPLATES (mapping to project's prompt properties)
+# PROMPT TEMPLATES FOR QASC (8-way multiple choice)
 # =====================================================================
 
-def create_control_prompt(sentence: str) -> str:
-    """Standard zero-shot instruction (no special properties)."""
-    return f"""Is this sentence grammatically correct? Answer Yes or No.
+def format_qasc_base(item: Dict) -> str:
+    """Format QASC item into base question string."""
+    question = item["question"]
+    fact1 = item["fact1"]
+    fact2 = item["fact2"]
+    choices = item["choices"]["text"]
+    labels = item["choices"]["label"]
+    
+    choices_str = "\n".join([f"  {l}) {t}" for l, t in zip(labels, choices)])
+    
+    return f"""Given:
+Fact 1: {fact1}
+Fact 2: {fact2}
 
-Sentence: "{sentence}"
-
-Answer:"""
-
-
-def add_metacognition(sentence: str) -> str:
-    """Adds self-check triggers (e.g., 'verify your answer')."""
-    return f"""Is this sentence grammatically correct? Answer Yes or No.
-Before answering, carefully check the grammar rules. Verify your answer is correct.
-
-Sentence: "{sentence}"
-
-Think about it carefully, then answer:"""
+Question: {question}
+Choices:
+{choices_str}"""
 
 
-def add_structure(sentence: str) -> str:
+def create_control_prompt(item: Dict, sentence: str = None) -> str:
+    """Standard zero-shot instruction."""
+    base = format_qasc_base(item) if sentence is None else sentence
+    return f"""{base}
+
+Answer with just the letter (A-H):"""
+
+
+def add_metacognition(item: Dict, sentence: str = None) -> str:
+    """Adds self-check triggers."""
+    base = format_qasc_base(item) if sentence is None else sentence
+    return f"""{base}
+
+Think carefully about how the facts relate to the question.
+Verify your reasoning before answering.
+Answer with just the letter (A-H):"""
+
+
+def add_structure(item: Dict, sentence: str = None) -> str:
     """Enforces strict JSON structured output."""
-    return f"""Analyze the grammatical correctness of the following sentence.
-
-Sentence: "{sentence}"
+    base = format_qasc_base(item) if sentence is None else sentence
+    return f"""{base}
 
 You MUST respond with valid JSON in this exact format:
-{{"reasoning": "your brief explanation here", "final_answer": "Yes or No"}}
+{{"reasoning": "your brief explanation here", "final_answer": "X"}}
 
-Output only the JSON, nothing else."""
+Where X is the letter A-H. Output only the JSON, nothing else."""
 
 
-def add_politeness(sentence: str) -> str:
-    """Adds conversational fillers (e.g., 'please', 'I would appreciate')."""
-    return f"""Hello! I would really appreciate your help with this.
-Could you please tell me if this sentence is grammatically correct?
-Please answer with Yes or No.
+def add_politeness(item: Dict, sentence: str = None) -> str:
+    """Adds conversational fillers."""
+    base = format_qasc_base(item) if sentence is None else sentence
+    return f"""Hello! I'd really appreciate your help with this question.
 
-Sentence: "{sentence}"
+{base}
 
-Thank you! Your answer:"""
+Please provide your answer (just the letter A-H). Thank you!"""
 
 
 PROMPT_STYLES = {
@@ -81,31 +99,8 @@ PROMPT_STYLES = {
 }
 
 
-def load_cola_dataset(split: str = "validation") -> List[Dict]:
-    """
-    Load CoLA dataset directly from HuggingFace.
-
-    CoLA (Corpus of Linguistic Acceptability) is a binary classification task
-    where sentences are labeled as grammatically acceptable (1) or not (0).
-
-    Returns:
-        List of dicts with 'sentence' and 'label' keys
-    """
-    dataset = load_dataset("nyu-mll/glue", "cola", split=split)
-
-    data_list = []
-    for item in dataset:
-        data_list.append({
-            "idx": item.get("idx", 0),
-            "sentence": item.get("sentence", ""),
-            "label": item.get("label", 0),  # 0=unacceptable, 1=acceptable
-        })
-
-    return data_list
-
-
-def run_inference_batch(model, tokenizer, prompts: List[str], device: str, max_new_tokens: int = 10) -> List[str]:
-    """Run inference on a batch of prompts."""
+def run_inference(model, tokenizer, prompts: List[str], device: str, max_new_tokens: int = 20) -> List[str]:
+    """Run inference on Flan-T5 (seq2seq model)."""
     inputs = tokenizer(prompts, padding=True, return_tensors='pt', truncation=True, max_length=512)
     inputs = {k: v.to(device) for k, v in inputs.items()}
 
@@ -113,35 +108,26 @@ def run_inference_batch(model, tokenizer, prompts: List[str], device: str, max_n
         outputs = model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,
-            temperature=1.0,
-            do_sample=False,  # Greedy decoding for determinism
-            pad_token_id=tokenizer.pad_token_id,
-            eos_token_id=tokenizer.eos_token_id,
+            do_sample=False,  # Greedy decoding
         )
 
-    # Decode only the new tokens
-    responses = []
-    for i, output in enumerate(outputs):
-        input_len = inputs['input_ids'][i].shape[0]
-        new_tokens = output[input_len:]
-        responses.append(tokenizer.decode(new_tokens, skip_special_tokens=True))
-    return responses
+    return tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
 
 def run_ootb_accuracy_check(
-    model, tokenizer, dataset: List[Dict], device: str,
+    model, tokenizer, dataset, device: str,
     sample_size: int = 100, seed: int = 42
 ) -> Tuple[float, int, int]:
     """
     Run Out-Of-The-Box accuracy check using Control prompt.
 
     This verifies the model performs significantly better than random guessing
-    (50% for CoLA's binary Yes/No) before running sensitivity experiments.
+    (12.5% for QASC's 8 choices) before running sensitivity experiments.
 
     Args:
-        model: The loaded Pythia model
+        model: The loaded Flan-T5 model
         tokenizer: The tokenizer
-        dataset: CoLA dataset as list of dicts with 'sentence' and 'label'
+        dataset: QASC dataset
         device: Device to run on
         sample_size: Number of samples to evaluate
         seed: Random seed for sampling
@@ -153,7 +139,7 @@ def run_ootb_accuracy_check(
     analyzer = ResultAnalyzer()
 
     # Sample items
-    sample_items = random.sample(dataset, min(sample_size, len(dataset)))
+    indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
 
     correct = 0
     total = 0
@@ -161,49 +147,41 @@ def run_ootb_accuracy_check(
     # Process in batches for efficiency
     batch_size = 8
 
-    for i in range(0, len(sample_items), batch_size):
-        batch_items = sample_items[i:i+batch_size]
+    for i in range(0, len(indices), batch_size):
+        batch_indices = indices[i:i+batch_size]
+        batch_items = [dataset[idx] for idx in batch_indices]
 
-        # Create Control prompts using sentence
-        prompts = [create_control_prompt(item["sentence"]) for item in batch_items]
+        # Create Control prompts
+        prompts = [create_control_prompt(item) for item in batch_items]
 
         # Run inference
-        responses = run_inference_batch(model, tokenizer, prompts, device)
+        responses = run_inference(model, tokenizer, prompts, device)
 
         # Check accuracy
         for item, response in zip(batch_items, responses):
-            predicted = analyzer.parse_yes_no_answer(response)
-            # CoLA label: 1 = grammatical (YES), 0 = ungrammatical (NO)
-            actual = "YES" if item["label"] == 1 else "NO"
+            predicted = analyzer.parse_letter_answer(response)
+            actual = item["answerKey"]
 
-            if predicted:  # Only count if we got a valid parse
-                total += 1
-                if predicted == actual:
-                    correct += 1
+            if predicted == actual:
+                correct += 1
+            total += 1
 
     accuracy = correct / total if total > 0 else 0.0
     return accuracy, correct, total
 
 
 def run_sensitivity_experiment(
-    model,
-    tokenizer,
-    dataset: List[Dict],
-    prompt_fn: Callable,
-    sample_size: int = 50,
-    seed: int = 42,
-    device: str = "mps",
+    model, tokenizer, dataset, prompt_fn: Callable,
+    sample_size: int = 50, seed: int = 42, device: str = "mps",
     is_structured: bool = False
 ) -> Dict:
     """
     Run sensitivity experiment for a single prompt style.
 
-    Uses on-the-fly perturbation generation instead of pre-generated perturbations.
-
     Args:
         model: The loaded model
         tokenizer: The tokenizer
-        dataset: CoLA dataset as list of dicts with 'sentence' and 'label'
+        dataset: QASC dataset
         prompt_fn: Function to create prompts
         sample_size: Number of samples to test
         seed: Random seed
@@ -217,30 +195,32 @@ def run_sensitivity_experiment(
     analyzer = ResultAnalyzer()
 
     # Sample items
-    sample_items = random.sample(dataset, min(sample_size, len(dataset)))
+    indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
 
     results = []
     total_variation = 0.0
 
     # Use longer max_new_tokens for structured output (needs room for JSON)
-    max_tokens = 50 if is_structured else 10
+    max_tokens = 100 if is_structured else 20
 
-    for idx, item in enumerate(sample_items):
-        original = item["sentence"]
-        label = item["label"]
+    for idx in indices:
+        item = dataset[idx]
 
-        # Generate perturbations on-the-fly (N=10)
-        perturbations = generate_perturbations(original, NUM_PERTURBATIONS)
+        # Generate perturbations of the base question
+        base_text = format_qasc_base(item)
+        perturbations = generate_perturbations(base_text, NUM_PERTURBATIONS)
 
         # Create prompts: original + perturbations
-        all_sentences = [original] + perturbations
-        prompts = [prompt_fn(s) for s in all_sentences]
+        prompts = [prompt_fn(item)]  # Original
+        for p in perturbations:
+            # For perturbations, we pass the perturbed base text
+            prompts.append(prompt_fn(item, p))
 
         # Run inference
-        responses = run_inference_batch(model, tokenizer, prompts, device, max_new_tokens=max_tokens)
+        responses = run_inference(model, tokenizer, prompts, device, max_new_tokens=max_tokens)
 
-        # Parse answers (use JSON parsing for Structure prompt)
-        answers = [analyzer.parse_yes_no_answer(r, is_structured=is_structured) for r in responses]
+        # Parse answers (use consolidated parser with JSON support for Structure prompt)
+        answers = [analyzer.parse_letter_answer(r, is_structured=is_structured) for r in responses]
 
         # Calculate variation ratio
         valid_answers = [a for a in answers if a]
@@ -251,18 +231,16 @@ def run_sensitivity_experiment(
 
         # Track accuracy: check if original (non-perturbed) answer is correct
         original_answer = answers[0] if answers else None
-        # CoLA label: 1 = grammatical (YES), 0 = ungrammatical (NO)
-        correct_answer = "YES" if label == 1 else "NO"
+        correct_answer = item["answerKey"]
         is_correct = (original_answer == correct_answer) if original_answer else False
 
         total_variation += variation_ratio
         results.append({
-            "item_idx": idx,
-            "original": original,
-            "label": label,
+            "idx": idx,
+            "question": item["question"][:50],
+            "answers": answers,
             "correct_answer": correct_answer,
             "original_correct": is_correct,
-            "answers": answers,
             "variation_ratio": variation_ratio
         })
 
@@ -291,11 +269,12 @@ if __name__ == "__main__":
     import sys
 
     print("=" * 70)
-    print("SENSITIVITY EXPERIMENT: Pythia-410M on CoLA")
+    print("SENSITIVITY EXPERIMENT: Flan-T5-Base on QASC")
     print("Testing prompt properties: Control, Metacognition, Structure, Politeness")
     print("=" * 70)
     print("\nFixes applied:")
     print("  ✓ OOTB accuracy check before sensitivity experiments")
+    print("  ✓ Fact injection (fact1 + fact2) in all prompts")
     print("  ✓ Strict JSON parsing for Structure prompt")
 
     # Setup
@@ -303,18 +282,17 @@ if __name__ == "__main__":
     print(f"\nDevice: {device}")
 
     # Load model
-    print("\nLoading Pythia-410M...")
-    model_name = "EleutherAI/pythia-410m"
-    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
-    tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    print("\nLoading Flan-T5-Base...")
+    model_name = "google/flan-t5-base"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = T5ForConditionalGeneration.from_pretrained(model_name).to(device)
     model.eval()
     print("Model loaded")
 
-    # Load CoLA dataset from HuggingFace (perturbations generated on-the-fly)
-    print("\nLoading CoLA dataset from HuggingFace...")
-    dataset = load_cola_dataset()
-    print(f"Loaded {len(dataset)} items (perturbations generated on-the-fly)")
+    # Load QASC
+    print("\nLoading QASC dataset...")
+    dataset = load_dataset("allenai/qasc", split="validation")
+    print(f"Loaded {len(dataset)} items")
 
     # =========================================================================
     # STEP 1: OOTB ACCURACY CHECK (CRUCIAL)
@@ -323,8 +301,8 @@ if __name__ == "__main__":
     print("STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK")
     print("=" * 70)
     print(f"\nVerifying model accuracy using Control prompt...")
-    print(f"Random baseline for CoLA (binary): {COLA_RANDOM_BASELINE*100:.1f}%")
-    print(f"Valid signal threshold: {COLA_VALID_THRESHOLD*100:.1f}%")
+    print(f"Random baseline for QASC (8 choices): {QASC_RANDOM_BASELINE*100:.1f}%")
+    print(f"Valid signal threshold: {QASC_VALID_THRESHOLD*100:.1f}%")
 
     OOTB_SAMPLE_SIZE = 100
     SEED = 2266
@@ -342,16 +320,16 @@ if __name__ == "__main__":
     print(f"Time: {elapsed:.1f}s")
 
     # Check if accuracy is valid
-    if accuracy < COLA_RANDOM_BASELINE:
-        print(f"\nCRITICAL: Accuracy ({accuracy*100:.1f}%) is BELOW random baseline ({COLA_RANDOM_BASELINE*100:.1f}%)!")
+    if accuracy < QASC_RANDOM_BASELINE:
+        print(f"\nCRITICAL: Accuracy ({accuracy*100:.1f}%) is BELOW random baseline ({QASC_RANDOM_BASELINE*100:.1f}%)!")
         print("   Model may be outputting invalid responses or consistently wrong.")
         print("   Aborting experiment.")
         sys.exit(1)
-    elif accuracy < COLA_VALID_THRESHOLD:
-        print(f"\nWARNING: Accuracy ({accuracy*100:.1f}%) is below valid threshold ({COLA_VALID_THRESHOLD*100:.1f}%).")
+    elif accuracy < QASC_VALID_THRESHOLD:
+        print(f"\nWARNING: Accuracy ({accuracy*100:.1f}%) is below valid threshold ({QASC_VALID_THRESHOLD*100:.1f}%).")
         print("   Results may not be meaningful. Proceeding with caution...")
     else:
-        print(f"\nPASS: Accuracy ({accuracy*100:.1f}%) exceeds threshold ({COLA_VALID_THRESHOLD*100:.1f}%).")
+        print(f"\nPASS: Accuracy ({accuracy*100:.1f}%) exceeds threshold ({QASC_VALID_THRESHOLD*100:.1f}%).")
         print("   Model shows valid signal. Proceeding with sensitivity experiments.")
 
     # =========================================================================
@@ -361,7 +339,7 @@ if __name__ == "__main__":
     print("STEP 2: SENSITIVITY EXPERIMENTS")
     print("=" * 70)
 
-    SAMPLE_SIZE = 30  # Use 30 samples for faster testing
+    SAMPLE_SIZE = 30
 
     all_results = {}
 
@@ -373,13 +351,8 @@ if __name__ == "__main__":
         is_structured = (style_name == "structure")
 
         result = run_sensitivity_experiment(
-            model=model,
-            tokenizer=tokenizer,
-            dataset=dataset,
-            prompt_fn=prompt_fn,
-            sample_size=SAMPLE_SIZE,
-            seed=SEED,
-            device=device,
+            model=model, tokenizer=tokenizer, dataset=dataset,
+            prompt_fn=prompt_fn, sample_size=SAMPLE_SIZE, seed=SEED, device=device,
             is_structured=is_structured
         )
 
@@ -390,7 +363,7 @@ if __name__ == "__main__":
         print(f"  Average Variation Ratio: {result['avg_variation_ratio']:.4f}")
         print(f"  Accuracy: {result['accuracy']*100:.1f}% ({result['correct_count']}/{result['num_samples']})")
 
-    # Summary table
+    # Summary
     print("\n" + "=" * 70)
     print("RESULTS SUMMARY")
     print("=" * 70)
@@ -401,12 +374,7 @@ if __name__ == "__main__":
     for style_name, result in all_results.items():
         vr = result['avg_variation_ratio']
         acc = result['accuracy']
-        if vr < 0.2:
-            interp = "Stable"
-        elif vr < 0.4:
-            interp = "Moderate"
-        else:
-            interp = "Unstable"
+        interp = "Stable" if vr < 0.2 else "Moderate" if vr < 0.4 else "Unstable"
         print(f"{style_name:<15} | {vr:.4f}   | {acc*100:5.1f}%       | {interp}")
 
     # Find best/worst by VR
@@ -424,10 +392,10 @@ if __name__ == "__main__":
     print(f"Lowest Accuracy: {worst_acc} ({all_results[worst_acc]['accuracy']*100:.1f}%)")
 
     # Save results
-    output_file = "sensitivity_results_pythia.json"
+    output_file = "outputs\\results\\flan\\sensitivity_results_flan_qasc.json"
     save_data = {
         "model": model_name,
-        "dataset": "CoLA",
+        "dataset": "QASC",
         "ootb_accuracy": accuracy,
         "ootb_correct": correct,
         "ootb_total": total,

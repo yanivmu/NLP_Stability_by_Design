@@ -25,7 +25,7 @@ class EnvironmentManager:
 class ModelManager:
     """
     Assigned to: Team Member 1
-    [cite_start]Description: Responsible for loading the SLMs (e.g., Flan-T5-Base, Pythia-410M) [cite: 22] 
+    Description: Responsible for loading the SLMs (e.g., Flan-T5-Base, Pythia-410M)  
                  and generating text safely without Out-Of-Memory (OOM) errors.
     """
     def __init__(self, model_name: str):
@@ -80,7 +80,7 @@ class ResultAnalyzer:
 
     def calculate_variation_ratio(self, parsed_answers: List[str]) -> float:
         """
-        [cite_start]Calculates the sensitivity metric 's' using the formula: s = 1 - (f_m / (N + 1))[cite: 20].
+        Calculates the sensitivity metric 's' using the formula: s = 1 - (f_m / (N + 1)).
         Calculations are strictly based on the extracted final answers.
         """
         pass
@@ -93,28 +93,28 @@ class ResultAnalyzer:
 class PromptEngine:
     """
     Assigned to: Team Member 3
-    [cite_start]Description: Wraps the base question with different prompt attributes[cite: 14].
+    Description: Wraps the base question with different prompt attributes.
     """
     def create_control_prompt(self, base_question: str) -> str:
-        [cite_start]"""Creates the standard zero-shot instruction[cite: 15]."""
+        """Creates the standard zero-shot instruction."""
         pass
 
     def add_metacognition(self, base_question: str) -> str:
-        [cite_start]"""Adds self-check triggers (e.g., 'verify your answer')[cite: 16]."""
+        """Adds self-check triggers (e.g., 'verify your answer')."""
         pass
 
     def add_structure(self, base_question: str) -> str:
-        [cite_start]"""Enforces a JSON output schema (e.g., requesting 'reasoning' and 'final_answer')[cite: 17]."""
+        """Enforces a JSON output schema (e.g., requesting 'reasoning' and 'final_answer')."""
         pass
 
     def add_politeness(self, base_question: str) -> str:
-        [cite_start]"""Adds conversational fillers (e.g., 'please', 'I would appreciate')[cite: 18]."""
+        """Adds conversational fillers (e.g., 'please', 'I would appreciate')."""
         pass
 
 class PerturbationGenerator:
     """
     Assigned to: Team Member 3
-    [cite_start]Description: Generates the N variants for each prompt to test stability[cite: 19].
+    Description: Generates the N variants for each prompt to test stability.
     """
     def generate_synonym_variants(self, prompt: str, num_variants: int) -> List[str]:
         """

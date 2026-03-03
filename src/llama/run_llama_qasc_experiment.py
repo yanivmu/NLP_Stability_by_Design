@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Sensitivity Experiment: Flan-T5-Base on QASC
+Sensitivity Experiment: Flan-T5-Large on QASC
 Generates perturbations on-the-fly and tests prompt properties.
 
 This script:
@@ -16,7 +16,7 @@ import json
 import torch
 import random
 from typing import Dict, List, Callable, Tuple
-from transformers import AutoTokenizer, T5ForConditionalGeneration
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 from datasets import load_dataset
 from data_analysis import ResultAnalyzer, DataManager, generate_perturbations
 
@@ -100,7 +100,7 @@ PROMPT_STYLES = {
 
 
 def run_inference(model, tokenizer, prompts: List[str], device: str, max_new_tokens: int = 20) -> List[str]:
-    """Run inference on Flan-T5 (seq2seq model)."""
+    """Run inference on Flan-T5 (encoder-decoder seq2seq)."""
     inputs = tokenizer(prompts, padding=True, return_tensors='pt', truncation=True, max_length=512)
     inputs = {k: v.to(device) for k, v in inputs.items()}
 
@@ -111,7 +111,9 @@ def run_inference(model, tokenizer, prompts: List[str], device: str, max_new_tok
             do_sample=False,  # Greedy decoding
         )
 
-    return tokenizer.batch_decode(outputs, skip_special_tokens=True)
+    # T5/Flan-T5 outputs are already just the generated tokens
+    responses = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+    return responses
 
 
 def run_ootb_accuracy_check(
@@ -120,44 +122,22 @@ def run_ootb_accuracy_check(
 ) -> Tuple[float, int, int]:
     """
     Run Out-Of-The-Box accuracy check using Control prompt.
-
-    This verifies the model performs significantly better than random guessing
-    (12.5% for QASC's 8 choices) before running sensitivity experiments.
-
-    Args:
-        model: The loaded Flan-T5 model
-        tokenizer: The tokenizer
-        dataset: QASC dataset
-        device: Device to run on
-        sample_size: Number of samples to evaluate
-        seed: Random seed for sampling
-
-    Returns:
-        Tuple of (accuracy, correct_count, total_count)
     """
     random.seed(seed)
     analyzer = ResultAnalyzer()
 
-    # Sample items
     indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
-
     correct = 0
     total = 0
-
-    # Process in batches for efficiency
-    batch_size = 8
+    batch_size = 4  # Smaller batch for larger model
 
     for i in range(0, len(indices), batch_size):
         batch_indices = indices[i:i+batch_size]
         batch_items = [dataset[idx] for idx in batch_indices]
 
-        # Create Control prompts
         prompts = [create_control_prompt(item) for item in batch_items]
-
-        # Run inference
         responses = run_inference(model, tokenizer, prompts, device)
 
-        # Check accuracy
         for item, response in zip(batch_items, responses):
             predicted = analyzer.parse_letter_answer(response)
             actual = item["answerKey"]
@@ -177,30 +157,13 @@ def run_sensitivity_experiment(
 ) -> Dict:
     """
     Run sensitivity experiment for a single prompt style.
-
-    Args:
-        model: The loaded model
-        tokenizer: The tokenizer
-        dataset: QASC dataset
-        prompt_fn: Function to create prompts
-        sample_size: Number of samples to test
-        seed: Random seed
-        device: Device to run on
-        is_structured: If True, use JSON parsing for Structure prompt
-
-    Returns:
-        Dictionary with results and average variation ratio
     """
     random.seed(seed)
     analyzer = ResultAnalyzer()
 
-    # Sample items
     indices = random.sample(range(len(dataset)), min(sample_size, len(dataset)))
-
     results = []
     total_variation = 0.0
-
-    # Use longer max_new_tokens for structured output (needs room for JSON)
     max_tokens = 100 if is_structured else 20
 
     for idx in indices:
@@ -211,15 +174,14 @@ def run_sensitivity_experiment(
         perturbations = generate_perturbations(base_text, NUM_PERTURBATIONS)
 
         # Create prompts: original + perturbations
-        prompts = [prompt_fn(item)]  # Original
+        prompts = [prompt_fn(item)]
         for p in perturbations:
-            # For perturbations, we pass the perturbed base text
             prompts.append(prompt_fn(item, p))
 
         # Run inference
         responses = run_inference(model, tokenizer, prompts, device, max_new_tokens=max_tokens)
 
-        # Parse answers (use consolidated parser with JSON support for Structure prompt)
+        # Parse answers
         answers = [analyzer.parse_letter_answer(r, is_structured=is_structured) for r in responses]
 
         # Calculate variation ratio
@@ -229,7 +191,7 @@ def run_sensitivity_experiment(
         else:
             variation_ratio = 0.0
 
-        # Track accuracy: check if original (non-perturbed) answer is correct
+        # Track accuracy
         original_answer = answers[0] if answers else None
         correct_answer = item["answerKey"]
         is_correct = (original_answer == correct_answer) if original_answer else False
@@ -245,8 +207,6 @@ def run_sensitivity_experiment(
         })
 
     avg_variation = total_variation / len(results) if results else 0.0
-
-    # Calculate accuracy for this prompt style
     correct_count = sum(1 for r in results if r["original_correct"])
     accuracy = correct_count / len(results) if results else 0.0
 
@@ -269,25 +229,30 @@ if __name__ == "__main__":
     import sys
 
     print("=" * 70)
-    print("SENSITIVITY EXPERIMENT: Flan-T5-Base on QASC")
+    print("SENSITIVITY EXPERIMENT: Flan-T5-Large on QASC")
     print("Testing prompt properties: Control, Metacognition, Structure, Politeness")
     print("=" * 70)
     print("\nFixes applied:")
-    print("  ✓ OOTB accuracy check before sensitivity experiments")
-    print("  ✓ Fact injection (fact1 + fact2) in all prompts")
-    print("  ✓ Strict JSON parsing for Structure prompt")
+    print("  - OOTB accuracy check before sensitivity experiments")
+    print("  - Fact injection (fact1 + fact2) in all prompts")
+    print("  - Strict JSON parsing for Structure prompt")
 
     # Setup
     device = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
     print(f"\nDevice: {device}")
 
     # Load model
-    print("\nLoading Flan-T5-Base...")
-    model_name = "google/flan-t5-base"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = T5ForConditionalGeneration.from_pretrained(model_name).to(device)
-    model.eval()
-    print("Model loaded")
+    print("\nLoading Flan-T5-Large...")
+    model_name = "google/flan-t5-large"
+
+    try:
+        tokenizer = T5Tokenizer.from_pretrained(model_name)
+        model = T5ForConditionalGeneration.from_pretrained(model_name).to(device)
+        model.eval()
+        print("Model loaded successfully")
+    except Exception as e:
+        print(f"\nError loading Flan-T5-Large: {e}")
+        sys.exit(1)
 
     # Load QASC
     print("\nLoading QASC dataset...")
@@ -347,7 +312,6 @@ if __name__ == "__main__":
         print(f"\n[{style_name.upper()}] Running experiment...")
         start_time = time.time()
 
-        # Use is_structured=True for Structure prompt to enable JSON parsing
         is_structured = (style_name == "structure")
 
         result = run_sensitivity_experiment(
@@ -377,11 +341,9 @@ if __name__ == "__main__":
         interp = "Stable" if vr < 0.2 else "Moderate" if vr < 0.4 else "Unstable"
         print(f"{style_name:<15} | {vr:.4f}   | {acc*100:5.1f}%       | {interp}")
 
-    # Find best/worst by VR
+    # Find best/worst
     best_vr = min(all_results.keys(), key=lambda k: all_results[k]['avg_variation_ratio'])
     worst_vr = max(all_results.keys(), key=lambda k: all_results[k]['avg_variation_ratio'])
-
-    # Find best/worst by accuracy
     best_acc = max(all_results.keys(), key=lambda k: all_results[k]['accuracy'])
     worst_acc = min(all_results.keys(), key=lambda k: all_results[k]['accuracy'])
 
@@ -392,7 +354,7 @@ if __name__ == "__main__":
     print(f"Lowest Accuracy: {worst_acc} ({all_results[worst_acc]['accuracy']*100:.1f}%)")
 
     # Save results
-    output_file = "sensitivity_results_flan_qasc.json"
+    output_file = "outputs\\results\\llama\\sensitivity_results_llama_qasc.json"
     save_data = {
         "model": model_name,
         "dataset": "QASC",
