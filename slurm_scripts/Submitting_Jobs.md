@@ -1,4 +1,19 @@
-## Submitting Jobs (For Avnerf / DevOps)
+## Part 2: Team Workflow & Submitting Jobs
+
+Since you are working as a team (`avnerf`, `sharonl4`, `yanivmualem`, `edendaya`), it is crucial to avoid conflicting files and permissions. 
+
+### Team Workflow (READ THIS FIRST)
+* **Code and Data Location:** All project files (`.py`, datasets, output logs) are centrally hosted in Avner's NetApp directory. 
+* **Environments:** Each team member **must** use their own Conda environment (`slm_env`) that they set up in Part 1. Do not try to share or activate someone else's environment.
+* **The Process:** 1. Connect to the cluster via VS Code Remote-SSH.
+   2. Navigate to the shared project directory: `cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Project_Sensitivity`
+   3. Pull the latest code from GitHub: `git pull`
+   4. Activate your personal environment: `conda activate slm_env`
+   5. Run your code or submit your Slurm jobs from this shared folder.
+
+---
+
+### Submitting Jobs (For Avnerf / DevOps)
 
 To run experiments, we use the `sbatch` command to submit jobs to the `studentkillable` partition using the `gpu-students` account.
 
@@ -18,13 +33,12 @@ Create a file named `run_experiment.slurm` in the project root:
 #SBATCH --mem=32000
 #SBATCH --gpus=1
 
-# 1. Activate the environment
+# 1. Activate the environment (This uses YOUR personal environment)
 source ~/.bashrc
 conda activate slm_env
 
-# 2. Navigate to the project directory
-# Make sure to clone the repo into your NetApp folder first!
-cd /vol/joberant_nobck/data/NLP_368307701_2526a/$USER/NLP_Project_Sensitivity
+# 2. Navigate to the SHARED project directory (Avner's folder)
+cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Project_Sensitivity
 
 # 3. Run the Python execution script
 python run_experiment.py --model flan-t5-base --dataset qasc --prompt_type control
