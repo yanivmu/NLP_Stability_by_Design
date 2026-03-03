@@ -14,7 +14,7 @@ Open your local terminal and follow these steps sequentially.
 Connect to the university cluster using your TAU username *(ensure you are on the university network or VPN)*.
 
 ```bash
-# Copy the line with your TAU username (avnerf, edendaya, yanivmualem, sharonl4) and the password is your TAU password.
+# Copy the line with your TAU username and the password is your TAU password.
 ssh avnerf@slurm-client.cs.tau.ac.il
 ssh edendaya@slurm-client.cs.tau.ac.il
 ssh yanivmualem@slurm-client.cs.tau.ac.il
@@ -90,42 +90,51 @@ pip install transformers datasets accelerate pandas numpy matplotlib
 
 ---
 
-## 🚀 Part 2: Submitting Jobs (For Avnerf / DevOps)
+## Part 2: GitHub & SSH Setup (For All Team Members)
 
-To run experiments, we use the `sbatch` command to submit jobs to the `studentkillable` partition using the `gpu-students` account.
+Since we are collaborating using a shared GitHub repository, **every team member must set up an SSH key on the cluster** to be able to pull and push code from the shared project folder.
 
-Create a file named `run_experiment.slurm` in the project root:
+### Step 1: Generate an SSH Key on the Server
+
+Open a terminal on the server (via VS Code or standard SSH) and run:
 
 ```bash
-#!/bin/bash
-#SBATCH --job-name=nlp_slm_proj
-#SBATCH --output=outputs/logs/nlp_proj_%j.out
-#SBATCH --error=outputs/logs/nlp_proj_%j.err
-#SBATCH --partition=studentkillable
-#SBATCH --account=gpu-students
-#SBATCH --time=1440
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
-#SBATCH --mem=32000
-#SBATCH --gpus=1
-
-# 1. Activate the environment
-source ~/.bashrc
-conda activate slm_env
-
-# 2. Navigate to the project directory
-# Make sure to clone the repo into your NetApp folder first!
-cd /vol/joberant_nobck/data/NLP_368307701_2526a/$USER/NLP_Project_Sensitivity
-
-# 3. Run the Python execution script
-python run_experiment.py --model flan-t5-base --dataset qasc --prompt_type control
+# Replace with your actual email
+ssh-keygen -t ed25519 -C "your_email@tau.ac.il"
 
 ```
 
-### Useful Slurm Commands
+*(Press `ENTER` to accept all default prompts, no passphrase needed).*
 
-* **Submit a job:** `sbatch run_experiment.slurm`
-* **Check your jobs:** `squeue --me`
-* **Cancel a job:** `scancel <job_id>`
-* **Check available servers:** `sinfo`
+### Step 2: Copy Your Public Key
+
+Run the following command to print your newly generated key:
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+
+```
+
+*Copy the entire output line (it starts with `ssh-ed25519`).*
+
+### Step 3: Add the Key to GitHub
+
+1. Go to your GitHub account settings in your local web browser.
+2. Navigate to **SSH and GPG keys** -> **New SSH key**.
+3. Name it something like "TAU Slurm Server" and paste the copied key.
+
+---
+
+## Part 3: Team Workflow & Submitting Jobs
+
+Since you are working as a team, it is crucial to avoid conflicting files and permissions.
+
+### Team Workflow (READ THIS FIRST)
+
+* **Code and Data Location:** All project files (`.py`, datasets, output logs) are centrally hosted in Avner's NetApp directory.
+* **Environments:** Each team member **must** use their own Conda environment (`slm_env`) that they set up in Part 1. Do not try to share or activate someone else's environment.
+* **The Process:** 1. Connect to the cluster via VS Code Remote-SSH.
+2. Navigate to the shared project directory: `cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Project_Sensitivity`
+3. Pull the latest code from GitHub: `git pull`
+4. Activate your personal environment: `conda activate slm_env`
+5. Run your code or submit your Slurm jobs from this shared folder.
