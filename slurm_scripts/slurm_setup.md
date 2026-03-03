@@ -129,11 +129,3 @@ python run_experiment.py --model flan-t5-base --dataset qasc --prompt_type contr
 * **Check your jobs:** `squeue --me`
 * **Cancel a job:** `scancel <job_id>`
 * **Check available servers:** `sinfo`
-
-```
-
-אתה יכול לשמור את זה כ-`CLUSTER_SETUP.md` בתיקייה הראשית של ה-Repository, ופשוט להגיד לשאר חברי הצוות "כנסו לקובץ ההתקנה ותעשו העתק-הדבק לשורות של Part 1".
-
-יש עוד משהו שקשור לתשתיות או לקוד שתרצה שאכין לך כעת?
-
-```
