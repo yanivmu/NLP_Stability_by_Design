@@ -20,7 +20,9 @@ An NLP research project investigating how **Small Language Models** respond to *
 | Model | Dataset | Task Type |
 |-------|---------|-----------|
 | [Flan-T5-Base](https://huggingface.co/google/flan-t5-base) | [QASC](https://huggingface.co/datasets/allenai/qasc) | 8-way multiple choice (science QA) |
+| [Flan-T5-Large](https://huggingface.co/google/flan-t5-large) | [CoLA](https://huggingface.co/datasets/nyu-mll/glue) | Binary classification (grammaticality) |
 | [Pythia-410M](https://huggingface.co/EleutherAI/pythia-410m) | [CoLA](https://huggingface.co/datasets/nyu-mll/glue) | Binary classification (grammaticality) |
+| [Llama-3.2-1B](https://huggingface.co/meta-llama/Llama-3.2-1B) | [QASC](https://huggingface.co/datasets/allenai/qasc) | 8-way multiple choice (science QA) |
 
 ## Prompt Styles Tested
 
@@ -36,17 +38,13 @@ An NLP research project investigating how **Small Language Models** respond to *
 ```text
 NLP_Project_Sensitivity/
 │
-├── data/                          # Datasets
-│   ├── processed/                 # Formatted data with facts/context
-│   └── raw/                       # Raw QASC/CoLA datasets
-│
 ├── outputs/                       # Generated results
 │   ├── figures/                   # Generated graphs and plots
 │   ├── logs/                      # Slurm .out and .err files
 │   └── results/                   # Saved sensitivity_results_*.json files
-│       ├── flan/                  # Results for Flan-T5
-│       ├── llama/                 # Results for LLaMA
-│       └── pythia/                # Results for Pythia
+│       ├── flan/                  # Results for Flan-T5 models
+│       ├── llama/                 # Results for LLaMA models
+│       └── pythia/                # Results for Pythia models
 │
 ├── reference_paper_code/          # Reference implementation (not part of main execution)
 │   └── sensetivity_article_project/
@@ -60,28 +58,24 @@ NLP_Project_Sensitivity/
 ├── src/                           # Core source code modules
 │   ├── data_analysis.py           # Data loading, parsing, OOTB checks, VR calculation
 │   ├── data_demo.py               # Interactive demo showing the pipeline
+│   ├── datasets_config.py         # Dataset configurations (QASC, CoLA)
 │   ├── interface.py               # Abstract interfaces defining the project architecture
-│   │
-│   ├── flan/                      # Execution scripts for Flan-T5 experiments
-│   │   ├── run_flan_cola_experiment.py
-│   │   └── run_flan_qasc_experiment.py
-│   │
-│   ├── llama/                     # Execution scripts for LLaMA experiments
-│   │   ├── run_llama_cola_experiment.py
-│   │   └── run_llama_qasc_experiment.py
-│   │
-│   └── pythia/                    # Execution scripts for Pythia experiments
-│       └── run_pythia_cola_experiment.py
+│   ├── models.py                  # Model configurations (Flan-T5, Pythia, Llama)
+│   ├── prompts.py                 # Prompt templates for all styles
+│   └── run_experiment.py          # Unified experiment runner for all models/datasets
 │
 └── README.md                      # Project documentation
+```
 
 ## File Descriptions
 
 | File | Purpose |
 |------|---------|
-| `data_analysis.py` | Contains `DataManager` (dataset loading, OOTB checks), `ResultAnalyzer` (parsing, VR calculation), and `generate_perturbations()` |
-| `run_flan_qasc_experiment.py` | Runs full sensitivity experiment with Flan-T5-Base on QASC dataset |
-| `run_pythia_cola_experiment.py` | Runs full sensitivity experiment with Pythia-410M on CoLA dataset |
+| `run_experiment.py` | Unified experiment runner - runs any model/dataset combination via CLI arguments |
+| `models.py` | Model configurations: HuggingFace names, architecture types, loading logic |
+| `datasets_config.py` | Dataset configurations: loading, formatting, thresholds |
+| `prompts.py` | Prompt templates for all 4 styles (Control, Metacognition, Structure, Politeness) |
+| `data_analysis.py` | Contains `DataManager`, `ResultAnalyzer` (parsing, VR calculation), and `generate_perturbations()` |
 | `data_demo.py` | Interactive demo showing raw data, prompts, model responses, and VR calculation |
 | `interface.py` | Abstract interfaces defining the project architecture |
 
@@ -110,24 +104,60 @@ NLP_Project_Sensitivity/
 ## Installation
 
 ```bash
-pip install torch transformers datasets
+pip install -r requirements.txt
+```
+
+Or install dependencies individually:
+```bash
+pip install torch transformers datasets huggingface_hub
+```
+
+**Note:** For Llama models, you need to authenticate with HuggingFace:
+```bash
+huggingface-cli login
 ```
 
 ## Usage
 
 ### Run Demo (see the pipeline in action)
 ```bash
+cd src
 python data_demo.py
 ```
 
 ### Run Experiments
-```bash
-# Flan-T5 on QASC
-python run_flan_qasc_experiment.py
 
-# Pythia on CoLA
-python run_pythia_cola_experiment.py
+Use the unified `run_experiment.py` script with command-line arguments:
+
+```bash
+cd src
+
+# Flan-T5-Base on QASC
+python run_experiment.py --model flan-t5-base --dataset qasc
+
+# Flan-T5-Large on QASC
+python run_experiment.py --model flan-t5-large --dataset qasc
+
+# Pythia-410M on CoLA
+python run_experiment.py --model pythia-410m --dataset cola
+
+# Llama-3.2-1B on QASC
+python run_experiment.py --model llama-3.2-1b --dataset qasc
+
+# Llama-3.2-1B on CoLA
+python run_experiment.py --model llama-3.2-1b --dataset cola
 ```
+
+### Command-Line Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--model` | Model to use: `flan-t5-base`, `flan-t5-large`, `pythia-410m`, `llama-3.2-1b` | Required |
+| `--dataset` | Dataset to use: `qasc`, `cola` | Required |
+| `--sample-size` | Number of samples for sensitivity experiments | 30 |
+| `--ootb-size` | Number of samples for OOTB accuracy check | 100 |
+| `--seed` | Random seed for reproducibility | 2266 |
+| `--output-dir` | Output directory for results | `outputs/results` |
 
 ## Methodology
 
