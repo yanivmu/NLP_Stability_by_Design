@@ -146,3 +146,12 @@ Since you are working as a team, it is crucial to avoid conflicting files and pe
 3. Pull the latest code from GitHub: `git pull`
 4. Activate your personal environment: `conda activate slm_env`
 5. Run your code or submit your Slurm jobs from this shared folder.
+
+### Truble Shooting
+
+if the connection isn't working run 
+'''bash
+ssh-keygen -R slurm-client.cs.tau.ac.il
+'''
+
+---
