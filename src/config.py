@@ -35,7 +35,7 @@ class ExperimentConfig:
     prompt_styles: Tuple[str, ...] = ("control", "metacognition", "structure", "politeness")
 
     # ---- Output ----
-    output_dir: str = "../outputs/results"
+    output_dir: str = "./outputs/results"
 
     # ---- Out-Of-The-Box accuracy check ----
     ootb_size: int = 100
