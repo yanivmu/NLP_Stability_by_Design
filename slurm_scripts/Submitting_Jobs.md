@@ -7,7 +7,7 @@ It is crucial to avoid conflicting files and permissions when working as a team 
 * **Code and Data Location:** All project files (`.py`, datasets, output logs) are centrally hosted in Avner's NetApp directory. 
 * **Environments:** Each team member **must** use their own Conda environment (`slm_env`) that they set up in Part 1. Do not try to share or activate someone else's environment.
 * **The Process:** 1. Connect to the cluster via VS Code Remote-SSH.
-   2. Navigate to the shared project directory: `cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Project_Sensitivity`
+   2. Navigate to the shared project directory: `cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design`
    3. Pull the latest code from GitHub: `git pull`
    4. Activate your personal environment: `conda activate slm_env`
    5. Run your code or submit your Slurm jobs from this shared folder.

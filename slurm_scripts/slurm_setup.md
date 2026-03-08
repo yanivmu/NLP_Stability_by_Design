@@ -90,7 +90,7 @@ conda activate slm_env
 
 # Install PyTorch (CUDA 11.8 compatible) and NLP libraries
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-pip install transformers datasets accelerate pandas numpy matplotlib
+pip install transformers datasets accelerate pandas numpy matplotlib nltk huggingface_hub
 
 ```
 
