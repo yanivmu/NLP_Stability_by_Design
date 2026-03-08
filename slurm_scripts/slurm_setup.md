@@ -67,6 +67,13 @@ source ~/.bashrc
 # Redirect conda packages to NetApp
 conda config --add pkgs_dirs /vol/joberant_nobck/data/NLP_368307701_2526a/$USER/conda_pkgs
 
+# Redirect Hugging Face cache (for models) to NetApp to avoid home directory quota errors
+echo 'export HF_HOME="/vol/joberant_nobck/data/NLP_368307701_2526a/$USER/huggingface_cache"' >> ~/.bashrc
+
+# Apply this change to your current session as well
+source ~/.bashrc
+
+
 ```
 
 ### Step 5: Create the Virtual Environment
@@ -78,6 +85,7 @@ We will use Python 3.10 and install the required ML libraries.
 conda create -y -n slm_env python=3.10
 
 # Activate the environment
+# IMPORTANT: Ensure your terminal prompt changes to (slm_env)
 conda activate slm_env
 
 # Install PyTorch (CUDA 11.8 compatible) and NLP libraries

@@ -1,6 +1,7 @@
-## Part 2: Team Workflow & Submitting Jobs
+## Part 2: Submitting Jobs to the Slurm Cluster
 
-Since you are working as a team (`avnerf`, `sharonl4`, `yanivmualem`, `edendaya`), it is crucial to avoid conflicting files and permissions. 
+This document details how to submit jobs to the TAU CS Slurm Cluster, building upon the environment setup described in `slurm_setup.md`.
+It is crucial to avoid conflicting files and permissions when working as a team (`avnerf`, `sharonl4`, `yanivmualem`, `edendaya`).
 
 ### Team Workflow (READ THIS FIRST)
 * **Code and Data Location:** All project files (`.py`, datasets, output logs) are centrally hosted in Avner's NetApp directory. 
@@ -35,13 +36,17 @@ Create a file named `run_experiment.slurm` in the project root:
 
 # 1. Activate the environment (This uses YOUR personal environment)
 source ~/.bashrc
+
+# Set HuggingFace cache directory to NetApp to avoid home directory quota errors
+export HF_HOME="/vol/joberant_nobck/data/NLP_368307701_2526a/$USER/huggingface_cache"
+
 conda activate slm_env
 
 # 2. Navigate to the SHARED project directory (Avner's folder)
-cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Project_Sensitivity
+cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/
 
 # 3. Run the Python execution script
-python run_experiment.py --model flan-t5-base --dataset qasc --prompt_type control
+python src/run_experiment.py --model flan-t5-base --dataset qasc --prompt_type control
 
 ```
 
