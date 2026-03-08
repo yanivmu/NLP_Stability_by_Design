@@ -23,4 +23,4 @@ conda activate slm_env
 cd /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/
 
 # 3. Run the Python execution script
-python src/run_experiment.py --model flan-t5-base --dataset qasc
+python src/run_experiment.py --model flan-t5-base --dataset qasc --sample-size 1000 --num-perturbations 20 --perturbation-method synonym --seed 2266 --words-to-replace 5
