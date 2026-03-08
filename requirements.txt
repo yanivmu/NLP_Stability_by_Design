@@ -6,3 +6,6 @@ datasets>=2.14.0
 # For Llama model access (requires HuggingFace authentication)
 huggingface_hub>=0.16.0
 
+# Perturbation generation (TM3 - WordNet synonym replacement)
+nltk>=3.8.0
+

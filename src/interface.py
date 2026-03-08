@@ -2,141 +2,107 @@
 NLP Final Project: Stability by Design in SLMs
 Team Members: 3
 Target Completion: March 15th
+
+Architecture Overview
+---------------------
+This file maps the original team roles to the actual implementation modules.
+It can be used as a quick reference or as an import hub.
+
+Module Map:
+    interface.py        ->  You are here (orchestrator / reference)
+    models.py           ->  Team Member 1: model loading, inference, device management
+    datasets_config.py  ->  Team Member 2: dataset configs, loading, formatting
+    data_analysis.py    ->  Team Member 2: parsing (ResultAnalyzer), OOTB baselines
+    prompts.py          ->  Team Member 3: four prompt styles per dataset
+    perturbations.py    ->  Team Member 3: synonym & paraphrase perturbation generation
+    config.py           ->  Team Member 3: ExperimentConfig dataclass, seed management
+    run_experiment.py   ->  Main CLI entry point (collaborative)
 """
 
-from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 
 # =====================================================================
-# TEAM MEMBER 1: DevOps, Infrastructure & Models
-# Responsibilities: Model loading, inference, Slurm optimization, reproducibility.
+# TEAM MEMBER 1: DevOps, Infrastructure & Models  (models.py)
 # =====================================================================
-
-class EnvironmentManager:
-    """
-    Assigned to: Team Member 1
-    Description: Handles the technical setup, including fixing the random seeds 
-                 for reproducibility across the entire pipeline.
-    """
-    def set_seed(self, seed: int) -> None:
-        """Fixes the seed for torch, numpy, and random libraries."""
-        pass
-
-class ModelManager:
-    """
-    Assigned to: Team Member 1
-    Description: Responsible for loading the SLMs (e.g., Flan-T5-Base, Pythia-410M)  
-                 and generating text safely without Out-Of-Memory (OOM) errors.
-    """
-    def __init__(self, model_name: str):
-        """Loads the model and tokenizer onto the appropriate device (GPU/CPU)."""
-        pass
-
-    def generate_responses(self, prompts: List[str], batch_size: int, max_length: int) -> List[str]:
-        """
-        Takes a list of prompts and returns raw model outputs. 
-        Must handle batching and context length limits to prevent OOM on Slurm.
-        """
-        pass
+from models import (
+    ModelConfig,
+    ModelType,
+    get_model_config,
+    load_model_and_tokenizer,
+    run_inference,
+    get_device,
+)
 
 # =====================================================================
-# TEAM MEMBER 2: Data, Parsing & Analysis
-# Responsibilities: QASC formatting, Out-Of-The-Box (OOTB) testing, JSON parsing, Math.
+# TEAM MEMBER 2: Data, Parsing & Analysis  (datasets_config.py + data_analysis.py)
 # =====================================================================
-
-class DataManager:
-    """
-    Assigned to: Team Member 2
-    Description: Manages the QASC dataset, including the injection of facts.
-    """
-    def load_qasc_dataset(self, split: str = "validation") -> List[Dict]:
-        """Loads the QASC dataset from HuggingFace or local storage."""
-        pass
-
-    def format_question_with_facts(self, question: str, fact1: str, fact2: str) -> str:
-        """
-        Combines Fact 1, Fact 2, and the question into a single cohesive string.
-        """
-        pass
-
-    def run_ootb_baseline(self, model_manager: ModelManager, dataset: List[Dict]) -> float:
-        """
-        Evaluates the model's Out-Of-The-Box performance to ensure it performs
-        significantly better than random guessing before proceeding with the main experiment.
-        """
-        pass
-
-class ResultAnalyzer:
-    """
-    Assigned to: Team Member 2
-    Description: Parses the raw text into structured data and calculates sensitivity metrics.
-    """
-    def extract_json_from_output(self, raw_text: str) -> Dict[str, Any]:
-        """
-        Uses Regex to find and extract the JSON object (e.g., {"reasoning": "...", "final_answer": "A"})
-        from the model's raw output. Handles edge cases where the model adds extra text.
-        """
-        pass
-
-    def calculate_variation_ratio(self, parsed_answers: List[str]) -> float:
-        """
-        Calculates the sensitivity metric 's' using the formula: s = 1 - (f_m / (N + 1)).
-        Calculations are strictly based on the extracted final answers.
-        """
-        pass
+from datasets_config import (
+    DatasetConfig,
+    AnswerType,
+    get_dataset_config,
+    load_dataset,
+    format_qasc_base,
+    get_item_text,
+    get_correct_answer,
+    convert_to_list,
+)
+from data_analysis import DataManager, ResultAnalyzer
 
 # =====================================================================
-# TEAM MEMBER 3: Prompts & Perturbations
-# Responsibilities: Prompt engineering and generating input variations.
+# TEAM MEMBER 3: Prompts & Perturbations  (prompts.py + perturbations.py + config.py)
 # =====================================================================
+from config import ExperimentConfig
+from prompts import get_prompt_styles, get_max_tokens, register_dataset_prompts
+from perturbations import (
+    set_all_seeds,
+    generate_perturbations,
+    generate_and_validate,
+    generate_paraphrase_perturbations,
+)
 
-class PromptEngine:
-    """
-    Assigned to: Team Member 3
-    Description: Wraps the base question with different prompt attributes.
-    """
-    def create_control_prompt(self, base_question: str) -> str:
-        """Creates the standard zero-shot instruction."""
-        pass
-
-    def add_metacognition(self, base_question: str) -> str:
-        """Adds self-check triggers (e.g., 'verify your answer')."""
-        pass
-
-    def add_structure(self, base_question: str) -> str:
-        """Enforces a JSON output schema (e.g., requesting 'reasoning' and 'final_answer')."""
-        pass
-
-    def add_politeness(self, base_question: str) -> str:
-        """Adds conversational fillers (e.g., 'please', 'I would appreciate')."""
-        pass
-
-class PerturbationGenerator:
-    """
-    Assigned to: Team Member 3
-    Description: Generates the N variants for each prompt to test stability.
-    """
-    def generate_synonym_variants(self, prompt: str, num_variants: int) -> List[str]:
-        """
-        Takes an engineered prompt and generates semantic variations 
-        (e.g., replacing words with synonyms) without changing the core meaning.
-        """
-        pass
-
-# =====================================================================
-# MAIN ORCHESTRATOR (Collaborative)
-# =====================================================================
 
 def main():
     """
-    The main execution script to be submitted via sbatch.
-    1. Team Member 1 initializes the environment and model.
-    2. Team Member 2 loads and prepares the QASC data, then runs OOTB.
-    3. Team Member 3 generates the prompts and perturbations.
-    4. Team Member 1 runs the generation loop.
-    5. Team Member 2 parses the outputs and calculates the metrics.
+    Quick-start example showing the full pipeline.
+
+    For real experiments use the CLI instead:
+        python run_experiment.py --model flan-t5-base --dataset qasc
+        python run_experiment.py --model flan-t5-base --dataset cola --perturbation-method paraphrase
     """
-    pass
+    cfg = ExperimentConfig(
+        model_key="flan-t5-base",
+        dataset_key="qasc",
+        sample_size=10,
+        num_perturbations=5,
+        seed=2266,
+    )
+
+    # 1. Reproducibility
+    set_all_seeds(cfg.seed)
+
+    # 2. Load model  (Team Member 1)
+    model_config = get_model_config(cfg.model_key)
+    device = get_device()
+    model, tokenizer = load_model_and_tokenizer(model_config, device)
+
+    # 3. Load dataset  (Team Member 2)
+    dataset_config = get_dataset_config(cfg.dataset_key)
+    dataset = load_dataset(dataset_config)
+
+    # 4. Get prompts  (Team Member 3)
+    prompt_styles = get_prompt_styles(cfg.dataset_key)
+
+    # 5. Generate perturbations  (Team Member 3)
+    sample_item = dataset[0]
+    text = get_item_text(sample_item, cfg.dataset_key)
+    perturbations = generate_and_validate(text, num=cfg.num_perturbations)
+
+    print(f"Model:         {model_config.name}")
+    print(f"Dataset:       {dataset_config.name} ({len(dataset)} items)")
+    print(f"Prompt styles: {list(prompt_styles.keys())}")
+    print(f"Perturbations: {len(perturbations)} generated for first item")
+    print("\nUse run_experiment.py for full experiments.")
+
 
 if __name__ == "__main__":
     main()

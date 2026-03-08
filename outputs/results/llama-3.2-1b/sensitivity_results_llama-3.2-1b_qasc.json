@@ -1,0 +1,40 @@
+{
+  "model": "meta-llama/Llama-3.2-1B",
+  "model_key": "llama-3.2-1b",
+  "dataset": "QASC",
+  "dataset_key": "qasc",
+  "perturbation_method": "synonym",
+  "ootb_accuracy": 0.01,
+  "ootb_correct": 1,
+  "ootb_total": 100,
+  "sample_size": 100,
+  "num_perturbations": 10,
+  "words_to_replace": 1,
+  "seed": 2266,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.06,
+      "correct_count": 6,
+      "num_samples": 100
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.0,
+      "correct_count": 0,
+      "num_samples": 100
+    },
+    "structure": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.0,
+      "correct_count": 0,
+      "num_samples": 100
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.0,
+      "correct_count": 0,
+      "num_samples": 100
+    }
+  }
+}
