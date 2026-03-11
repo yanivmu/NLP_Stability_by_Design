@@ -61,6 +61,8 @@ def generate():
         # Create model-specific log directory
         log_subdir = os.path.join(BASE_LOG_DIR, PHASE, model)
         os.makedirs(log_subdir, exist_ok=True)
+        slurm_subdir = os.path.join(BASE_SLURM_DIR, model, "seed_" + str(seed))
+        os.makedirs(slurm_subdir, exist_ok=True)
         
         # Fill template
         slurm_content = SLURM_TEMPLATE.format(
@@ -74,7 +76,7 @@ def generate():
         )
         
         # Save to file (using Unix line endings)
-        file_path = os.path.join(BASE_SLURM_DIR, f"{job_name}.slurm")
+        file_path = os.path.join(slurm_subdir, f"{job_name}.slurm")
         with open(file_path, "wb") as f:
             f.write(slurm_content.encode("utf-8"))
             
