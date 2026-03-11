@@ -364,15 +364,25 @@ def main():
         print(f"Highest Accuracy: {best_acc} ({all_results[best_acc]['accuracy']*100:.1f}%)")
         print(f"Lowest Accuracy: {worst_acc} ({all_results[worst_acc]['accuracy']*100:.1f}%)")
 
-    # Save results
-    output_subdir = os.path.join(cfg.output_dir, cfg.model_key)
+    # Save results in a structured hierarchy:
+    # outputs/results/{model}/{dataset}/{method}/w{words}_n{num}_s{seed}.json
+    
+    output_subdir = os.path.join(
+        cfg.output_dir, 
+        cfg.model_key, 
+        cfg.dataset_key, 
+        cfg.perturbation_method
+    )
     os.makedirs(output_subdir, exist_ok=True)
 
-    method_suffix = f"_{cfg.perturbation_method}" if cfg.perturbation_method != "synonym" else ""
-    output_file = os.path.join(
-        output_subdir,
-        f"sensitivity_results_{cfg.model_key}_{cfg.dataset_key}{method_suffix}.json",
-    )
+    filename_parts = [
+        f"w{cfg.words_to_replace}" if cfg.perturbation_method == "synonym" else "",
+        f"n{cfg.num_perturbations}",
+        f"s{cfg.seed}"
+    ]
+    # Filter out empty strings and join with underscores
+    filename = "_".join([p for p in filename_parts if p]) + ".json"
+    output_file = os.path.join(output_subdir, filename)
 
     save_data = {
         "model": model_config.hf_name,
