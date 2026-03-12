@@ -1,0 +1,76 @@
+======================================================================
+SENSITIVITY EXPERIMENT: LLAMA-3.2-1B on QASC
+Config: model=llama-3.2-1b  dataset=qasc  samples=500  perturbations=20  method=synonym  seed=2266  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Loading Llama-3.2-1B...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 6.0% (6/100)
+==================================================
+Time: 4.3s
+
+WARNING: Accuracy (6.0%) is BELOW random baseline!
+   Results may not be meaningful, but proceeding anyway...
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 302.1s
+  Average Variation Ratio: 0.0005
+  Accuracy: 7.6% (38/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 91.1s
+  Average Variation Ratio: 0.0000
+  Accuracy: 0.0% (0/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 104.5s
+  Average Variation Ratio: 0.0000
+  Accuracy: 0.0% (0/500)
+
+[POLITENESS] Running experiment...
+  Completed in 95.3s
+  Average Variation Ratio: 0.0000
+  Accuracy: 0.0% (0/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 6.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.0005   |   7.6%       | Stable
+metacognition   | 0.0000   |   0.0%       | Stable
+structure       | 0.0000   |   0.0%       | Stable
+politeness      | 0.0000   |   0.0%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): metacognition (VR=0.0000)
+Least Stable (highest VR): control (VR=0.0005)
+Highest Accuracy: control (7.6%)
+Lowest Accuracy: metacognition (0.0%)
+
+Results saved to ./outputs/results/llama-3.2-1b/qasc/synonym/w1_n20_s2266.json
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

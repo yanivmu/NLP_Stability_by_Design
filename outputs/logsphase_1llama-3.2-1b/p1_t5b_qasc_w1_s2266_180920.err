@@ -1,0 +1,30 @@
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer_config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/special_tokens_map.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/special_tokens_map.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/xet-read-token/4e20de362430cd3b72f300e6b0f18e50e7166e08 "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:   1%|          | 1/146 [00:10<24:12, 10.02s/it]Loading weights:  33%|███▎      | 48/146 [00:10<00:16,  6.03it/s]Loading weights:  37%|███▋      | 54/146 [00:11<00:13,  6.81it/s]Loading weights:  40%|███▉      | 58/146 [00:12<00:14,  6.15it/s]Loading weights:  44%|████▍     | 64/146 [00:12<00:11,  7.06it/s]Loading weights:  45%|████▌     | 66/146 [00:13<00:12,  6.43it/s]Loading weights:  49%|████▉     | 72/146 [00:13<00:09,  7.87it/s]Loading weights:  51%|█████▏    | 75/146 [00:14<00:09,  7.18it/s]Loading weights:  53%|█████▎    | 77/146 [00:14<00:10,  6.79it/s]Loading weights:  56%|█████▌    | 82/146 [00:14<00:06,  9.40it/s]Loading weights:  58%|█████▊    | 85/146 [00:15<00:08,  7.05it/s]Loading weights:  60%|█████▉    | 87/146 [00:15<00:07,  7.67it/s]Loading weights:  62%|██████▏   | 91/146 [00:15<00:05,  9.95it/s]Loading weights:  64%|██████▎   | 93/146 [00:15<00:05, 10.43it/s]Loading weights:  65%|██████▌   | 95/146 [00:16<00:07,  6.48it/s]Loading weights:  68%|██████▊   | 99/146 [00:16<00:05,  9.28it/s]Loading weights:  70%|██████▉   | 102/146 [00:17<00:06,  6.38it/s]Loading weights:  71%|███████   | 104/146 [00:17<00:06,  6.52it/s]Loading weights:  73%|███████▎  | 106/146 [00:18<00:06,  6.53it/s]Loading weights:  76%|███████▌  | 111/146 [00:19<00:06,  5.79it/s]Loading weights:  77%|███████▋  | 112/146 [00:19<00:05,  5.99it/s]Loading weights:  81%|████████  | 118/146 [00:19<00:02, 10.15it/s]Loading weights:  82%|████████▏ | 120/146 [00:20<00:04,  6.40it/s]Loading weights:  84%|████████▎ | 122/146 [00:20<00:03,  7.01it/s]Loading weights:  87%|████████▋ | 127/146 [00:20<00:01,  9.69it/s]Loading weights:  88%|████████▊ | 129/146 [00:21<00:02,  6.24it/s]Loading weights:  90%|████████▉ | 131/146 [00:21<00:02,  7.32it/s]Loading weights:  92%|█████████▏| 135/146 [00:21<00:01,  9.99it/s]Loading weights:  95%|█████████▍| 138/146 [00:22<00:01,  7.07it/s]Loading weights:  96%|█████████▌| 140/146 [00:22<00:00,  7.64it/s]Loading weights: 100%|██████████| 146/146 [00:22<00:00,  6.43it/s]
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/generation_config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/allenai/qasc/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/README.md "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/qasc.py "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/allenai/qasc/allenai/qasc.py "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/revision/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070 "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/.huggingface.yaml "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=allenai/qasc "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/tree/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/tree/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070?recursive=false&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/dataset_infos.json "HTTP/1.1 404 Not Found"
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.

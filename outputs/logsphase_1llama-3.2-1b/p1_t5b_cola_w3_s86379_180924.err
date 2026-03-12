@@ -1,0 +1,21 @@
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer_config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  50%|█████     | 73/146 [00:00<00:00, 729.45it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 796.19it/s]
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/generation_config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/nyu-mll/glue/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/README.md "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/glue.py "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/nyu-mll/glue/nyu-mll/glue.py "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/revision/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/.huggingface.yaml "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=nyu-mll/glue "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/ax?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c?recursive=false&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/dataset_infos.json "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/cola?recursive=true&expand=false "HTTP/1.1 200 OK"
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.

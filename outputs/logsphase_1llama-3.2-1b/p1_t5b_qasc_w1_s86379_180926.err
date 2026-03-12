@@ -1,0 +1,23 @@
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer_config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  47%|████▋     | 68/146 [00:00<00:00, 649.58it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 765.99it/s]
+INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/generation_config.json "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/allenai/qasc/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/README.md "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/qasc.py "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/allenai/qasc/allenai/qasc.py "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/revision/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070 "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/.huggingface.yaml "HTTP/1.1 404 Not Found"
+INFO: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=allenai/qasc "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/tree/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/tree/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070?recursive=false&expand=false "HTTP/1.1 200 OK"
+INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/dataset_infos.json "HTTP/1.1 404 Not Found"
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
+slurmstepd: error: Cannot write to cgroup.procs for (null)
+slurmstepd: error: Unable to move pid 3365542 to init root cgroup (null)
