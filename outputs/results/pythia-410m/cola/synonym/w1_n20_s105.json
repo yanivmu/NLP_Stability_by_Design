@@ -1,0 +1,40 @@
+{
+  "model": "EleutherAI/pythia-410m",
+  "model_key": "pythia-410m",
+  "dataset": "CoLA",
+  "dataset_key": "cola",
+  "perturbation_method": "synonym",
+  "ootb_accuracy": 0.7303370786516854,
+  "ootb_correct": 65,
+  "ootb_total": 89,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 1,
+  "seed": 105,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.016875722316898788,
+      "accuracy": 0.588,
+      "correct_count": 294,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.03468010579891385,
+      "accuracy": 0.068,
+      "correct_count": 34,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.6,
+      "correct_count": 300,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.011071958270487682,
+      "accuracy": 0.574,
+      "correct_count": 287,
+      "num_samples": 500
+    }
+  }
+}

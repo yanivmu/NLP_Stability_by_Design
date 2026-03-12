@@ -1,0 +1,75 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-BASE on QASC
+Config: model=flan-t5-base  dataset=qasc  samples=500  perturbations=20  method=synonym  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Loading Flan-T5-Base...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 99.0% (99/100)
+==================================================
+Time: 1.4s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 63.1s
+  Average Variation Ratio: 0.0185
+  Accuracy: 98.4% (492/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 129.4s
+  Average Variation Ratio: 0.0240
+  Accuracy: 95.4% (477/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 75.4s
+  Average Variation Ratio: 0.0198
+  Accuracy: 97.2% (486/500)
+
+[POLITENESS] Running experiment...
+  Completed in 66.4s
+  Average Variation Ratio: 0.0190
+  Accuracy: 98.2% (491/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 99.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.0185   |  98.4%       | Stable
+metacognition   | 0.0240   |  95.4%       | Stable
+structure       | 0.0198   |  97.2%       | Stable
+politeness      | 0.0190   |  98.2%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): control (VR=0.0185)
+Least Stable (highest VR): metacognition (VR=0.0240)
+Highest Accuracy: control (98.4%)
+Lowest Accuracy: metacognition (95.4%)
+
+Results saved to ./outputs/results/flan-t5-base/qasc/synonym/w1_n20_s86379.json
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================
