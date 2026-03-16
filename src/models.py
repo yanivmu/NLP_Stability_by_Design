@@ -3,9 +3,10 @@
 Model configurations and inference logic for different LLM architectures.
 
 Supports:
-- Flan-T5 (encoder-decoder seq2seq)
-- Pythia (decoder-only causal LM)
-- Llama (decoder-only causal LM)
+- Flan-T5 Base/Large (encoder-decoder seq2seq)
+- Pythia-410M (decoder-only causal LM)
+- Llama-3.2-1B / Llama-3.2-1B-Instruct (decoder-only causal LM)
+- Phi-3-Mini-4K-Instruct (decoder-only causal LM)
 """
 
 import torch
@@ -61,6 +62,22 @@ MODEL_CONFIGS: Dict[str, ModelConfig] = {
         use_fp16=True,
         padding_side="left",
         default_max_tokens=15,
+    ),
+    "llama-3.2-1b-instruct": ModelConfig(
+        name="Llama-3.2-1B-Instruct",
+        hf_name="meta-llama/Llama-3.2-1B-Instruct",
+        model_type=ModelType.CAUSAL,
+        use_fp16=True,
+        padding_side="left",
+        default_max_tokens=20,
+    ),
+    "phi-3-mini": ModelConfig(
+        name="Phi-3-Mini-4K-Instruct",
+        hf_name="microsoft/Phi-3-mini-4k-instruct",
+        model_type=ModelType.CAUSAL,
+        use_fp16=True,
+        padding_side="left",
+        default_max_tokens=20,
     ),
 }
 
