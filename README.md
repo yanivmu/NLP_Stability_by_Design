@@ -27,13 +27,23 @@ The reference paper shows that **sensitivity** (measured via variation ratio) is
 | Flan-T5-Large | Encoder-Decoder (T5) | 783M | `google/flan-t5-large` |
 | Pythia-410M | Decoder-only (GPT-NeoX) | 410M | `EleutherAI/pythia-410m` |
 | Llama-3.2-1B | Decoder-only (Llama) | 1.24B | `meta-llama/Llama-3.2-1B` |
+| Llama-3.2-1B-Instruct | Decoder-only (Llama, Instruct) | 1.24B | `meta-llama/Llama-3.2-1B-Instruct` |
+| Phi-3-Mini-4K-Instruct | Decoder-only (Phi-3) | 3.8B | `microsoft/Phi-3-mini-4k-instruct` |
+
+Instruct models (Llama-Instruct, Phi-3-Mini) automatically use chat templates via the model handler registry.
 
 ## Datasets
 
-| Dataset | Task | Labels | Random Baseline |
-|---------|------|--------|-----------------|
-| [QASC](https://huggingface.co/datasets/allenai/qasc) | 8-way multiple-choice science QA | A-H | 12.5% |
-| [CoLA](https://huggingface.co/datasets/nyu-mll/glue) | Binary grammaticality judgment | acceptable / unacceptable | 50% |
+| Dataset | Task | Labels | Random Baseline | Status |
+|---------|------|--------|-----------------|--------|
+| [QASC](https://huggingface.co/datasets/allenai/qasc) | 8-way multiple-choice science QA (no facts) | A-H | 12.5% | Active |
+| [CoLA](https://huggingface.co/datasets/nyu-mll/glue) | Binary grammaticality judgment | acceptable / unacceptable | 50% | Active |
+| [CommonsenseQA](https://huggingface.co/datasets/tau/commonsense_qa) | 5-way multiple-choice commonsense | A-E | 20% | Registered (stub) |
+| [GSM8K](https://huggingface.co/datasets/openai/gsm8k) | Grade-school math, free-form numeric | numeric | 0% | Registered (stub) |
+
+New datasets are added by implementing a `DatasetHandler` subclass — zero changes to the pipeline code.
+
+**QASC fact injection:** Disabled by default to avoid a ceiling effect (~99% → ~63% accuracy on Flan-T5-Large). Use `--facts` to re-enable for comparison.
 
 ## Prompt Styles
 
@@ -73,15 +83,21 @@ NLP_Stability_by_Design/
 │       ├── flan-t5-base/            # Results per model
 │       ├── flan-t5-large/
 │       ├── pythia-410m/
-│       └── llama-3.2-1b/
+│       ├── llama-3.2-1b/
+│       ├── llama-3.2-1b-instruct/
+│       ├── phi-3-mini/
+│       └── qasc_no_facts/           # QASC no-facts baseline eval
 ├── reference_paper_code/            # Original paper's code (read-only reference)
 ├── src/                             # Source code
-│   ├── run_experiment.py            # Main CLI entry point
-│   ├── config.py                    # ExperimentConfig dataclass
+│   ├── run_experiment.py            # Main CLI entry point (model- and dataset-agnostic)
+│   ├── model_handlers.py            # Model Handler ABC + Registry (Seq2Seq, Causal, Instruct)
+│   ├── dataset_handlers.py          # Dataset Handler ABC + Registry (CoLA, QASC, CSQA, GSM8K)
+│   ├── config.py                    # ExperimentConfig dataclass, experiment seeds
 │   ├── perturbations.py             # Synonym + paraphrase perturbation generation
-│   ├── prompts.py                   # Four prompt style templates (dataset-agnostic)
-│   ├── models.py                    # Model configs, loading, inference
-│   ├── datasets_config.py           # Dataset configs, loading, formatting
+│   ├── eval_qasc_no_facts.py        # Isolated QASC-without-facts evaluation script
+│   ├── models.py                    # ModelConfig definitions, device detection (legacy)
+│   ├── prompts.py                   # Four prompt style templates (legacy)
+│   ├── datasets_config.py           # DatasetConfig definitions (legacy)
 │   ├── data_analysis.py             # DataManager, ResultAnalyzer, parsing, VR math
 │   ├── data_demo.py                 # Standalone demo of the data pipeline
 │   └── interface.py                 # Architecture overview and import hub
@@ -93,12 +109,15 @@ NLP_Stability_by_Design/
 
 | File | Owner | Purpose |
 |------|-------|---------|
-| `run_experiment.py` | All | Unified CLI runner: loads model, loads dataset, runs OOTB check, generates perturbations, evaluates all prompt styles, saves JSON results |
-| `config.py` | TM3 | `ExperimentConfig` dataclass with all tuneable parameters (model, dataset, sample size, perturbation count, seed, etc.) |
+| `run_experiment.py` | All | Unified CLI runner — fully model- and dataset-agnostic via handler registries |
+| `model_handlers.py` | TM1 | `ModelHandler` ABC + concrete handlers (`Seq2SeqModelHandler`, `CausalModelHandler`, `InstructCausalModelHandler`) + registry |
+| `dataset_handlers.py` | TM2 | `DatasetHandler` ABC + concrete handlers (`QASCHandler`, `CoLAHandler`, `CSQAHandler`, `GSM8KHandler`) + registry |
+| `config.py` | TM3 | `ExperimentConfig` dataclass, `EXPERIMENT_SEEDS` (3 seeds for statistical significance) |
 | `perturbations.py` | TM3 | WordNet synonym replacement + Flan-T5-Small paraphrase generation, seed management (`set_all_seeds`), validation |
-| `prompts.py` | TM3 | Generic and dataset-specific prompt templates for all four styles; extensible via `register_dataset_prompts()` |
-| `models.py` | TM1 | `ModelConfig` definitions, `load_model_and_tokenizer()`, `run_inference()`, device detection |
-| `datasets_config.py` | TM2 | `DatasetConfig` definitions, HuggingFace dataset loading, item formatting, answer extraction |
+| `eval_qasc_no_facts.py` | All | Isolated evaluation of Flan-T5-Large on QASC without fact injection (ceiling-effect investigation) |
+| `models.py` | TM1 | `ModelConfig` definitions, `load_model_and_tokenizer()`, `run_inference()`, device detection (legacy, still importable) |
+| `prompts.py` | TM3 | Generic and dataset-specific prompt templates for all four styles (legacy, still importable) |
+| `datasets_config.py` | TM2 | `DatasetConfig` definitions, HuggingFace dataset loading (legacy, still importable) |
 | `data_analysis.py` | TM2 | `DataManager` (data loading/sampling), `ResultAnalyzer` (response parsing, VR calculation) |
 | `data_demo.py` | TM2 | Interactive demo showing raw data, prompt formatting, model responses |
 | `interface.py` | All | Architecture overview, re-exports from all modules, quick-start example |
@@ -125,9 +144,9 @@ The `requirements.txt` includes:
 
 NLTK data (`wordnet`, `punkt_tab`, `averaged_perceptron_tagger_eng`, `stopwords`, `omw-1.4`) is downloaded automatically on first run.
 
-### Llama Access (required for Llama-3.2-1B only)
+### Llama Access (required for Llama models)
 
-Llama is a gated model. To use it:
+Llama models are gated. To use `llama-3.2-1b` or `llama-3.2-1b-instruct`:
 
 1. Visit [meta-llama/Llama-3.2-1B](https://huggingface.co/meta-llama/Llama-3.2-1B) and accept Meta's license
 2. Create a HuggingFace token at [hf.co/settings/tokens](https://huggingface.co/settings/tokens) with "Access to public gated repos" enabled
@@ -178,20 +197,27 @@ python run_experiment.py --model flan-t5-base --dataset qasc --sample-size 100 -
 # Paraphrase mode with custom seed
 python run_experiment.py --model pythia-410m --dataset cola --perturbation-method paraphrase --seed 42
 
-# Llama on QASC
-python run_experiment.py --model llama-3.2-1b --dataset qasc
+# Llama Instruct on QASC (chat template applied automatically)
+python run_experiment.py --model llama-3.2-1b-instruct --dataset qasc
+
+# Phi-3-Mini on CoLA
+python run_experiment.py --model phi-3-mini --dataset cola
+
+# QASC with fact injection (re-enables the old behavior for comparison)
+python run_experiment.py --model flan-t5-large --dataset qasc --facts
 ```
 
 ### CLI Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--model` | Model key: `flan-t5-base`, `flan-t5-large`, `pythia-410m`, `llama-3.2-1b` | *required* |
-| `--dataset` | Dataset key: `qasc`, `cola` | *required* |
-| `--sample-size` | Number of samples for sensitivity measurement | 30 |
+| `--model` | Model key: `flan-t5-base`, `flan-t5-large`, `pythia-410m`, `llama-3.2-1b`, `llama-3.2-1b-instruct`, `phi-3-mini` | *required* |
+| `--dataset` | Dataset key: `qasc`, `cola` (also registered: `csqa`, `gsm8k`) | *required* |
+| `--sample-size` | Number of samples for sensitivity measurement | 500 |
 | `--num-perturbations` | Number of perturbations per sample (N) | 10 |
 | `--words-to-replace` | Words to replace per synonym perturbation | 1 |
 | `--perturbation-method` | `synonym` or `paraphrase` | `synonym` |
+| `--facts` | Inject supporting facts into QASC prompts (off by default to avoid ceiling effect) | off |
 | `--ootb-size` | Samples for OOTB accuracy check | 100 |
 | `--seed` | Random seed for reproducibility | 2266 |
 | `--output-dir` | Output directory | `../outputs/results` |
@@ -219,7 +245,7 @@ Seeds are fixed across all libraries via `set_all_seeds()` in `perturbations.py`
 
 The paraphrase generator additionally re-seeds torch before every individual generation call with `base_seed + attempt_index` to ensure deterministic output even with `do_sample=True`.
 
-Default seed: **2266** (from the reference paper).
+Default seed: **2266** (from the reference paper). Three seeds are used for statistical significance: **105**, **2266**, **86379** (defined in `config.EXPERIMENT_SEEDS`).
 
 ## Methodology
 
@@ -238,7 +264,9 @@ Default seed: **2266** (from the reference paper).
 
 ## Experiment Results
 
-All experiments: 100 samples, 10 perturbations per sample, synonym mode, seed=2266.
+### Phase 1 (with fact injection)
+
+All Phase 1 experiments: 100 samples, 10 perturbations per sample, synonym mode, seed=2266, **QASC with fact injection** (`--facts`). Note: QASC with facts produces a ceiling effect (~99-100% accuracy on Flan-T5). Phase 2 experiments use the no-facts default (~63% accuracy on Flan-T5-Large).
 
 ### Flan-T5-Base
 
