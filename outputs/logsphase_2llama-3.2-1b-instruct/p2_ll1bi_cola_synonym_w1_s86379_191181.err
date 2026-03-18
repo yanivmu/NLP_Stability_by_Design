@@ -1,0 +1,76 @@
+/var/spool/slurmd/job191181/slurm_script: line 15: /a/home/cc/students/csguests/avnerf/.bashrc: No such file or directory
+usage: conda [-h] [--no-plugins] [-V] COMMAND ...
+conda: error: argument COMMAND: invalid choice: 'activate' (choose from 'clean', 'compare', 'config', 'create', 'info', 'init', 'install', 'list', 'notices', 'package', 'remove', 'uninstall', 'rename', 'run', 'search', 'update', 'upgrade', 'build', 'content-trust', 'convert', 'debug', 'develop', 'doctor', 'index', 'inspect', 'metapackage', 'render', 'skeleton', 'token', 'server', 'env', 'repo', 'verify', 'pack')
+Traceback (most recent call last):
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/python3.11/site-packages/nltk/corpus/util.py", line 84, in __load
+    root = nltk.data.find(f"{self.subdir}/{zip_name}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/python3.11/site-packages/nltk/data.py", line 583, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource [93mstopwords[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('stopwords')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/stopwords.zip/stopwords/[0m
+
+  Searched in:
+    - '/a/home/cc/students/csguests/avnerf/nltk_data'
+    - '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/nltk_data'
+    - '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/share/nltk_data'
+    - '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 30, in <module>
+    from perturbations import (
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/perturbations.py", line 54, in <module>
+    STOPWORDS: Set[str] = set(sw.words("english"))
+                              ^^^^^^^^
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/python3.11/site-packages/nltk/corpus/util.py", line 121, in __getattr__
+    self.__load()
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/python3.11/site-packages/nltk/corpus/util.py", line 86, in __load
+    raise e
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/python3.11/site-packages/nltk/corpus/util.py", line 81, in __load
+    root = nltk.data.find(f"{self.subdir}/{self.__name}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/python3.11/site-packages/nltk/data.py", line 583, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource [93mstopwords[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('stopwords')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/stopwords[0m
+
+  Searched in:
+    - '/a/home/cc/students/csguests/avnerf/nltk_data'
+    - '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/nltk_data'
+    - '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/share/nltk_data'
+    - '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
+slurmstepd: error: Cannot write to cgroup.procs for (null)
+slurmstepd: error: Unable to move pid 1251023 to init root cgroup (null)

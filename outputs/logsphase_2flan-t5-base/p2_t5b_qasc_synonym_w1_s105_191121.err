@@ -1,0 +1,2 @@
+Loading weights:   0%|          | 0/282 [00:00<?, ?it/s]Loading weights:   7%|▋         | 21/282 [00:00<00:01, 204.51it/s]Loading weights:  15%|█▍        | 42/282 [00:00<00:01, 183.77it/s]Loading weights:  29%|██▊       | 81/282 [00:00<00:00, 268.67it/s]Loading weights: 100%|██████████| 282/282 [00:00<00:00, 732.82it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning

@@ -4,8 +4,8 @@
   "dataset": "QASC",
   "dataset_key": "qasc",
   "perturbation_method": "synonym",
-  "ootb_accuracy": 0.99,
-  "ootb_correct": 99,
+  "ootb_accuracy": 0.43,
+  "ootb_correct": 43,
   "ootb_total": 100,
   "sample_size": 500,
   "num_perturbations": 20,
@@ -13,27 +13,27 @@
   "seed": 2266,
   "results": {
     "control": {
-      "avg_variation_ratio": 0.07377136468622529,
-      "accuracy": 0.986,
-      "correct_count": 493,
+      "avg_variation_ratio": 0.27774919003425264,
+      "accuracy": 0.44,
+      "correct_count": 220,
       "num_samples": 500
     },
     "metacognition": {
-      "avg_variation_ratio": 0.08388873163300409,
-      "accuracy": 0.958,
-      "correct_count": 479,
+      "avg_variation_ratio": 0.2921991632980029,
+      "accuracy": 0.416,
+      "correct_count": 208,
       "num_samples": 500
     },
     "structure": {
-      "avg_variation_ratio": 0.07580655078495632,
-      "accuracy": 0.974,
-      "correct_count": 487,
+      "avg_variation_ratio": 0.24489580440199643,
+      "accuracy": 0.39,
+      "correct_count": 195,
       "num_samples": 500
     },
     "politeness": {
-      "avg_variation_ratio": 0.0744176814585483,
-      "accuracy": 0.984,
-      "correct_count": 492,
+      "avg_variation_ratio": 0.2838144623865992,
+      "accuracy": 0.442,
+      "correct_count": 221,
       "num_samples": 500
     }
   }

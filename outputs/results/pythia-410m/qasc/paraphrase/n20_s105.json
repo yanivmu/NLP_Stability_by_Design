@@ -1,0 +1,40 @@
+{
+  "model": "EleutherAI/pythia-410m",
+  "model_key": "pythia-410m",
+  "dataset": "QASC",
+  "dataset_key": "qasc",
+  "perturbation_method": "paraphrase",
+  "ootb_accuracy": 0.05,
+  "ootb_correct": 5,
+  "ootb_total": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 0,
+  "seed": 105,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.0034524455936220644,
+      "accuracy": 0.116,
+      "correct_count": 58,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.002652014652014652,
+      "accuracy": 0.116,
+      "correct_count": 58,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.116,
+      "correct_count": 58,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.001680555555555557,
+      "accuracy": 0.116,
+      "correct_count": 58,
+      "num_samples": 500
+    }
+  }
+}

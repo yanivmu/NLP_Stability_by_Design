@@ -1,0 +1,9 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-BASE on COLA
+Config: model=flan-t5-base  dataset=cola  samples=500  perturbations=20  method=paraphrase  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...

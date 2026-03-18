@@ -1,0 +1,56 @@
+Could not set the permissions on the file '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/huggingface_cache/hub/models--google--flan-t5-small/blobs/db13bf98b7714acc4dea7621ff7f4ab93f64258e.incomplete'. Error: [Errno 2] No such file or directory: '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/huggingface_cache/hub/models--google--flan-t5-small/blobs/db13bf98b7714acc4dea7621ff7f4ab93f64258e.incomplete'.
+Continuing without setting permissions.
+Traceback (most recent call last):
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/shutil.py", line 816, in move
+    os.rename(src, real_dst)
+FileNotFoundError: [Errno 2] No such file or directory: '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/huggingface_cache/hub/models--google--flan-t5-small/blobs/db13bf98b7714acc4dea7621ff7f4ab93f64258e.incomplete' -> '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/huggingface_cache/hub/models--google--flan-t5-small/blobs/db13bf98b7714acc4dea7621ff7f4ab93f64258e'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1904, in _copy_no_matter_what
+    shutil.copy2(src, dst)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/shutil.py", line 434, in copy2
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/shutil.py", line 254, in copyfile
+    with open(src, 'rb') as fsrc:
+FileNotFoundError: [Errno 2] No such file or directory: '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/huggingface_cache/hub/models--google--flan-t5-small/blobs/db13bf98b7714acc4dea7621ff7f4ab93f64258e.incomplete'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 374, in <module>
+    main()
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 219, in main
+    get_paraphraser(device=device, seed=cfg.seed)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/perturbations.py", line 516, in get_paraphraser
+    _paraphraser = ParaphraseGenerator(device=device, seed=seed)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/perturbations.py", line 449, in __init__
+    self.tokenizer = AutoTokenizer.from_pretrained(self._PARAPHRASER_MODEL)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py", line 663, in from_pretrained
+    tokenizer_config = get_tokenizer_config(pretrained_model_name_or_path, **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py", line 500, in get_tokenizer_config
+    resolved_config_file = cached_file(
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/hub.py", line 277, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/hub.py", line 508, in cached_files
+    raise e
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/hub.py", line 420, in cached_files
+    hf_hub_download(
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 986, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1202, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1852, in _download_to_tmp_and_move
+    _chmod_and_move(incomplete_path, destination_path)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1893, in _chmod_and_move
+    shutil.move(str(src), str(dst), copy_function=_copy_no_matter_what)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/shutil.py", line 836, in move
+    copy_function(src, real_dst)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1907, in _copy_no_matter_what
+    shutil.copyfile(src, dst)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/shutil.py", line 254, in copyfile
+    with open(src, 'rb') as fsrc:
+FileNotFoundError: [Errno 2] No such file or directory: '/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/huggingface_cache/hub/models--google--flan-t5-small/blobs/db13bf98b7714acc4dea7621ff7f4ab93f64258e.incomplete'
