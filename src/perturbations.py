@@ -43,7 +43,7 @@ def ensure_nltk_data() -> None:
 
 ensure_nltk_data()
 
-from nltk.corpus import wordnet as wn, stopwords as sw
+from nltk.corpus import wordnet as wn
 from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 
@@ -51,7 +51,16 @@ from nltk import pos_tag
 # Constants
 # ---------------------------------------------------------------------------
 
-STOPWORDS: Set[str] = set(sw.words("english"))
+def get_stopwords():
+    """Lazy load stopwords to ensure NLTK data is present."""
+    from nltk.corpus import stopwords as sw
+    try:
+        return set(sw.words("english"))
+    except LookupError:
+        nltk.download("stopwords", quiet=True)
+        return set(sw.words("english"))
+
+STOPWORDS: Set[str] = get_stopwords()
 
 SKIP_WORDS: Set[str] = STOPWORDS | {
     "what", "which", "who", "whom", "where", "when", "why", "how",
