@@ -195,6 +195,38 @@ def run_sensitivity_experiment(
 # MAIN
 # =====================================================================
 
+import csv
+from datetime import datetime
+
+def save_to_csv(cfg: ExperimentConfig, all_results: Dict, ootb_acc: float, output_dir: str):
+    """
+    Saves experiment results in a flat CSV format, one row per prompt style.
+    This format is ideal for plotting (Seaborn, Pandas, etc.).
+    """
+    csv_file = os.path.join(output_dir, "all_results.csv")
+    file_exists = os.path.isfile(csv_file)
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    with open(csv_file, mode='a', newline='') as f:
+        writer = csv.writer(f)
+        # Header
+        if not file_exists:
+            writer.writerow([
+                "timestamp", "model", "dataset", "method", "words_to_replace", 
+                "num_perturbations", "sample_size", "seed", "ootb_accuracy",
+                "prompt_style", "variation_ratio", "accuracy"
+            ])
+        
+        # Rows (one per style)
+        for style, res in all_results.items():
+            writer.writerow([
+                timestamp, cfg.model_key, cfg.dataset_key, cfg.perturbation_method,
+                cfg.words_to_replace, cfg.num_perturbations, cfg.sample_size,
+                cfg.seed, f"{ootb_acc:.4f}",
+                style, f"{res['avg_variation_ratio']:.4f}", f"{res['accuracy']:.4f}"
+            ])
+
 def main():
     """Main experiment runner."""
     cfg = parse_args()
@@ -361,9 +393,12 @@ def main():
         },
     }
 
-    with open(output_file, "w") as f:
+    with open(output_file, 'w') as f:
         json.dump(save_data, f, indent=2)
     print(f"\nResults saved to {output_file}")
+
+    # Also save to consolidated CSV for easy graphing
+    save_to_csv(cfg, all_results, accuracy, cfg.output_dir)
 
     print("\n" + "=" * 70)
     print("EXPERIMENT COMPLETE")
