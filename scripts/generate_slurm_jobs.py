@@ -37,12 +37,19 @@ SLURM_TEMPLATE = """#!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=32000
+#SBATCH --mem={mem}
 #SBATCH --gpus=1
 
 # 1. Activate environment
 source ~/.bashrc
 export HF_HOME="/vol/joberant_nobck/data/NLP_368307701_2526a/$USER/huggingface_cache"
+
+# Fallback for environment activation if .bashrc sourcing fails
+if ! command -v conda &> /dev/null
+then
+    source /vol/joberant_nobck/data/NLP_368307701_2526a/$USER/anaconda3/bin/activate
+fi
+
 conda activate slm_env
 
 # 2. Navigate to project
@@ -81,10 +88,15 @@ def generate():
         w_tag = f"_w{words}" if method == "synonym" else ""
         job_name = f"p2_{m_short}_{dataset}_{method}{w_tag}_s{seed}"
 
-        log_subdir = os.path.join(BASE_LOG_DIR, PHASE, model)
+        # Using forward slashes explicitly for Linux compatibility
+        log_subdir = f"{BASE_LOG_DIR}/{PHASE}/{model}"
         os.makedirs(log_subdir, exist_ok=True)
-        slurm_subdir = os.path.join(BASE_SLURM_DIR, model, f"seed_{seed}")
+        
+        slurm_subdir = f"{BASE_SLURM_DIR}/{model}/seed_{seed}"
         os.makedirs(slurm_subdir, exist_ok=True)
+
+        # Request more memory for Llama/Phi models
+        mem = 48000 if ("llama" in model or "phi" in model) else 32000
 
         slurm_content = SLURM_TEMPLATE.format(
             job_name=job_name,
@@ -95,14 +107,14 @@ def generate():
             method=method,
             words=words,
             seed=seed,
+            mem=mem
         )
 
-        file_path = os.path.join(slurm_subdir, f"{job_name}.slurm")
+        file_path = f"{slurm_subdir}/{job_name}.slurm"
         with open(file_path, "wb") as f:
             f.write(slurm_content.encode("utf-8"))
 
         print(f"  -> Created {file_path}")
-        print(f"     Logs: {log_subdir}/")
 
 if __name__ == "__main__":
     generate()
