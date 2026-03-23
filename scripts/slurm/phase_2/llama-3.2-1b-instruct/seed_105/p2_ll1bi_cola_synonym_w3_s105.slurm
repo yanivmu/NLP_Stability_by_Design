@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=p2_ll1bi_cola_synonym_w3_s105
-#SBATCH --output=outputs/logs\phase_2\llama-3.2-1b-instruct/p2_ll1bi_cola_synonym_w3_s105_%j.out
-#SBATCH --error=outputs/logs\phase_2\llama-3.2-1b-instruct/p2_ll1bi_cola_synonym_w3_s105_%j.err
+#SBATCH --output=outputs/logs/phase_2/llama-3.2-1b-instruct/p2_ll1bi_cola_synonym_w3_s105_%j.out
+#SBATCH --error=outputs/logs/phase_2/llama-3.2-1b-instruct/p2_ll1bi_cola_synonym_w3_s105_%j.err
 #SBATCH --partition=studentkillable
 #SBATCH --account=gpu-students
 #SBATCH --time=1440

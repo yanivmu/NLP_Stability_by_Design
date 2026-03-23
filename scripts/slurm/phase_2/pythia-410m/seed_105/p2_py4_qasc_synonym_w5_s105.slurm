@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=p2_py4_qasc_synonym_w5_s105
-#SBATCH --output=outputs/logs\phase_2\pythia-410m/p2_py4_qasc_synonym_w5_s105_%j.out
-#SBATCH --error=outputs/logs\phase_2\pythia-410m/p2_py4_qasc_synonym_w5_s105_%j.err
+#SBATCH --output=outputs/logs/phase_2/pythia-410m/p2_py4_qasc_synonym_w5_s105_%j.out
+#SBATCH --error=outputs/logs/phase_2/pythia-410m/p2_py4_qasc_synonym_w5_s105_%j.err
 #SBATCH --partition=studentkillable
 #SBATCH --account=gpu-students
 #SBATCH --time=1440

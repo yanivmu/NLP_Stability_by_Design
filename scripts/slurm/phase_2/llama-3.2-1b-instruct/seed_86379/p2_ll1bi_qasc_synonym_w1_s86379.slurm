@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=p2_ll1bi_qasc_synonym_w1_s86379
-#SBATCH --output=outputs/logs\phase_2\llama-3.2-1b-instruct/p2_ll1bi_qasc_synonym_w1_s86379_%j.out
-#SBATCH --error=outputs/logs\phase_2\llama-3.2-1b-instruct/p2_ll1bi_qasc_synonym_w1_s86379_%j.err
+#SBATCH --output=outputs/logs/phase_2/llama-3.2-1b-instruct/p2_ll1bi_qasc_synonym_w1_s86379_%j.out
+#SBATCH --error=outputs/logs/phase_2/llama-3.2-1b-instruct/p2_ll1bi_qasc_synonym_w1_s86379_%j.err
 #SBATCH --partition=studentkillable
 #SBATCH --account=gpu-students
 #SBATCH --time=1440

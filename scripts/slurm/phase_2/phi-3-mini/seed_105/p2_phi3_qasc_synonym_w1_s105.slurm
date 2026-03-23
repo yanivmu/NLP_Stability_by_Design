@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=p2_phi3_qasc_synonym_w1_s105
-#SBATCH --output=outputs/logs\phase_2\phi-3-mini/p2_phi3_qasc_synonym_w1_s105_%j.out
-#SBATCH --error=outputs/logs\phase_2\phi-3-mini/p2_phi3_qasc_synonym_w1_s105_%j.err
+#SBATCH --output=outputs/logs/phase_2/phi-3-mini/p2_phi3_qasc_synonym_w1_s105_%j.out
+#SBATCH --error=outputs/logs/phase_2/phi-3-mini/p2_phi3_qasc_synonym_w1_s105_%j.err
 #SBATCH --partition=studentkillable
 #SBATCH --account=gpu-students
 #SBATCH --time=1440

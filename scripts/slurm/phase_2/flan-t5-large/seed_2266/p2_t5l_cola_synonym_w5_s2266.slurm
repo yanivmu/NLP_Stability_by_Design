@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=p2_t5l_cola_synonym_w5_s2266
-#SBATCH --output=outputs/logs\phase_2\flan-t5-large/p2_t5l_cola_synonym_w5_s2266_%j.out
-#SBATCH --error=outputs/logs\phase_2\flan-t5-large/p2_t5l_cola_synonym_w5_s2266_%j.err
+#SBATCH --output=outputs/logs/phase_2/flan-t5-large/p2_t5l_cola_synonym_w5_s2266_%j.out
+#SBATCH --error=outputs/logs/phase_2/flan-t5-large/p2_t5l_cola_synonym_w5_s2266_%j.err
 #SBATCH --partition=studentkillable
 #SBATCH --account=gpu-students
 #SBATCH --time=1440

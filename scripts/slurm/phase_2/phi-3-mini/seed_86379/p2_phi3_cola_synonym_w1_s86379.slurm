@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=p2_phi3_cola_synonym_w1_s86379
-#SBATCH --output=outputs/logs\phase_2\phi-3-mini/p2_phi3_cola_synonym_w1_s86379_%j.out
-#SBATCH --error=outputs/logs\phase_2\phi-3-mini/p2_phi3_cola_synonym_w1_s86379_%j.err
+#SBATCH --output=outputs/logs/phase_2/phi-3-mini/p2_phi3_cola_synonym_w1_s86379_%j.out
+#SBATCH --error=outputs/logs/phase_2/phi-3-mini/p2_phi3_cola_synonym_w1_s86379_%j.err
 #SBATCH --partition=studentkillable
 #SBATCH --account=gpu-students
 #SBATCH --time=1440
