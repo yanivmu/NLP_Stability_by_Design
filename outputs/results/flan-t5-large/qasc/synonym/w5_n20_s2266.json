@@ -4,36 +4,36 @@
   "dataset": "QASC",
   "dataset_key": "qasc",
   "perturbation_method": "synonym",
-  "ootb_accuracy": 1.0,
-  "ootb_correct": 100,
-  "ootb_total": 100,
+  "ootb_accuracy": 0.5959595959595959,
+  "ootb_correct": 59,
+  "ootb_total": 99,
   "sample_size": 500,
   "num_perturbations": 20,
   "words_to_replace": 5,
   "seed": 2266,
   "results": {
     "control": {
-      "avg_variation_ratio": 0.049943766278441146,
-      "accuracy": 0.998,
-      "correct_count": 499,
+      "avg_variation_ratio": 0.23904042725420468,
+      "accuracy": 0.606,
+      "correct_count": 303,
       "num_samples": 500
     },
     "metacognition": {
-      "avg_variation_ratio": 0.051027715121136116,
-      "accuracy": 0.998,
-      "correct_count": 499,
+      "avg_variation_ratio": 0.22932704713587074,
+      "accuracy": 0.382,
+      "correct_count": 191,
       "num_samples": 500
     },
     "structure": {
-      "avg_variation_ratio": 0.032074237037472336,
-      "accuracy": 0.986,
-      "correct_count": 493,
+      "avg_variation_ratio": 0.030115847087209317,
+      "accuracy": 0.228,
+      "correct_count": 114,
       "num_samples": 500
     },
     "politeness": {
-      "avg_variation_ratio": 0.04953441938178774,
-      "accuracy": 0.998,
-      "correct_count": 499,
+      "avg_variation_ratio": 0.25095376147760096,
+      "accuracy": 0.622,
+      "correct_count": 311,
       "num_samples": 500
     }
   }

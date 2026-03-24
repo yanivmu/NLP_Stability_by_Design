@@ -1,0 +1,78 @@
+======================================================================
+SENSITIVITY EXPERIMENT: LLAMA-3.2-1B-INSTRUCT on QASC
+Config: model=llama-3.2-1b-instruct  dataset=qasc  samples=500  perturbations=20  method=paraphrase  seed=2266  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Llama-3.2-1B-Instruct...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 13.0% (13/100)
+==================================================
+Time: 15.1s
+
+WARNING: Accuracy below threshold. Proceeding with caution...
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 2760.1s
+  Average Variation Ratio: 0.0017
+  Accuracy: 13.4% (67/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 2909.2s
+  Average Variation Ratio: 0.1321
+  Accuracy: 34.4% (172/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 5377.3s
+  Average Variation Ratio: 0.3160
+  Accuracy: 46.2% (231/500)
+
+[POLITENESS] Running experiment...
+  Completed in 2862.7s
+  Average Variation Ratio: 0.0519
+  Accuracy: 25.2% (126/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 13.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.0017   |  13.4%       | Stable
+metacognition   | 0.1321   |  34.4%       | Stable
+structure       | 0.3160   |  46.2%       | Moderate
+politeness      | 0.0519   |  25.2%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): control (VR=0.0017)
+Least Stable (highest VR): structure (VR=0.3160)
+Highest Accuracy: structure (46.2%)
+Lowest Accuracy: control (13.4%)
+
+Results saved to ./outputs/results/llama-3.2-1b-instruct/qasc/paraphrase/n20_s2266.json
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

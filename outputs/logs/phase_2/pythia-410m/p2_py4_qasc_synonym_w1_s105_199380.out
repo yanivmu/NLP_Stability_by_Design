@@ -1,0 +1,77 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PYTHIA-410M on QASC
+Config: model=pythia-410m  dataset=qasc  samples=500  perturbations=20  method=synonym  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Pythia-410M...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 5.0% (5/100)
+==================================================
+Time: 8.7s
+
+WARNING: Accuracy (5.0%) is BELOW random baseline!
+   Results may not be meaningful, but proceeding anyway...
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 340.8s
+  Average Variation Ratio: 0.0032
+  Accuracy: 11.6% (58/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 344.2s
+  Average Variation Ratio: 0.0033
+  Accuracy: 11.6% (58/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 1643.0s
+  Average Variation Ratio: 0.0000
+  Accuracy: 11.6% (58/500)
+
+[POLITENESS] Running experiment...
+  Completed in 341.6s
+  Average Variation Ratio: 0.0000
+  Accuracy: 11.6% (58/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 5.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.0032   |  11.6%       | Stable
+metacognition   | 0.0033   |  11.6%       | Stable
+structure       | 0.0000   |  11.6%       | Stable
+politeness      | 0.0000   |  11.6%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): structure (VR=0.0000)
+Least Stable (highest VR): metacognition (VR=0.0033)
+Highest Accuracy: control (11.6%)
+Lowest Accuracy: control (11.6%)
+
+Results saved to ./outputs/results/pythia-410m/qasc/synonym/w1_n20_s105.json
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

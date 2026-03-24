@@ -1,0 +1,73 @@
+Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 2669.41it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:   1%|          | 1/146 [00:21<51:10, 21.17s/it]Loading weights:   1%|▏         | 2/146 [00:21<21:09,  8.82s/it]Loading weights:  31%|███       | 45/146 [00:21<00:24,  4.07it/s]Loading weights:  36%|███▋      | 53/146 [00:23<00:22,  4.19it/s]Loading weights:  40%|███▉      | 58/146 [00:25<00:23,  3.74it/s]Loading weights:  43%|████▎     | 63/146 [00:26<00:20,  4.09it/s]Loading weights:  45%|████▌     | 66/146 [00:27<00:21,  3.78it/s]Loading weights:  47%|████▋     | 68/146 [00:27<00:20,  3.85it/s]Loading weights:  49%|████▉     | 72/146 [00:28<00:16,  4.44it/s]Loading weights:  51%|█████▏    | 75/146 [00:29<00:19,  3.58it/s]Loading weights:  55%|█████▌    | 81/146 [00:30<00:14,  4.45it/s]Loading weights:  58%|█████▊    | 84/146 [00:31<00:16,  3.77it/s]Loading weights:  59%|█████▉    | 86/146 [00:32<00:14,  4.20it/s]Loading weights:  62%|██████▏   | 90/146 [00:32<00:11,  4.94it/s]Loading weights:  64%|██████▎   | 93/146 [00:33<00:14,  3.70it/s]Loading weights:  64%|██████▍   | 94/146 [00:34<00:13,  3.78it/s]Loading weights:  67%|██████▋   | 98/146 [00:34<00:08,  5.38it/s]Loading weights:  70%|██████▉   | 102/146 [00:36<00:12,  3.40it/s]Loading weights:  71%|███████   | 104/146 [00:36<00:10,  3.97it/s]Loading weights:  74%|███████▍  | 108/146 [00:36<00:07,  5.03it/s]Loading weights:  75%|███████▍  | 109/146 [00:37<00:07,  4.72it/s]Loading weights:  76%|███████▌  | 111/146 [00:37<00:08,  4.27it/s]Loading weights:  77%|███████▋  | 112/146 [00:38<00:11,  2.85it/s]Loading weights:  77%|███████▋  | 113/146 [00:39<00:10,  3.14it/s]Loading weights:  80%|████████  | 117/146 [00:39<00:05,  5.53it/s]Loading weights:  82%|████████▏ | 119/146 [00:39<00:04,  5.84it/s]Loading weights:  82%|████████▏ | 120/146 [00:40<00:07,  3.52it/s]Loading weights:  83%|████████▎ | 121/146 [00:41<00:10,  2.39it/s]Loading weights:  87%|████████▋ | 127/146 [00:41<00:03,  5.00it/s]Loading weights:  88%|████████▊ | 129/146 [00:43<00:05,  3.31it/s]Loading weights:  89%|████████▉ | 130/146 [00:43<00:05,  2.85it/s]Loading weights:  94%|█████████▍| 137/146 [00:43<00:01,  6.05it/s]Loading weights:  95%|█████████▌| 139/146 [00:46<00:02,  2.95it/s]Loading weights:  99%|█████████▊| 144/146 [00:46<00:00,  4.65it/s]Loading weights: 100%|██████████| 146/146 [00:46<00:00,  3.15it/s]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback

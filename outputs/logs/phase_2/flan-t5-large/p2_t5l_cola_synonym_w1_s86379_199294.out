@@ -1,0 +1,76 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-LARGE on COLA
+Config: model=flan-t5-large  dataset=cola  samples=500  perturbations=20  method=synonym  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Flan-T5-Large...
+Model loaded successfully
+Loading CoLA dataset...
+Loaded 1043 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 50.0%
+Valid signal threshold: 60.0%
+
+==================================================
+OOTB ACCURACY RESULT: 64.0% (64/100)
+==================================================
+Time: 1.9s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 64.5s
+  Average Variation Ratio: 0.1351
+  Accuracy: 65.8% (329/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 75.6s
+  Average Variation Ratio: 0.1449
+  Accuracy: 69.4% (347/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 97.9s
+  Average Variation Ratio: 0.1164
+  Accuracy: 72.6% (363/500)
+
+[POLITENESS] Running experiment...
+  Completed in 76.2s
+  Average Variation Ratio: 0.1554
+  Accuracy: 73.2% (366/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 64.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.1351   |  65.8%       | Stable
+metacognition   | 0.1449   |  69.4%       | Stable
+structure       | 0.1164   |  72.6%       | Stable
+politeness      | 0.1554   |  73.2%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): structure (VR=0.1164)
+Least Stable (highest VR): politeness (VR=0.1554)
+Highest Accuracy: politeness (73.2%)
+Lowest Accuracy: control (65.8%)
+
+Results saved to ./outputs/results/flan-t5-large/cola/synonym/w1_n20_s86379.json
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

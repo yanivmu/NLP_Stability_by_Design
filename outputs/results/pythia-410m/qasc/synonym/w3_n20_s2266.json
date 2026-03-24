@@ -13,13 +13,13 @@
   "seed": 2266,
   "results": {
     "control": {
-      "avg_variation_ratio": 0.0025299145299145305,
+      "avg_variation_ratio": 0.002720390720390721,
       "accuracy": 0.134,
       "correct_count": 67,
       "num_samples": 500
     },
     "metacognition": {
-      "avg_variation_ratio": 0.0011267638793954586,
+      "avg_variation_ratio": 0.001471208323839903,
       "accuracy": 0.134,
       "correct_count": 67,
       "num_samples": 500

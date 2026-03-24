@@ -20,8 +20,8 @@
     },
     "metacognition": {
       "avg_variation_ratio": 0.0,
-      "accuracy": 0.492,
-      "correct_count": 246,
+      "accuracy": 0.49,
+      "correct_count": 245,
       "num_samples": 500
     },
     "structure": {

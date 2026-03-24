@@ -4,18 +4,18 @@
   "dataset": "QASC",
   "dataset_key": "qasc",
   "perturbation_method": "synonym",
-  "ootb_accuracy": 0.09,
-  "ootb_correct": 9,
-  "ootb_total": 100,
+  "ootb_accuracy": 0.0,
+  "ootb_correct": 0,
+  "ootb_total": 0,
   "sample_size": 500,
   "num_perturbations": 20,
   "words_to_replace": 3,
   "seed": 86379,
   "results": {
     "control": {
-      "avg_variation_ratio": 0.000761904761904762,
-      "accuracy": 0.084,
-      "correct_count": 42,
+      "avg_variation_ratio": 0.0,
+      "accuracy": 0.0,
+      "correct_count": 0,
       "num_samples": 500
     },
     "metacognition": {
