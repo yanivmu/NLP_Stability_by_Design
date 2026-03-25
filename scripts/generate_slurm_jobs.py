@@ -40,9 +40,11 @@ SLURM_TEMPLATE = """#!/bin/bash
 #SBATCH --mem={mem}
 #SBATCH --gpus=1
 
-# 1. Activate environment
+# 1. Activate environment & reproducibility env vars
 source ~/.bashrc
 export HF_HOME="/vol/joberant_nobck/data/NLP_368307701_2526a/$USER/huggingface_cache"
+export PYTHONHASHSEED={seed}
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
 
 # Fallback for environment activation if .bashrc sourcing fails
 if ! command -v conda &> /dev/null

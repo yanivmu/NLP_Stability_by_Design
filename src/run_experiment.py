@@ -128,6 +128,8 @@ def run_sensitivity_experiment(
     cfg: ExperimentConfig,
 ) -> Dict:
     """Run sensitivity experiment for a single prompt style."""
+    import random as _random
+
     sample_items = dataset_handler.sample_items(dataset, cfg.sample_size, cfg.seed)
     max_tokens = dataset_handler.get_max_tokens(style_name)
     is_structured = (style_name == "structure")
@@ -136,12 +138,18 @@ def run_sensitivity_experiment(
     total_variation = 0.0
 
     for idx, item in enumerate(sample_items):
+        # Per-item deterministic seed so each item's perturbations are
+        # independent of previous items and reproducible across runs.
+        item_seed = cfg.seed + idx
+        _random.seed(item_seed)
+        set_all_seeds(item_seed)
+
         base_text = dataset_handler.get_item_text(item)
 
         if cfg.perturbation_method == "paraphrase":
             perturbations = generate_paraphrase_perturbations(
                 base_text, num=cfg.num_perturbations,
-                device=model_handler.device, seed=cfg.seed,
+                device=model_handler.device, seed=item_seed,
             )
         else:
             perturbations = generate_synonym_perturbations(

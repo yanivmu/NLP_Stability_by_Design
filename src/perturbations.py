@@ -91,7 +91,12 @@ def set_all_seeds(seed: int) -> None:
     Fix random seeds across all libraries for full reproducibility.
 
     Covers: stdlib random, numpy, torch (CPU + GPU), CUDA determinism,
-    and Python hash seed.
+    and HuggingFace transformers internals.
+
+    NOTE: For PYTHONHASHSEED to take effect it must be set as an
+    environment variable *before* the interpreter starts (e.g. in the
+    Slurm script: ``export PYTHONHASHSEED=2266``).  Setting it here is
+    a best-effort fallback.
     """
     random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
@@ -108,6 +113,14 @@ def set_all_seeds(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
+        os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+        torch.use_deterministic_algorithms(True, warn_only=True)
+    except (ImportError, AttributeError):
+        pass
+
+    try:
+        from transformers import set_seed as hf_set_seed
+        hf_set_seed(seed)
     except ImportError:
         pass
 
@@ -538,6 +551,7 @@ def generate_paraphrase_perturbations(
     Falls back to synonym-based perturbations for any shortfall.
     """
     para = get_paraphraser(device=device, seed=seed)
+    para._base_seed = seed  # update seed for per-item reproducibility
     paraphrases = para.generate(text, num=num)
 
     if len(paraphrases) < num:
