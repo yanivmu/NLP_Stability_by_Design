@@ -11,9 +11,18 @@
 #SBATCH --mem=32000
 #SBATCH --gpus=1
 
-# 1. Activate environment
+# 1. Activate environment & reproducibility env vars
 source ~/.bashrc
 export HF_HOME="/vol/joberant_nobck/data/NLP_368307701_2526a/$USER/huggingface_cache"
+export PYTHONHASHSEED=86379
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
+
+# Fallback for environment activation if .bashrc sourcing fails
+if ! command -v conda &> /dev/null
+then
+    source /vol/joberant_nobck/data/NLP_368307701_2526a/$USER/anaconda3/bin/activate
+fi
+
 conda activate slm_env
 
 # 2. Navigate to project
