@@ -13,25 +13,25 @@
   "seed": 2266,
   "results": {
     "control": {
-      "avg_variation_ratio": 0.14904432871050563,
+      "avg_variation_ratio": 0.14780623347241034,
       "accuracy": 0.44,
       "correct_count": 220,
       "num_samples": 500
     },
     "metacognition": {
-      "avg_variation_ratio": 0.16475008538073607,
+      "avg_variation_ratio": 0.16448693161843378,
       "accuracy": 0.416,
       "correct_count": 208,
       "num_samples": 500
     },
     "structure": {
-      "avg_variation_ratio": 0.14789165124521203,
+      "avg_variation_ratio": 0.1473682397753608,
       "accuracy": 0.39,
       "correct_count": 195,
       "num_samples": 500
     },
     "politeness": {
-      "avg_variation_ratio": 0.15374222612612742,
+      "avg_variation_ratio": 0.15126603564993701,
       "accuracy": 0.442,
       "correct_count": 221,
       "num_samples": 500

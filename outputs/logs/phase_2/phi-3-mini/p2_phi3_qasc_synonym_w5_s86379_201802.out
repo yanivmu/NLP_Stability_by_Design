@@ -1,0 +1,76 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PHI-3-MINI on QASC
+Config: model=phi-3-mini  dataset=qasc  samples=500  perturbations=20  method=synonym  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Phi-3-Mini-4K-Instruct...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 73.0% (73/100)
+==================================================
+Time: 8.4s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 299.2s
+  Average Variation Ratio: 0.2424
+  Accuracy: 80.2% (401/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 611.6s
+  Average Variation Ratio: 0.2416
+  Accuracy: 77.6% (388/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 2419.5s
+  Average Variation Ratio: 0.2965
+  Accuracy: 70.0% (350/500)
+
+[POLITENESS] Running experiment...
+  Completed in 504.7s
+  Average Variation Ratio: 0.2389
+  Accuracy: 79.4% (397/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 73.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.2424   |  80.2%       | Moderate
+metacognition   | 0.2416   |  77.6%       | Moderate
+structure       | 0.2965   |  70.0%       | Moderate
+politeness      | 0.2389   |  79.4%       | Moderate
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): politeness (VR=0.2389)
+Least Stable (highest VR): structure (VR=0.2965)
+Highest Accuracy: control (80.2%)
+Lowest Accuracy: structure (70.0%)
+
+Results saved to ./outputs/results/phi-3-mini/qasc/synonym/w5_n20_s86379.json
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

@@ -31,7 +31,7 @@
       "num_samples": 500
     },
     "politeness": {
-      "avg_variation_ratio": 0.0006666666666666668,
+      "avg_variation_ratio": 0.0016666666666666668,
       "accuracy": 0.0,
       "correct_count": 0,
       "num_samples": 500

@@ -13,7 +13,7 @@
   "seed": 86379,
   "results": {
     "control": {
-      "avg_variation_ratio": 0.0,
+      "avg_variation_ratio": 0.00011764705882352944,
       "accuracy": 0.0,
       "correct_count": 0,
       "num_samples": 500

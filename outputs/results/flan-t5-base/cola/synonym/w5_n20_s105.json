@@ -25,7 +25,7 @@
       "num_samples": 500
     },
     "structure": {
-      "avg_variation_ratio": 0.10899122119710367,
+      "avg_variation_ratio": 0.10856264976853222,
       "accuracy": 0.452,
       "correct_count": 226,
       "num_samples": 500

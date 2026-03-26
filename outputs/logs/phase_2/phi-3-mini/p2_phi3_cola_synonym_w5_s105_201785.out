@@ -1,0 +1,76 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PHI-3-MINI on COLA
+Config: model=phi-3-mini  dataset=cola  samples=500  perturbations=20  method=synonym  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Phi-3-Mini-4K-Instruct...
+Model loaded successfully
+Loading CoLA dataset...
+Loaded 1043 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 50.0%
+Valid signal threshold: 60.0%
+
+==================================================
+OOTB ACCURACY RESULT: 77.0% (77/100)
+==================================================
+Time: 29.1s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 760.4s
+  Average Variation Ratio: 0.1132
+  Accuracy: 76.0% (380/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 1168.6s
+  Average Variation Ratio: 0.1112
+  Accuracy: 77.0% (385/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 5338.7s
+  Average Variation Ratio: 0.0004
+  Accuracy: 1.2% (6/500)
+
+[POLITENESS] Running experiment...
+  Completed in 1087.6s
+  Average Variation Ratio: 0.1086
+  Accuracy: 75.6% (378/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 77.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.1132   |  76.0%       | Stable
+metacognition   | 0.1112   |  77.0%       | Stable
+structure       | 0.0004   |   1.2%       | Stable
+politeness      | 0.1086   |  75.6%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): structure (VR=0.0004)
+Least Stable (highest VR): control (VR=0.1132)
+Highest Accuracy: metacognition (77.0%)
+Lowest Accuracy: structure (1.2%)
+
+Results saved to ./outputs/results/phi-3-mini/cola/synonym/w5_n20_s105.json
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

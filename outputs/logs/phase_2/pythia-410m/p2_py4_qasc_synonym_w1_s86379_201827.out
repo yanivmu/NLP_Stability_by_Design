@@ -1,0 +1,9 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PYTHIA-410M on QASC
+Config: model=pythia-410m  dataset=qasc  samples=500  perturbations=20  method=synonym  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Pythia-410M...

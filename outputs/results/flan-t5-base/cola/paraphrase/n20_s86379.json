@@ -19,19 +19,19 @@
       "num_samples": 500
     },
     "metacognition": {
-      "avg_variation_ratio": 0.000285714285714286,
+      "avg_variation_ratio": 0.0003809523809523814,
       "accuracy": 0.284,
       "correct_count": 142,
       "num_samples": 500
     },
     "structure": {
-      "avg_variation_ratio": 0.2300952380952389,
+      "avg_variation_ratio": 0.22934285714285785,
       "accuracy": 0.462,
       "correct_count": 231,
       "num_samples": 500
     },
     "politeness": {
-      "avg_variation_ratio": 0.0008571428571428581,
+      "avg_variation_ratio": 0.0007619047619047628,
       "accuracy": 0.284,
       "correct_count": 142,
       "num_samples": 500

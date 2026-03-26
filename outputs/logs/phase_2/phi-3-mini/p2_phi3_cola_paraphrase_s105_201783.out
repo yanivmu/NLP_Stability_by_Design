@@ -1,0 +1,45 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PHI-3-MINI on COLA
+Config: model=phi-3-mini  dataset=cola  samples=500  perturbations=20  method=paraphrase  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Phi-3-Mini-4K-Instruct...
+Model loaded successfully
+Loading CoLA dataset...
+Loaded 1043 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 50.0%
+Valid signal threshold: 60.0%
+
+==================================================
+OOTB ACCURACY RESULT: 77.0% (77/100)
+==================================================
+Time: 29.4s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 6576.8s
+  Average Variation Ratio: 0.3348
+  Accuracy: 76.0% (380/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 7137.1s
+  Average Variation Ratio: 0.3150
+  Accuracy: 77.0% (385/500)
+
+[STRUCTURE] Running experiment...
