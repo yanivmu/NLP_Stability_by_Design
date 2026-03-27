@@ -98,6 +98,10 @@ class DatasetHandler(ABC):
     def parse_answer(self, response: str, is_structured: bool = False) -> str:
         """Extract a normalised answer from raw model output."""
 
+    def parse_answer_verbose(self, response: str, is_structured: bool = False) -> tuple:
+        """Return ``(answer, parse_method)`` — override for dataset-specific detail."""
+        return self.parse_answer(response, is_structured), "unknown"
+
 
 # =====================================================================
 # REGISTRY
@@ -144,50 +148,62 @@ _JSON_ANSWER = re.compile(
 
 def _parse_letter(response: str, is_structured: bool = False) -> str:
     """Parse a single letter (A–H) from model output."""
+    ans, _ = _parse_letter_verbose(response, is_structured)
+    return ans
+
+
+def _parse_letter_verbose(response: str, is_structured: bool = False) -> tuple:
+    """Return ``(answer, parse_method)`` describing how the answer was extracted."""
     text = response.strip()
     if is_structured:
         m = _JSON_ANSWER.search(text)
         if m:
             letter = m.group(1).strip().upper()
             if letter and letter[0] in "ABCDEFGH":
-                return letter[0]
+                return letter[0], 'json_key "final_answer"'
     upper = text.upper()
     m = _LETTER_PATTERN.search(upper)
     if m:
-        return m.group(1)
+        return m.group(1), r"regex \b[A-H]\b"
     if upper and upper[0] in "ABCDEFGH":
-        return upper[0]
-    return ""
+        return upper[0], "first_char A-H"
+    return "", "no_match"
 
 
 def _parse_yes_no(response: str, is_structured: bool = False) -> str:
     """Parse YES / NO from model output."""
+    ans, _ = _parse_yes_no_verbose(response, is_structured)
+    return ans
+
+
+def _parse_yes_no_verbose(response: str, is_structured: bool = False) -> tuple:
+    """Return ``(answer, parse_method)`` describing how the answer was extracted."""
     text = response.strip()
     if is_structured:
         m = _JSON_ANSWER.search(text)
         if m:
             val = m.group(1).strip().lower()
             if "yes" in val:
-                return "YES"
+                return "YES", 'json_regex "final_answer"'
             if "no" in val:
-                return "NO"
+                return "NO", 'json_regex "final_answer"'
         jm = re.search(r'\{[^}]+\}', text)
         if jm:
             try:
                 data = json.loads(jm.group())
                 val = str(data.get("final_answer", "")).lower()
                 if "yes" in val:
-                    return "YES"
+                    return "YES", 'json_parse "final_answer"'
                 if "no" in val:
-                    return "NO"
+                    return "NO", 'json_parse "final_answer"'
             except (json.JSONDecodeError, AttributeError):
                 pass
     lower = text.lower()[:30]
     if "yes" in lower:
-        return "YES"
+        return "YES", "text_match first_30_chars"
     if "no" in lower:
-        return "NO"
-    return ""
+        return "NO", "text_match first_30_chars"
+    return "", "no_match"
 
 
 # =====================================================================
@@ -287,6 +303,9 @@ class QASCHandler(DatasetHandler):
     def parse_answer(self, response: str, is_structured: bool = False) -> str:
         return _parse_letter(response, is_structured=is_structured)
 
+    def parse_answer_verbose(self, response: str, is_structured: bool = False) -> tuple:
+        return _parse_letter_verbose(response, is_structured=is_structured)
+
 
 # =====================================================================
 # CONCRETE HANDLER: CoLA
@@ -360,6 +379,9 @@ class CoLAHandler(DatasetHandler):
 
     def parse_answer(self, response: str, is_structured: bool = False) -> str:
         return _parse_yes_no(response, is_structured=is_structured)
+
+    def parse_answer_verbose(self, response: str, is_structured: bool = False) -> tuple:
+        return _parse_yes_no_verbose(response, is_structured=is_structured)
 
 
 # =====================================================================
@@ -446,6 +468,9 @@ class CSQAHandler(DatasetHandler):
 
     def parse_answer(self, response: str, is_structured: bool = False) -> str:
         return _parse_letter(response, is_structured=is_structured)
+
+    def parse_answer_verbose(self, response: str, is_structured: bool = False) -> tuple:
+        return _parse_letter_verbose(response, is_structured=is_structured)
 
 
 # =====================================================================

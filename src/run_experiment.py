@@ -135,6 +135,7 @@ def run_sensitivity_experiment(
     is_structured = (style_name == "structure")
 
     results = []
+    detail_rows = []
     total_variation = 0.0
 
     for idx, item in enumerate(sample_items):
@@ -158,12 +159,17 @@ def run_sensitivity_experiment(
             )
 
         prompts = [dataset_handler.build_prompt(item, style_name)]
+        perturbed_texts = [""]  # empty string marks the original
         for p in perturbations:
             prompts.append(dataset_handler.build_prompt(item, style_name, perturbed_text=p))
+            perturbed_texts.append(p)
 
         responses = model_handler.generate(prompts, max_new_tokens=max_tokens)
 
-        answers = [dataset_handler.parse_answer(r, is_structured=is_structured) for r in responses]
+        parsed_pairs = [dataset_handler.parse_answer_verbose(r, is_structured=is_structured)
+                        for r in responses]
+        answers = [ans for ans, _ in parsed_pairs]
+        parse_methods = [method for _, method in parsed_pairs]
         valid_answers = [a for a in answers if a]
 
         if len(valid_answers) >= 2:
@@ -185,12 +191,38 @@ def run_sensitivity_experiment(
             "variation_ratio": variation_ratio,
         })
 
+        # Resolve the human-readable answer text (e.g. "B) erosion")
+        # so failures can be diagnosed ("model said 'erosion' not 'B'").
+        correct_answer_text = _resolve_answer_text(item, correct_answer, cfg.dataset_key)
+
+        # Collect per-response detail rows for the detailed CSV.
+        for pidx, (prompt, perturbed, resp, ans, pmeth) in enumerate(
+            zip(prompts, perturbed_texts, responses, answers, parse_methods)
+        ):
+            detail_rows.append({
+                "item_idx": idx,
+                "perturb_idx": pidx,
+                "correct_answer": correct_answer,
+                "correct_answer_text": correct_answer_text,
+                "variation_ratio": variation_ratio,
+                "base_text": base_text,
+                "perturbed_text": perturbed if perturbed else "",
+                "prompt": prompt,
+                "raw_response": resp,
+                "parsed_answer": ans,
+                "expected_format": _expected_format(cfg.dataset_key, style_name),
+                "parse_method": pmeth,
+                "is_valid_parse": bool(ans),
+                "is_correct": (ans == correct_answer) if ans else False,
+            })
+
     avg_variation = total_variation / len(results) if results else 0.0
     correct_count = sum(1 for r in results if r["original_correct"])
     accuracy = correct_count / len(results) if results else 0.0
 
     return {
         "results": results,
+        "detail_rows": detail_rows,
         "avg_variation_ratio": avg_variation,
         "accuracy": accuracy,
         "correct_count": correct_count,
@@ -205,6 +237,91 @@ def run_sensitivity_experiment(
 
 import csv
 from datetime import datetime
+
+
+def _expected_format(dataset_key: str, style: str) -> str:
+    """Human-readable description of what the parser expects from the model."""
+    if dataset_key == "qasc":
+        if style == "structure":
+            return 'JSON {"final_answer": "A-H"}'
+        return "single letter A-H"
+    if dataset_key == "cola":
+        if style == "structure":
+            return 'JSON {"final_answer": "Yes/No"}'
+        return "Yes or No"
+    if dataset_key == "csqa":
+        if style == "structure":
+            return 'JSON {"final_answer": "A-E"}'
+        return "single letter A-E"
+    return "free text"
+
+
+def _resolve_answer_text(item: Dict, answer_key: str, dataset_key: str) -> str:
+    """Return a human-readable version of the correct answer.
+
+    For QASC: 'B) erosion' instead of just 'B'.
+    For CoLA: 'YES (grammatical)' / 'NO (ungrammatical)'.
+    """
+    if dataset_key == "qasc":
+        try:
+            labels = item["choices"]["label"]
+            texts = item["choices"]["text"]
+            idx = labels.index(answer_key)
+            return f"{answer_key}) {texts[idx]}"
+        except (KeyError, ValueError, IndexError):
+            return answer_key
+    if dataset_key == "cola":
+        return "YES (grammatical)" if answer_key == "YES" else "NO (ungrammatical)"
+    return answer_key
+
+_DETAIL_CSV_HEADER = [
+    "model", "dataset", "seed", "method", "words_to_replace",
+    "num_perturbations", "inject_facts",
+    "prompt_style", "item_idx", "perturb_idx",
+    "correct_answer", "correct_answer_text",
+    "variation_ratio",
+    "base_text", "perturbed_text", "prompt",
+    "raw_response", "parsed_answer", "expected_format", "parse_method",
+    "is_valid_parse", "is_correct",
+]
+
+
+def save_detailed_csv(
+    cfg: ExperimentConfig, all_results: Dict, output_subdir: str,
+) -> str:
+    """
+    Write one row per (item x perturbation x style) with full prompt,
+    raw response, and parsed answer — enables debugging model failures.
+    """
+    filename_parts = [
+        f"w{cfg.words_to_replace}" if cfg.perturbation_method == "synonym" else "",
+        f"n{cfg.num_perturbations}",
+        f"s{cfg.seed}",
+        "detail",
+    ]
+    filename = "_".join(p for p in filename_parts if p) + ".csv"
+    csv_path = os.path.join(output_subdir, filename)
+
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=_DETAIL_CSV_HEADER)
+        writer.writeheader()
+
+        for style, res in all_results.items():
+            for row in res.get("detail_rows", []):
+                writer.writerow({
+                    "model": cfg.model_key,
+                    "dataset": cfg.dataset_key,
+                    "seed": cfg.seed,
+                    "method": cfg.perturbation_method,
+                    "words_to_replace": cfg.words_to_replace,
+                    "num_perturbations": cfg.num_perturbations,
+                    "inject_facts": cfg.inject_facts,
+                    "prompt_style": style,
+                    **row,
+                })
+
+    return csv_path
+
 
 def save_to_csv(cfg: ExperimentConfig, all_results: Dict, ootb_acc: float, output_dir: str):
     """
@@ -299,10 +416,16 @@ def main():
         print(f"Time: {elapsed:.1f}s")
 
         if accuracy < dataset_handler.CONFIG.random_baseline:
-            print(f"\nWARNING: Accuracy ({accuracy * 100:.1f}%) is BELOW random baseline!")
-            print("   Results may not be meaningful, but proceeding anyway...")
+            print(f"\nFAIL: Accuracy ({accuracy * 100:.1f}%) is BELOW random baseline "
+                  f"({dataset_handler.CONFIG.random_baseline * 100:.1f}%)!")
+            print("   Model cannot perform this task. Skipping sensitivity experiments.")
+            print("   (Saves significant Slurm compute time.)")
+            sys.exit(0)
         elif accuracy < dataset_handler.CONFIG.valid_threshold:
-            print(f"\nWARNING: Accuracy below threshold. Proceeding with caution...")
+            print(f"\nFAIL: Accuracy ({accuracy * 100:.1f}%) is below valid-signal threshold "
+                  f"({dataset_handler.CONFIG.valid_threshold * 100:.1f}%)!")
+            print("   Sensitivity results would not be meaningful. Skipping Phase 2.")
+            sys.exit(0)
         else:
             print(f"\nPASS: Accuracy exceeds threshold. Proceeding with experiments.")
     else:
@@ -404,6 +527,10 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(save_data, f, indent=2)
     print(f"\nResults saved to {output_file}")
+
+    # Per-response detailed CSV for debugging model failures
+    detail_path = save_detailed_csv(cfg, all_results, output_subdir)
+    print(f"Detailed responses saved to {detail_path}")
 
     # Also save to consolidated CSV for easy graphing
     save_to_csv(cfg, all_results, accuracy, cfg.output_dir)
