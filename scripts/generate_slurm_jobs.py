@@ -2,7 +2,7 @@ import os
 from itertools import product
 
 # Configuration
-PHASE = "phase_2"
+PHASE = "phase_3"
 BASE_SLURM_DIR = f"scripts/slurm/{PHASE}"
 BASE_LOG_DIR = "outputs/logs"
 PROJECT_DIR = "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/"
@@ -12,7 +12,7 @@ MODELS = [
     "llama-3.2-1b", "llama-3.2-1b-instruct",
     "pythia-410m", "phi-3-mini",
 ]
-DATASETS = ["cola", "qasc"]
+DATASETS = ["cola", "qasc", "CSQA", "gsm8k"]
 SEEDS = [105, 2266, 86379]
 PERTURBATION_METHODS = ["synonym", "paraphrase"]
 WORDS_TO_REPLACE = [1, 3, 5]  # only relevant for synonym method
