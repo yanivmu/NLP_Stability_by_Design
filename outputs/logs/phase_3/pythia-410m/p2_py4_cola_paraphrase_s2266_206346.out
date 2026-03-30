@@ -1,0 +1,79 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PYTHIA-410M on COLA
+Config: model=pythia-410m  dataset=cola  samples=500  perturbations=20  method=paraphrase  seed=2266  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Pythia-410M...
+Model loaded successfully
+Loading CoLA dataset...
+Loaded 1043 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 50.0%
+Valid signal threshold: 60.0%
+
+==================================================
+OOTB ACCURACY RESULT: 68.1% (64/94)
+==================================================
+Time: 4.8s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 5293.9s
+  Average Variation Ratio: 0.0153
+  Accuracy: 61.2% (306/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 5294.4s
+  Average Variation Ratio: 0.0905
+  Accuracy: 9.0% (45/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 7009.7s
+  Average Variation Ratio: 0.0000
+  Accuracy: 61.8% (309/500)
+
+[POLITENESS] Running experiment...
+  Completed in 5218.0s
+  Average Variation Ratio: 0.0166
+  Accuracy: 58.4% (292/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=94): 68.1%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.0153   |  61.2%       | Stable
+metacognition   | 0.0905   |   9.0%       | Stable
+structure       | 0.0000   |  61.8%       | Stable
+politeness      | 0.0166   |  58.4%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): structure (VR=0.0000)
+Least Stable (highest VR): metacognition (VR=0.0905)
+Highest Accuracy: structure (61.8%)
+Lowest Accuracy: metacognition (9.0%)
+
+Results saved to ./outputs/results/pythia-410m/cola/paraphrase/n20_s2266.json
+Detailed responses saved to ./outputs/results/pythia-410m/cola/paraphrase/n20_s2266_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

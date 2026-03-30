@@ -1,0 +1,4 @@
+======================================================================
+SENSITIVITY EXPERIMENT: LLAMA-3.2-1B on CSQA
+Config: model=llama-3.2-1b  dataset=CSQA  samples=500  perturbations=20  method=paraphrase  seed=105  styles=control,metacognition,structure,politeness
+======================================================================

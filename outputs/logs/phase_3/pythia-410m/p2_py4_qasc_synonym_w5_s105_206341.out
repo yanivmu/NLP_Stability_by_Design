@@ -1,0 +1,29 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PYTHIA-410M on QASC
+Config: model=pythia-410m  dataset=qasc  samples=500  perturbations=20  method=synonym  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Pythia-410M...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 5.0% (5/100)
+==================================================
+Time: 10.5s
+
+FAIL: Accuracy (5.0%) is BELOW random baseline (12.5%)!
+   Model cannot perform this task. Skipping sensitivity experiments.
+   (Saves significant Slurm compute time.)

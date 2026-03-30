@@ -4,18 +4,18 @@
   "dataset": "CoLA",
   "dataset_key": "cola",
   "perturbation_method": "synonym",
-  "ootb_accuracy": 0.6938775510204082,
+  "ootb_accuracy": 0.6868686868686869,
   "ootb_correct": 68,
-  "ootb_total": 98,
+  "ootb_total": 99,
   "sample_size": 500,
   "num_perturbations": 20,
   "words_to_replace": 1,
   "seed": 2266,
   "results": {
     "control": {
-      "avg_variation_ratio": 0.0196569139494836,
-      "accuracy": 0.666,
-      "correct_count": 333,
+      "avg_variation_ratio": 0.03595571719302368,
+      "accuracy": 0.674,
+      "correct_count": 337,
       "num_samples": 500
     },
     "metacognition": {
@@ -25,15 +25,15 @@
       "num_samples": 500
     },
     "structure": {
-      "avg_variation_ratio": 0.13674907838119923,
+      "avg_variation_ratio": 0.13357678297794412,
       "accuracy": 0.48,
       "correct_count": 240,
       "num_samples": 500
     },
     "politeness": {
-      "avg_variation_ratio": 0.00019047619047619045,
-      "accuracy": 0.672,
-      "correct_count": 336,
+      "avg_variation_ratio": 0.0011587301587301588,
+      "accuracy": 0.67,
+      "correct_count": 335,
       "num_samples": 500
     }
   }

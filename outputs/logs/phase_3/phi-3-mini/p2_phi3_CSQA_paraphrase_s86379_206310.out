@@ -1,0 +1,4 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PHI-3-MINI on CSQA
+Config: model=phi-3-mini  dataset=CSQA  samples=500  perturbations=20  method=paraphrase  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================

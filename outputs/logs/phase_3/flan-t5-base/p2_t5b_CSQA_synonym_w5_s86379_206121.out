@@ -1,0 +1,4 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-BASE on CSQA
+Config: model=flan-t5-base  dataset=CSQA  samples=500  perturbations=20  method=synonym  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================

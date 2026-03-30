@@ -1,0 +1,4 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PYTHIA-410M on CSQA
+Config: model=pythia-410m  dataset=CSQA  samples=500  perturbations=20  method=paraphrase  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
