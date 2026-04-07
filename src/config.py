@@ -39,6 +39,7 @@ class ExperimentConfig:
 
     # ---- Output ----
     output_dir: str = "./outputs/results"
+    phase: str = "phase_1"
 
     # ---- Out-Of-The-Box accuracy check ----
     ootb_size: int = 100
@@ -47,7 +48,7 @@ class ExperimentConfig:
     def summary(self) -> str:
         """Human-readable one-liner for logging."""
         return (
-            f"model={self.model_key}  dataset={self.dataset_key}  "
+            f"phase={self.phase}  model={self.model_key}  dataset={self.dataset_key}  "
             f"samples={self.sample_size}  perturbations={self.num_perturbations}  "
             f"method={self.perturbation_method}  "
             f"seed={self.seed}  styles={','.join(self.prompt_styles)}"
