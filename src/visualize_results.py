@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Advanced Visualization script for Stability by Design.
-Aligns results with NAACL 2024 paper and Project Proposal styles.
+Aggregates run CSVs by Phase and creates Control-centric baseline plots.
 """
 
 import pandas as pd
@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import argparse
-import numpy as np
+import glob
+from typing import List
 
 # Use high-quality plotting defaults
 plt.rcParams.update({
@@ -22,17 +23,33 @@ plt.rcParams.update({
 })
 sns.set_theme(style="whitegrid")
 
-# Group prompt styles as per proposal
-STYLE_GROUPS = {
-    'Control': ['Control'],
-    'Cognitive': ['Metacognition'],
-    'Formatting': ['Structure'],
-    'Social': ['Politeness']
-}
+def load_results_for_phase(base_dir: str, phase: str) -> pd.DataFrame:
+    """Find all summary CSVs specifically for one phase."""
+    phase_dir = os.path.join(base_dir, phase)
+    if not os.path.exists(phase_dir):
+        print(f"Error: Phase directory not found: {phase_dir}")
+        return pd.DataFrame()
 
-def create_double_axis_plot(df, model, dataset, output_dir):
+    csv_files = glob.glob(os.path.join(phase_dir, "**", "*.csv"), recursive=True)
+    # Filter out detail CSVs
+    csv_files = [f for f in csv_files if "detail" not in f]
+    
+    if not csv_files:
+        return pd.DataFrame()
+    
+    print(f"Phase {phase}: Found {len(csv_files)} result files.")
+    df_list = []
+    for f in csv_files:
+        try:
+            df_list.append(pd.read_csv(f))
+        except Exception as e:
+            print(f"Warning: Could not read {f}: {e}")
+            
+    return pd.concat(df_list, ignore_index=True)
+
+def create_control_centric_plot(df, model, dataset, phase, output_dir):
     """
-    Creates Figure 2 style dual-axis plots: Accuracy (line) and Sensitivity (line).
+    Creates dual-axis plots with explicit lines from Control to other styles.
     """
     subset = df[(df['model'] == model) & (df['dataset'] == dataset)]
     if subset.empty:
@@ -45,18 +62,18 @@ def create_double_axis_plot(df, model, dataset, output_dir):
     }).reset_index()
     agg.columns = ['prompt_style', 'acc_mean', 'acc_std', 'vr_mean', 'vr_std']
 
-    # Sort to ensure consistent order
-    agg['prompt_style'] = pd.Categorical(agg['prompt_style'], categories=['Control', 'Metacognition', 'Structure', 'Politeness'], ordered=True)
+    # Normalize style names
+    agg['prompt_style'] = agg['prompt_style'].str.capitalize()
+    styles = ['Control', 'Metacognition', 'Structure', 'Politeness']
+    agg['prompt_style'] = pd.Categorical(agg['prompt_style'], categories=styles, ordered=True)
     agg = agg.sort_values('prompt_style')
 
-    fig, ax1 = plt.subplots(figsize=(8, 5))
-
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    
     # Axis 1: Accuracy (Blue)
     color_acc = '#1f77b4'
     ax1.set_xlabel('Prompt Style')
     ax1.set_ylabel('Accuracy', color=color_acc)
-    ax1.plot(agg['prompt_style'], agg['acc_mean'], marker='o', color=color_acc, label='Accuracy', linewidth=3)
-    ax1.fill_between(agg['prompt_style'], agg['acc_mean'] - agg['acc_std'], agg['acc_mean'] + agg['acc_std'], color=color_acc, alpha=0.2)
     ax1.tick_params(axis='y', labelcolor=color_acc)
     ax1.set_ylim(0, 1.05)
 
@@ -64,100 +81,74 @@ def create_double_axis_plot(df, model, dataset, output_dir):
     ax2 = ax1.twinx()
     color_vr = '#ff7f0e'
     ax2.set_ylabel('Variation Ratio (Sensitivity)', color=color_vr)
-    ax2.plot(agg['prompt_style'], agg['vr_mean'], marker='s', color=color_vr, label='Sensitivity', linestyle='--', linewidth=3)
-    ax2.fill_between(agg['prompt_style'], agg['vr_mean'] - agg['vr_std'], agg['vr_mean'] + agg['vr_std'], color=color_vr, alpha=0.2)
     ax2.tick_params(axis='y', labelcolor=color_vr)
     ax2.set_ylim(0, 1.05)
 
-    plt.title(f"{model.upper()} on {dataset.upper()}\nAccuracy vs. Stability Comparison")
+    # Plot points
+    ax1.scatter(agg['prompt_style'], agg['acc_mean'], color=color_acc, s=120, zorder=5, edgecolors='black')
+    ax2.scatter(agg['prompt_style'], agg['vr_mean'], color=color_vr, marker='s', s=120, zorder=5, edgecolors='black')
+
+    # Explicit comparison lines from Control
+    control_data = agg[agg['prompt_style'] == 'Control']
+    if not control_data.empty:
+        c_acc = control_data['acc_mean'].values[0]
+        c_vr = control_data['vr_mean'].values[0]
+        
+        for i, row in agg.iterrows():
+            if row['prompt_style'] == 'Control':
+                continue
+            
+            # Line for Accuracy (Solid)
+            ax1.plot(['Control', row['prompt_style']], [c_acc, row['acc_mean']], 
+                    color=color_acc, alpha=0.4, linestyle='-', linewidth=2)
+            # Line for Sensitivity (Dashed)
+            ax2.plot(['Control', row['prompt_style']], [c_vr, row['vr_mean']], 
+                    color=color_vr, alpha=0.4, linestyle='--', linewidth=2)
+
+    plt.title(f"{phase.upper()}: {model.upper()} on {dataset.upper()}\nComparison from Control Baseline")
     
     # Combined Legend
-    lines1, labels1 = ax1.get_legend_handles_labels()
-    lines2, labels2 = ax2.get_legend_handles_labels()
-    ax1.legend(lines1 + lines2, labels1 + labels2, loc='lower left')
+    from matplotlib.lines import Line2D
+    legend_elements = [
+        Line2D([0], [0], marker='o', color=color_acc, label='Accuracy', markersize=10, markeredgecolor='black'),
+        Line2D([0], [0], marker='s', color=color_vr, label='Sensitivity (VR)', markersize=10, markeredgecolor='black'),
+        Line2D([0], [0], color='gray', linestyle='-', label='Acc Change', alpha=0.5),
+        Line2D([0], [0], color='gray', linestyle='--', label='VR Change', alpha=0.5)
+    ]
+    ax1.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.15, 1))
 
-    save_path = os.path.join(output_dir, f"dual_axis_{model}_{dataset}.png")
+    # Save by phase
+    phase_fig_dir = os.path.join(output_dir, phase)
+    os.makedirs(phase_fig_dir, exist_ok=True)
+    
+    save_path = os.path.join(phase_fig_dir, f"baseline_compare_{model}_{dataset}.png")
     plt.savefig(save_path, bbox_inches='tight')
-    plt.close()
-
-def plot_style_impact_bar(df, output_dir):
-    """
-    Creates Figure 3 style bar plot comparing sensitivity across styles.
-    """
-    plt.figure(figsize=(10, 6))
-    
-    # Capitalize for labels
-    plot_df = df.copy()
-    plot_df['prompt_style'] = plot_df['prompt_style'].str.capitalize()
-    
-    sns.barplot(
-        data=plot_df, x='prompt_style', y='variation_ratio', hue='model',
-        capsize=.1, errorbar='sd', palette="viridis"
-    )
-    
-    plt.axhline(0.1, ls='--', color='gray', alpha=0.5, label='Stability Baseline')
-    plt.title("Impact of Prompt Design on Output Stability (VR)")
-    plt.ylabel("Variation Ratio (Lower is Better)")
-    plt.xlabel("Independent Variable (Prompt Property)")
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-    
-    plt.savefig(os.path.join(output_dir, "style_sensitivity_bars.png"), bbox_inches='tight')
-    plt.close()
-
-def plot_global_correlation(df, output_dir):
-    """
-    Global scatter plot of VR vs Accuracy with Pearson R.
-    """
-    plt.figure(figsize=(8, 6))
-    
-    # Pearson Correlation Calculation
-    corr = df['variation_ratio'].corr(df['accuracy'])
-    
-    sns.regplot(
-        data=df, x='variation_ratio', y='accuracy', 
-        scatter_kws={'alpha':0.5, 's':100}, line_kws={'color':'red'}
-    )
-    
-    plt.text(0.05, 0.95, f'Pearson r = {corr:.2f}', transform=plt.gca().transAxes, 
-             fontsize=14, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
-    
-    plt.title("Global Correlation: Sensitivity vs. Performance")
-    plt.xlabel("Variation Ratio (Sensitivity)")
-    plt.ylabel("Accuracy")
-    
-    plt.savefig(os.path.join(output_dir, "global_correlation.png"), bbox_inches='tight')
     plt.close()
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--results-csv", type=str, default="outputs/results/all_results.csv")
+    parser.add_argument("--phase", type=str, default="phase_1", help="Which phase to visualize")
+    parser.add_argument("--results-dir", type=str, default="outputs/results")
     parser.add_argument("--output-dir", type=str, default="outputs/figures")
     args = parser.parse_args()
 
-    if not os.path.exists(args.results_csv):
-        print(f"File not found: {args.results_csv}")
+    df = load_results_for_phase(args.results_dir, args.phase)
+    if df.empty:
+        print(f"No results found for {args.phase}.")
         return
 
-    os.makedirs(args.output_dir, exist_ok=True)
-    df = pd.read_csv(args.results_csv)
-    
-    # Ensure numeric and clean
+    # Clean data
     df['accuracy'] = pd.to_numeric(df['accuracy'], errors='coerce')
     df['variation_ratio'] = pd.to_numeric(df['variation_ratio'], errors='coerce')
-    df['prompt_style'] = df['prompt_style'].str.capitalize()
 
-    # 1. Dual Axis plots per Model/Dataset (Figure 2 Style)
+    print(f"Generating Phase-specific analytics for: {args.phase}")
+
+    # Generate plots for every model/dataset combination in this phase
     for model in df['model'].unique():
         for dataset in df['dataset'].unique():
-            create_double_axis_plot(df, model, dataset, args.output_dir)
+            create_control_centric_plot(df, model, dataset, args.phase, args.output_dir)
 
-    # 2. Impact Bars (Figure 3 Style)
-    plot_style_impact_bar(df, args.output_dir)
-
-    # 3. Global Correlation
-    plot_global_correlation(df, args.output_dir)
-
-    print(f"Enhanced figures generated in {args.output_dir}")
+    print(f"Figures saved to {args.output_dir}/{args.phase}/")
 
 if __name__ == "__main__":
     main()
