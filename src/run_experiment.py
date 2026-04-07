@@ -45,6 +45,8 @@ def parse_args() -> ExperimentConfig:
     registered_m = ", ".join(list_registered_models())
 
     parser = argparse.ArgumentParser(description="Run sensitivity experiment")
+    parser.add_argument("--phase", type=str, default=defaults.phase,
+                        help=f"Experiment phase (default: {defaults.phase})")
     parser.add_argument("--model", required=True,
                         help=f"Model key. Registered: {registered_m}")
     parser.add_argument("--dataset", required=True,
@@ -71,6 +73,7 @@ def parse_args() -> ExperimentConfig:
     args = parser.parse_args()
 
     return ExperimentConfig(
+        phase=args.phase,
         model_key=args.model,
         dataset_key=args.dataset,
         sample_size=args.sample_size,
@@ -323,30 +326,25 @@ def save_detailed_csv(
     return csv_path
 
 
-def save_to_csv(cfg: ExperimentConfig, all_results: Dict, ootb_acc: float, output_dir: str):
+def save_to_csv(cfg: ExperimentConfig, all_results: Dict, ootb_acc: float, json_path: str):
     """
-    Saves experiment results in a flat CSV format, one row per prompt style.
-    This format is ideal for plotting (Seaborn, Pandas, etc.).
+    Saves experiment summary in a flat CSV format for this specific run.
+    The filename matches the JSON result but with a .csv extension.
     """
-    csv_file = os.path.join(output_dir, "all_results.csv")
-    file_exists = os.path.isfile(csv_file)
-    
+    csv_file = json_path.replace(".json", ".csv")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    with open(csv_file, mode='a', newline='') as f:
+    with open(csv_file, mode='w', newline='') as f:
         writer = csv.writer(f)
-        # Header
-        if not file_exists:
-            writer.writerow([
-                "timestamp", "model", "dataset", "method", "words_to_replace", 
-                "num_perturbations", "sample_size", "seed", "ootb_accuracy",
-                "prompt_style", "variation_ratio", "accuracy"
-            ])
+        writer.writerow([
+            "timestamp", "phase", "model", "dataset", "method", "words_to_replace", 
+            "num_perturbations", "sample_size", "seed", "ootb_accuracy",
+            "prompt_style", "variation_ratio", "accuracy"
+        ])
         
-        # Rows (one per style)
         for style, res in all_results.items():
             writer.writerow([
-                timestamp, cfg.model_key, cfg.dataset_key, cfg.perturbation_method,
+                timestamp, cfg.phase, cfg.model_key, cfg.dataset_key, cfg.perturbation_method,
                 cfg.words_to_replace, cfg.num_perturbations, cfg.sample_size,
                 cfg.seed, f"{ootb_acc:.4f}",
                 style, f"{res['avg_variation_ratio']:.4f}", f"{res['accuracy']:.4f}"
@@ -486,16 +484,19 @@ def main():
         print(f"Highest Accuracy: {best_acc} ({all_results[best_acc]['accuracy'] * 100:.1f}%)")
         print(f"Lowest Accuracy: {worst_acc} ({all_results[worst_acc]['accuracy'] * 100:.1f}%)")
 
-    # Save results
+    # Save results in structured hierarchy: outputs/results/{phase}/{model}/{dataset}/{method}/
     output_subdir = os.path.join(
-        cfg.output_dir, cfg.model_key, cfg.dataset_key, cfg.perturbation_method,
+        cfg.output_dir, cfg.phase, cfg.model_key, cfg.dataset_key, cfg.perturbation_method,
     )
     os.makedirs(output_subdir, exist_ok=True)
 
+    # Unique filename using timestamp to avoid ever overwriting results
+    timestamp_str = datetime.now().strftime("%H%M%S")
     filename_parts = [
         f"w{cfg.words_to_replace}" if cfg.perturbation_method == "synonym" else "",
         f"n{cfg.num_perturbations}",
         f"s{cfg.seed}",
+        timestamp_str
     ]
     filename = "_".join(p for p in filename_parts if p) + ".json"
     output_file = os.path.join(output_subdir, filename)
@@ -532,8 +533,8 @@ def main():
     detail_path = save_detailed_csv(cfg, all_results, output_subdir)
     print(f"Detailed responses saved to {detail_path}")
 
-    # Also save to consolidated CSV for easy graphing
-    save_to_csv(cfg, all_results, accuracy, cfg.output_dir)
+    # Save summary CSV for this specific run (used by the aggregator for plotting)
+    save_to_csv(cfg, all_results, accuracy, output_file)
 
     print("\n" + "=" * 70)
     print("EXPERIMENT COMPLETE")
