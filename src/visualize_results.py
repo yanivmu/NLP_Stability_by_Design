@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Advanced Visualization script for Stability by Design.
-Aggregates run CSVs by Phase and creates Control-centric baseline plots.
+Aggregates run CSVs by Phase and creates Control-centric baseline plots
+with unique colors for each prompt style comparison.
 """
 
 import pandas as pd
@@ -23,6 +24,14 @@ plt.rcParams.update({
 })
 sns.set_theme(style="whitegrid")
 
+# Define unique colors for each comparison style
+STYLE_COLORS = {
+    'Metacognition': '#2ca02c',  # Green
+    'Structure': '#d62728',      # Red
+    'Politeness': '#9467bd',     # Purple
+    'Control': '#7f7f7f'         # Gray for the baseline point
+}
+
 def load_results_for_phase(base_dir: str, phase: str) -> pd.DataFrame:
     """Find all summary CSVs specifically for one phase."""
     phase_dir = os.path.join(base_dir, phase)
@@ -31,7 +40,6 @@ def load_results_for_phase(base_dir: str, phase: str) -> pd.DataFrame:
         return pd.DataFrame()
 
     csv_files = glob.glob(os.path.join(phase_dir, "**", "*.csv"), recursive=True)
-    # Filter out detail CSVs
     csv_files = [f for f in csv_files if "detail" not in f]
     
     if not csv_files:
@@ -49,7 +57,7 @@ def load_results_for_phase(base_dir: str, phase: str) -> pd.DataFrame:
 
 def create_control_centric_plot(df, model, dataset, phase, output_dir):
     """
-    Creates dual-axis plots with explicit lines from Control to other styles.
+    Creates dual-axis plots with unique colored lines from Control to other styles.
     """
     subset = df[(df['model'] == model) & (df['dataset'] == dataset)]
     if subset.empty:
@@ -70,50 +78,64 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir):
 
     fig, ax1 = plt.subplots(figsize=(10, 6))
     
-    # Axis 1: Accuracy (Blue)
-    color_acc = '#1f77b4'
-    ax1.set_xlabel('Prompt Style')
-    ax1.set_ylabel('Accuracy', color=color_acc)
-    ax1.tick_params(axis='y', labelcolor=color_acc)
+    # Axis 1: Accuracy
+    ax1.set_xlabel('Prompt Style', fontweight='bold')
+    ax1.set_ylabel('Accuracy (Solid Lines)', fontsize=12)
     ax1.set_ylim(0, 1.05)
 
-    # Axis 2: Sensitivity (Red/Orange)
+    # Axis 2: Sensitivity
     ax2 = ax1.twinx()
-    color_vr = '#ff7f0e'
-    ax2.set_ylabel('Variation Ratio (Sensitivity)', color=color_vr)
-    ax2.tick_params(axis='y', labelcolor=color_vr)
-    ax2.set_ylim(0, 1.05)
+    ax2.set_ylabel('Variation Ratio / Sensitivity (Dashed Lines)', fontsize=12)
+    ax2.set_ylim(0, 0.5)
+    ax2.grid(False) # Turn off grid for second axis to avoid overlap
 
-    # Plot points
-    ax1.scatter(agg['prompt_style'], agg['acc_mean'], color=color_acc, s=120, zorder=5, edgecolors='black')
-    ax2.scatter(agg['prompt_style'], agg['vr_mean'], color=color_vr, marker='s', s=120, zorder=5, edgecolors='black')
-
-    # Explicit comparison lines from Control
+    # Get Control baseline values
     control_data = agg[agg['prompt_style'] == 'Control']
-    if not control_data.empty:
-        c_acc = control_data['acc_mean'].values[0]
-        c_vr = control_data['vr_mean'].values[0]
-        
-        for i, row in agg.iterrows():
-            if row['prompt_style'] == 'Control':
-                continue
-            
-            # Line for Accuracy (Solid)
-            ax1.plot(['Control', row['prompt_style']], [c_acc, row['acc_mean']], 
-                    color=color_acc, alpha=0.4, linestyle='-', linewidth=2)
-            # Line for Sensitivity (Dashed)
-            ax2.plot(['Control', row['prompt_style']], [c_vr, row['vr_mean']], 
-                    color=color_vr, alpha=0.4, linestyle='--', linewidth=2)
+    if control_data.empty:
+        return
+    c_acc = control_data['acc_mean'].values[0]
+    c_vr = control_data['vr_mean'].values[0]
 
-    plt.title(f"{phase.upper()}: {model.upper()} on {dataset.upper()}\nComparison from Control Baseline")
+    # Plot points and add value labels
+    for i, row in agg.iterrows():
+        style = row['prompt_style']
+        color = STYLE_COLORS.get(style, '#17becf')
+        
+        # Accuracy points + labels (placed ABOVE point)
+        ax1.scatter(style, row['acc_mean'], color=color, s=150, zorder=10, edgecolors='black')
+        ax1.text(style, row['acc_mean'] + 0.02, f"A: {row['acc_mean']:.2f}", 
+                ha='center', va='bottom', color=color, fontweight='bold', fontsize=9)
+        
+        # Sensitivity points + labels (placed BELOW point)
+        ax2.scatter(style, row['vr_mean'], color=color, marker='s', s=150, zorder=10, edgecolors='black')
+        ax2.text(style, row['vr_mean'] - 0.01, f"V: {row['vr_mean']:.2f}", 
+                ha='center', va='top', color=color, fontweight='bold', fontsize=9)
+
+    # Draw lines for each style
+    for i, row in agg.iterrows():
+        style = row['prompt_style']
+        if style == 'Control':
+            continue
+        
+        color = STYLE_COLORS.get(style, '#17becf')
+        
+        # Line for Accuracy (Solid)
+        ax1.plot(['Control', style], [c_acc, row['acc_mean']], 
+                color=color, alpha=0.7, linestyle='-', linewidth=3)
+        # Line for Sensitivity (Dashed)
+        ax2.plot(['Control', style], [c_vr, row['vr_mean']], 
+                color=color, alpha=0.7, linestyle='--', linewidth=3)
+
+    plt.title(f"{phase.upper()}: {model.upper()} on {dataset.upper()}\nImpact of Prompt Attributes relative to Control", fontsize=14, pad=20)
     
-    # Combined Legend
+    # Custom Legend
     from matplotlib.lines import Line2D
     legend_elements = [
-        Line2D([0], [0], marker='o', color=color_acc, label='Accuracy', markersize=10, markeredgecolor='black'),
-        Line2D([0], [0], marker='s', color=color_vr, label='Sensitivity (VR)', markersize=10, markeredgecolor='black'),
-        Line2D([0], [0], color='gray', linestyle='-', label='Acc Change', alpha=0.5),
-        Line2D([0], [0], color='gray', linestyle='--', label='VR Change', alpha=0.5)
+        Line2D([0], [0], color='black', linestyle='-', label='Accuracy'),
+        Line2D([0], [0], color='black', linestyle='--', label='Sensitivity (VR)'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor=STYLE_COLORS['Metacognition'], markersize=10, label='Metacognition'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor=STYLE_COLORS['Structure'], markersize=10, label='Structure'),
+        Line2D([0], [0], marker='o', color='w', markerfacecolor=STYLE_COLORS['Politeness'], markersize=10, label='Politeness'),
     ]
     ax1.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.15, 1))
 
@@ -121,7 +143,7 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir):
     phase_fig_dir = os.path.join(output_dir, phase)
     os.makedirs(phase_fig_dir, exist_ok=True)
     
-    save_path = os.path.join(phase_fig_dir, f"baseline_compare_{model}_{dataset}.png")
+    save_path = os.path.join(phase_fig_dir, f"impact_plot_{model}_{dataset}.png")
     plt.savefig(save_path, bbox_inches='tight')
     plt.close()
 
@@ -141,9 +163,9 @@ def main():
     df['accuracy'] = pd.to_numeric(df['accuracy'], errors='coerce')
     df['variation_ratio'] = pd.to_numeric(df['variation_ratio'], errors='coerce')
 
-    print(f"Generating Phase-specific analytics for: {args.phase}")
+    print(f"Generating Multi-Color analytics for: {args.phase}")
 
-    # Generate plots for every model/dataset combination in this phase
+    # Generate plots for every model/dataset combination
     for model in df['model'].unique():
         for dataset in df['dataset'].unique():
             create_control_centric_plot(df, model, dataset, args.phase, args.output_dir)
