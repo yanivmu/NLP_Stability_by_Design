@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260408_041805,phase_4,phi-3-mini,csqa,paraphrase,0,20,500,105,0.6900,control,0.2847,0.7260
+20260408_041805,phase_4,phi-3-mini,csqa,paraphrase,0,20,500,105,0.6900,metacognition,0.2595,0.7160
+20260408_041805,phase_4,phi-3-mini,csqa,paraphrase,0,20,500,105,0.6900,structure,0.3325,0.6940
+20260408_041805,phase_4,phi-3-mini,csqa,paraphrase,0,20,500,105,0.6900,politeness,0.2960,0.7280

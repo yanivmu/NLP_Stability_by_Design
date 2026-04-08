@@ -1,0 +1,6 @@
+Loading weights:   0%|          | 0/282 [00:00<?, ?it/s]Loading weights:  13%|█▎        | 37/282 [00:00<00:00, 299.03it/s]Loading weights:  24%|██▍       | 67/282 [00:00<00:00, 223.34it/s]Loading weights:  38%|███▊      | 108/282 [00:00<00:00, 291.11it/s]Loading weights:  50%|████▉     | 140/282 [00:00<00:00, 253.34it/s]Loading weights:  61%|██████    | 171/282 [00:00<00:00, 253.20it/s]Loading weights:  70%|███████   | 198/282 [00:01<00:00, 137.14it/s]Loading weights: 100%|██████████| 282/282 [00:01<00:00, 258.91it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
+slurmstepd: error: *** JOB 234790 ON s-006 CANCELLED AT 2026-04-07T18:17:30 ***
+slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
+slurmstepd: error: Cannot write to cgroup.procs for (null)
+slurmstepd: error: Unable to move pid 2707423 to init root cgroup (null)

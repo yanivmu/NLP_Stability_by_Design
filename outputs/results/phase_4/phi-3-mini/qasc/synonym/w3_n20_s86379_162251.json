@@ -1,0 +1,40 @@
+{
+  "model": "microsoft/Phi-3-mini-4k-instruct",
+  "model_key": "phi-3-mini",
+  "dataset": "QASC",
+  "dataset_key": "qasc",
+  "perturbation_method": "synonym",
+  "ootb_accuracy": 0.73,
+  "ootb_correct": 73,
+  "ootb_total": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 3,
+  "seed": 86379,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.22856911746664116,
+      "accuracy": 0.8,
+      "correct_count": 400,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.23231510713229023,
+      "accuracy": 0.78,
+      "correct_count": 390,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.2795770881251534,
+      "accuracy": 0.7,
+      "correct_count": 350,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.22337736382984089,
+      "accuracy": 0.794,
+      "correct_count": 397,
+      "num_samples": 500
+    }
+  }
+}

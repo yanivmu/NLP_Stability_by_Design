@@ -10,7 +10,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=48000
 #SBATCH --gpus=1
-#SBATCH --constraint="geforce_rtx_3090|a100|a5000|a6000|l40s|quadro_rtx_8000"
+
 
 # 1. Activate environment & reproducibility env vars
 source ~/.bashrc

@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260408_091405,phase_4,phi-3-mini,qasc,synonym,1,20,500,86379,0.7300,control,0.1579,0.8020
+20260408_091405,phase_4,phi-3-mini,qasc,synonym,1,20,500,86379,0.7300,metacognition,0.1669,0.7760
+20260408_091405,phase_4,phi-3-mini,qasc,synonym,1,20,500,86379,0.7300,structure,0.2031,0.7020
+20260408_091405,phase_4,phi-3-mini,qasc,synonym,1,20,500,86379,0.7300,politeness,0.1501,0.7940

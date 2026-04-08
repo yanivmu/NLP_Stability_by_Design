@@ -1,0 +1,77 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PHI-3-MINI on CSQA
+Config: phase=phase_4  model=phi-3-mini  dataset=csqa  samples=500  perturbations=20  method=synonym  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Phi-3-Mini-4K-Instruct...
+Model loaded successfully
+Loading CommonsenseQA dataset...
+Loaded 1221 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 20.0%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 69.0% (69/100)
+==================================================
+Time: 17.9s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 1254.7s
+  Average Variation Ratio: 0.1590
+  Accuracy: 72.6% (363/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 2467.4s
+  Average Variation Ratio: 0.1653
+  Accuracy: 71.6% (358/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 15586.0s
+  Average Variation Ratio: 0.2163
+  Accuracy: 70.2% (351/500)
+
+[POLITENESS] Running experiment...
+  Completed in 2228.4s
+  Average Variation Ratio: 0.1667
+  Accuracy: 73.0% (365/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 69.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.1590   |  72.6%       | Stable
+metacognition   | 0.1653   |  71.6%       | Stable
+structure       | 0.2163   |  70.2%       | Moderate
+politeness      | 0.1667   |  73.0%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): control (VR=0.1590)
+Least Stable (highest VR): structure (VR=0.2163)
+Highest Accuracy: politeness (73.0%)
+Lowest Accuracy: structure (70.2%)
+
+Results saved to ./outputs/results/phase_4/phi-3-mini/csqa/synonym/w1_n20_s105_064333.json
+Detailed responses saved to ./outputs/results/phase_4/phi-3-mini/csqa/synonym/w1_n20_s105_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

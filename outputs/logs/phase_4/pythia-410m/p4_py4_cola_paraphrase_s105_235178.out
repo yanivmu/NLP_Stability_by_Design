@@ -1,0 +1,11 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PYTHIA-410M on COLA
+Config: phase=phase_4  model=pythia-410m  dataset=cola  samples=500  perturbations=20  method=paraphrase  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Pythia-410M...

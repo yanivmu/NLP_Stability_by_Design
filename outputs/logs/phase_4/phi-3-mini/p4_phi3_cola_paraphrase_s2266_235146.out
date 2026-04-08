@@ -1,0 +1,13 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PHI-3-MINI on COLA
+Config: phase=phase_4  model=phi-3-mini  dataset=cola  samples=500  perturbations=20  method=paraphrase  seed=2266  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Phi-3-Mini-4K-Instruct...
+Model loaded successfully
+Loading CoLA dataset...

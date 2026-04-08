@@ -1,0 +1,40 @@
+{
+  "model": "google/flan-t5-large",
+  "model_key": "flan-t5-large",
+  "dataset": "CoLA",
+  "dataset_key": "cola",
+  "perturbation_method": "synonym",
+  "ootb_accuracy": 0.64,
+  "ootb_correct": 64,
+  "ootb_total": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 3,
+  "seed": 86379,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.10655839564632136,
+      "accuracy": 0.658,
+      "correct_count": 329,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.11693746168691994,
+      "accuracy": 0.694,
+      "correct_count": 347,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.1155612508922108,
+      "accuracy": 0.726,
+      "correct_count": 363,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.1342718575542106,
+      "accuracy": 0.732,
+      "correct_count": 366,
+      "num_samples": 500
+    }
+  }
+}
