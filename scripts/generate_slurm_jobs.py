@@ -3,7 +3,7 @@ from itertools import product
 from datetime import datetime
 
 # Configuration
-PHASE = "phase_4"
+PHASE = "phase_5"
 BASE_SLURM_DIR = f"scripts/slurm/{PHASE}"
 BASE_LOG_DIR = "outputs/logs"
 PROJECT_DIR = "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/"
@@ -13,7 +13,7 @@ MODELS = [
     "llama-3.2-1b", "llama-3.2-1b-instruct",
     "pythia-410m", "phi-3-mini",
 ]
-DATASETS = ["cola", "qasc", "csqa", "gsm8k"]
+DATASETS = ["cola", "qasc", "csqa"]
 SEEDS = [105, 2266, 86379]
 PERTURBATION_METHODS = ["synonym", "paraphrase"]
 WORDS_TO_REPLACE = [1, 3, 5]  # only relevant for synonym method
@@ -39,7 +39,6 @@ SLURM_TEMPLATE = """#!/bin/bash
 #SBATCH --cpus-per-task=4
 #SBATCH --mem={mem}
 #SBATCH --gpus=1
-{gpu_constraint}
 
 # 1. Activate environment & reproducibility env vars
 source ~/.bashrc
@@ -102,13 +101,6 @@ def generate():
         # Request more memory for Llama/Phi models
         is_large = ("llama" in model or "phi" in model)
         mem = 48000 if is_large else 32000
-        
-        # Add GPU constraint for large models to avoid OOM on small cards
-        if is_large:
-            # 24GB+ cards (3090, a100, a5000, a6000, l40s, rtx_8000)
-            gpu_constraint = '#SBATCH --constraint="geforce_rtx_3090|a100|a5000|a6000|l40s|quadro_rtx_8000"'
-        else:
-            gpu_constraint = ""
 
         slurm_content = SLURM_TEMPLATE.format(
             job_name=job_name,
@@ -121,7 +113,6 @@ def generate():
             words=words,
             seed=seed,
             mem=mem,
-            gpu_constraint=gpu_constraint
         )
 
         file_path = f"{slurm_subdir}/{job_name}.slurm"

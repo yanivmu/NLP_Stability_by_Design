@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration: Where to look for slurm files
-SEARCH_DIR="./scripts/slurm/phase_4"
+SEARCH_DIR="./scripts/slurm/phase_5"
 
 # Check if the directory exists
 if [ ! -d "$SEARCH_DIR" ]; then
