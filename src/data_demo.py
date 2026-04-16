@@ -10,8 +10,11 @@ This script demonstrates:
 5. How answers are parsed and evaluated
 6. How the Variation Ratio is calculated
 
-Run with: python data_demo.py
+Run with: python data_demo.py [--sensitivity-on-parsed]
 """
+
+import argparse
+from collections import Counter
 
 import torch
 from datasets import load_dataset
@@ -37,8 +40,9 @@ def print_subsection(title: str):
 # =============================================================================
 # PART 1: FLAN-T5-BASE + QASC DEMO
 # =============================================================================
-def demo_flan_qasc():
+def demo_flan_qasc(sensitivity_on_raw: bool = True):
     print_section("PART 1: FLAN-T5-BASE + QASC (Question Answering)")
+    print(f"\nVariation ratio mode: {'raw decoded strings (strip only)' if sensitivity_on_raw else 'parsed letters (strip + upper)'}")
     
     # Detect device
     device = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
@@ -119,11 +123,13 @@ Answer with just the letter (A-H):"""
         
         print(f"\n[MODEL INFERENCE]")
         answers = []
+        raw_responses = []
         for i, prompt in enumerate(all_prompts):
             inputs = tokenizer(prompt, return_tensors='pt', truncation=True, max_length=512).to(device)
             with torch.no_grad():
                 output = model.generate(**inputs, max_new_tokens=10, do_sample=False)
             response = tokenizer.decode(output[0], skip_special_tokens=True)
+            raw_responses.append(response)
             parsed = analyzer.parse_letter_answer(response)
             answers.append(parsed)
             
@@ -131,19 +137,27 @@ Answer with just the letter (A-H):"""
             correct = "CORRECT" if parsed == item['answerKey'] else "WRONG"
             print(f"  {label}: Raw='{response}' -> Parsed='{parsed}' [{correct}]")
         
-        # Calculate variation ratio AND accuracy
+        # Calculate variation ratio AND accuracy (VR uses raw or parsed per flag; accuracy uses parsed only)
         print(f"\n[SENSITIVITY & ACCURACY ANALYSIS]")
-        vr = analyzer.calculate_variation_ratio(answers)
-        from collections import Counter
-        counts = Counter(answers)
-        modal = counts.most_common(1)[0]
+        valid_parsed = [a for a in answers if a]
+        if sensitivity_on_raw:
+            vr_inputs = [r.strip() for r in raw_responses if r and r.strip()]
+            vr_norm = "raw"
+        else:
+            vr_inputs = valid_parsed
+            vr_norm = "parsed"
+        vr = analyzer.calculate_variation_ratio(vr_inputs, normalization=vr_norm)
+        counts = Counter(vr_inputs)
+        modal = counts.most_common(1)[0] if counts else ("", 0)
 
         # Accuracy: is the original (non-perturbed) answer correct?
         original_answer = answers[0]
         correct_answer = item['answerKey']
         is_correct = original_answer == correct_answer
 
-        print(f"  All answers: {answers}")
+        print(f"  All parsed answers: {answers}")
+        if sensitivity_on_raw:
+            print(f"  VR inputs (raw, stripped): {vr_inputs}")
         print(f"  Correct answer: {correct_answer}")
         print(f"  Original answer: {original_answer} -> {'CORRECT' if is_correct else 'WRONG'}")
         print(f"  Modal answer: '{modal[0]}' (appears {modal[1]} times)")
@@ -162,8 +176,9 @@ Answer with just the letter (A-H):"""
 # =============================================================================
 # PART 2: PYTHIA-410M + CoLA DEMO
 # =============================================================================
-def demo_pythia_cola():
+def demo_pythia_cola(sensitivity_on_raw: bool = True):
     print_section("PART 2: PYTHIA-410M + CoLA (Grammaticality Judgment)")
+    print(f"\nVariation ratio mode: {'raw decoded strings (strip only)' if sensitivity_on_raw else 'parsed Yes/No (strip + upper)'}")
 
     # Detect device
     device = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
@@ -221,6 +236,7 @@ Answer:"""
 
         print(f"\n[MODEL INFERENCE]")
         answers = []
+        raw_responses = []
         for i, sent in enumerate(all_sentences):
             prompt = f"""Is this sentence grammatically correct? Answer Yes or No.
 
@@ -237,6 +253,7 @@ Answer:"""
                 )
             # Get only the new tokens
             response = tokenizer.decode(output[0][inputs['input_ids'].shape[1]:], skip_special_tokens=True)
+            raw_responses.append(response)
             parsed = analyzer.parse_yes_no_answer(response)
             answers.append(parsed)
 
@@ -247,19 +264,27 @@ Answer:"""
             label = "Original" if i == 0 else f"Perturb {i}"
             print(f"  {label}: Raw='{response.strip()[:30]}' -> Parsed='{parsed}' [{correct}]")
 
-        # Calculate variation ratio AND accuracy
+        # Calculate variation ratio AND accuracy (VR uses raw or parsed per flag; accuracy uses parsed only)
         print(f"\n[SENSITIVITY & ACCURACY ANALYSIS]")
-        vr = analyzer.calculate_variation_ratio(answers)
-        from collections import Counter
-        counts = Counter(answers)
-        modal = counts.most_common(1)[0]
+        valid_parsed = [a for a in answers if a]
+        if sensitivity_on_raw:
+            vr_inputs = [r.strip() for r in raw_responses if r and r.strip()]
+            vr_norm = "raw"
+        else:
+            vr_inputs = valid_parsed
+            vr_norm = "parsed"
+        vr = analyzer.calculate_variation_ratio(vr_inputs, normalization=vr_norm)
+        counts = Counter(vr_inputs)
+        modal = counts.most_common(1)[0] if counts else ("", 0)
 
         # Accuracy: is the original (non-perturbed) answer correct?
         original_answer = answers[0]
         correct_answer = "YES" if item['label'] == 1 else "NO"
         is_correct = original_answer == correct_answer
 
-        print(f"  All answers: {answers}")
+        print(f"  All parsed answers: {answers}")
+        if sensitivity_on_raw:
+            print(f"  VR inputs (raw, stripped): {vr_inputs}")
         print(f"  Correct answer: {correct_answer} (label={item['label']})")
         print(f"  Original answer: {original_answer} -> {'CORRECT' if is_correct else 'WRONG'}")
         print(f"  Modal answer: '{modal[0]}' (appears {modal[1]} times)")
@@ -279,7 +304,17 @@ Answer:"""
 # MAIN
 # =============================================================================
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Data demo for sensitivity experiments")
+    parser.add_argument(
+        "--sensitivity-on-parsed",
+        action="store_true",
+        help="Use extracted answers for VR (strip+upper). Default matches run_experiment: raw decoded strings (strip only)",
+    )
+    args = parser.parse_args()
+    sensitivity_on_raw = not args.sensitivity_on_parsed
+
     print_section("DATA DEMO - SENSITIVITY EXPERIMENTS")
+    print(f"VR mode: {'raw (strip only)' if sensitivity_on_raw else 'parsed (strip + upper)'}")
     print("""
 This script demonstrates that we are using:
 - REAL models from HuggingFace (google/flan-t5-base, EleutherAI/pythia-410m)
@@ -296,8 +331,8 @@ You will see:
 """)
 
     # Run both demos
-    demo_flan_qasc()
-    demo_pythia_cola()
+    demo_flan_qasc(sensitivity_on_raw=sensitivity_on_raw)
+    demo_pythia_cola(sensitivity_on_raw=sensitivity_on_raw)
 
     print_section("DEMO COMPLETE")
     print("""
