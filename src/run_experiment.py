@@ -10,6 +10,7 @@ Usage:
     python run_experiment.py --model pythia-410m --dataset cola
     python run_experiment.py --model llama-3.2-1b-instruct --dataset qasc --sample-size 500
     python run_experiment.py --model flan-t5-base --dataset qasc --perturbation-method paraphrase
+    python run_experiment.py --model flan-t5-base --dataset qasc --sensitivity-on-parsed
 
 The pipeline is fully **model-agnostic** and **dataset-agnostic**: all
 model-specific logic is delegated to ``ModelHandler`` (model_handlers.py)
@@ -70,6 +71,11 @@ def parse_args() -> ExperimentConfig:
                         help=f"Perturbation strategy (default: {defaults.perturbation_method})")
     parser.add_argument("--facts", action="store_true", default=defaults.inject_facts,
                         help="Inject supporting facts into QASC prompts (default: off to avoid ceiling effect)")
+    parser.add_argument(
+        "--sensitivity-on-parsed",
+        action="store_true",
+        help="Use extracted answers for variation ratio (strip+upper). Default is raw decoded strings (strip only); accuracy still uses parsed answers",
+    )
     args = parser.parse_args()
 
     return ExperimentConfig(
@@ -85,6 +91,7 @@ def parse_args() -> ExperimentConfig:
         output_dir=args.output_dir,
         perturbation_method=args.perturbation_method,
         inject_facts=args.facts,
+        sensitivity_on_raw=not args.sensitivity_on_parsed,
     )
 
 
@@ -175,9 +182,18 @@ def run_sensitivity_experiment(
         parse_methods = [method for _, method in parsed_pairs]
         valid_answers = [a for a in answers if a]
 
-        if len(valid_answers) >= 2:
+        if cfg.sensitivity_on_raw:
+            vr_inputs = [r.strip() for r in responses if r and r.strip()]
+            vr_normalization = "raw"
+        else:
+            vr_inputs = valid_answers
+            vr_normalization = "parsed"
+
+        if len(vr_inputs) >= 2:
             from data_analysis import ResultAnalyzer
-            variation_ratio = ResultAnalyzer().calculate_variation_ratio(valid_answers)
+            variation_ratio = ResultAnalyzer().calculate_variation_ratio(
+                vr_inputs, normalization=vr_normalization
+            )
         else:
             variation_ratio = 0.0
 
@@ -507,6 +523,7 @@ def main():
         "dataset": dataset_handler.CONFIG.name,
         "dataset_key": cfg.dataset_key,
         "perturbation_method": cfg.perturbation_method,
+        "sensitivity_on_raw": cfg.sensitivity_on_raw,
         "ootb_accuracy": accuracy,
         "ootb_correct": correct,
         "ootb_total": total,
