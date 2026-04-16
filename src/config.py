@@ -31,6 +31,10 @@ class ExperimentConfig:
     words_to_replace: int = 1
     perturbation_method: str = "synonym"  # "synonym" or "paraphrase"
 
+    # ---- Sensitivity metric ----
+    # When True (default), variation ratio uses decoded responses (strip only); parsed answers still drive accuracy.
+    sensitivity_on_raw: bool = True
+
     # ---- Reproducibility ----
     seed: int = 2266
 
@@ -51,6 +55,7 @@ class ExperimentConfig:
             f"phase={self.phase}  model={self.model_key}  dataset={self.dataset_key}  "
             f"samples={self.sample_size}  perturbations={self.num_perturbations}  "
             f"method={self.perturbation_method}  "
+            f"sensitivity_on_raw={self.sensitivity_on_raw}  "
             f"seed={self.seed}  styles={','.join(self.prompt_styles)}"
         )
 
