@@ -17,7 +17,7 @@ import re
 import json
 import random
 import logging
-from typing import List, Dict, Any, Optional, Callable, Tuple
+from typing import List, Dict, Any, Optional, Callable, Tuple, Literal
 from collections import Counter
 
 # =====================================================================
@@ -522,7 +522,11 @@ class ResultAnalyzer:
         # All strategies failed
         return self.FALLBACK_RESPONSE.copy()
 
-    def calculate_variation_ratio(self, parsed_answers: List[str]) -> float:
+    def calculate_variation_ratio(
+        self,
+        parsed_answers: List[str],
+        normalization: Literal["parsed", "raw"] = "raw",
+    ) -> float:
         """
         Calculates the sensitivity metric 's' using the Variation Ratio formula.
 
@@ -536,12 +540,16 @@ class ResultAnalyzer:
         - s = 0 means the model always gives the same answer (perfectly stable)
         - s approaching 1 means high variability in answers (unstable)
 
-        IMPORTANT: This calculation uses extracted final_answer values only,
-        not raw text strings, to avoid penalizing slight phrasing differences.
-
         Args:
-            parsed_answers: A list of final_answer strings extracted from parsed JSON.
-                           These should be normalized (e.g., uppercase single letters).
+            parsed_answers: Answer strings to compare (extracted letters when
+                ``normalization="parsed"``, or full decoded model outputs when
+                ``normalization="raw"``).
+            normalization:
+                - ``"raw"`` (default): filter empties after ``strip()`` only (no case folding),
+                  then modal count—full decoded strings are the outcome.
+                - ``"parsed"``: filter empties, apply ``strip().upper()``,
+                  then modal count. Use with extracted final answers so minor
+                  phrasing differences are not penalized.
 
         Returns:
             The variation ratio 's' as a float between 0.0 and 1.0.
@@ -550,8 +558,10 @@ class ResultAnalyzer:
         if not parsed_answers:
             return 0.0
 
-        # Filter out empty answers and normalize
-        valid_answers = [ans.strip().upper() for ans in parsed_answers if ans and ans.strip()]
+        if normalization == "raw":
+            valid_answers = [ans.strip() for ans in parsed_answers if ans and ans.strip()]
+        else:
+            valid_answers = [ans.strip().upper() for ans in parsed_answers if ans and ans.strip()]
 
         if len(valid_answers) <= 1:
             return 0.0
@@ -574,13 +584,17 @@ class ResultAnalyzer:
 
     def batch_extract_and_calculate(
         self,
-        raw_outputs: List[str]
+        raw_outputs: List[str],
+        normalization: Literal["parsed", "raw"] = "raw",
     ) -> Dict[str, Any]:
         """
         Convenience method to extract answers from multiple outputs and calculate variation ratio.
 
         Args:
             raw_outputs: List of raw LLM outputs from perturbed prompts.
+            normalization: Same as ``calculate_variation_ratio``: ``"raw"`` (default) uses full
+                decoded strings (strip only); ``"parsed"`` uses extracted ``final_answer``
+                strings (strip + upper). Parsed fields are always computed regardless.
 
         Returns:
             A dictionary containing:
@@ -595,13 +609,17 @@ class ResultAnalyzer:
         successful_parses = sum(1 for p in parsed_results if p.get("parse_success", False))
         parse_success_rate = successful_parses / len(parsed_results) if parsed_results else 0.0
 
-        variation_ratio = self.calculate_variation_ratio(final_answers)
+        if normalization == "raw":
+            vr_inputs = [o.strip() for o in raw_outputs if o and o.strip()]
+        else:
+            vr_inputs = final_answers
+        variation_ratio = self.calculate_variation_ratio(vr_inputs, normalization=normalization)
 
         return {
             "parsed_results": parsed_results,
             "final_answers": final_answers,
             "variation_ratio": variation_ratio,
-            "parse_success_rate": parse_success_rate
+            "parse_success_rate": parse_success_rate,
         }
 
     def parse_yes_no_answer(self, response: str, is_structured: bool = False) -> str:
