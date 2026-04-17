@@ -86,7 +86,7 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir):
     # Axis 2: Sensitivity
     ax2 = ax1.twinx()
     ax2.set_ylabel('Variation Ratio / Sensitivity (Dashed Lines)', fontsize=12)
-    ax2.set_ylim(0, 0.5)
+    ax2.set_ylim(0, 1.05)
     ax2.grid(False) # Turn off grid for second axis to avoid overlap
 
     # Get Control baseline values

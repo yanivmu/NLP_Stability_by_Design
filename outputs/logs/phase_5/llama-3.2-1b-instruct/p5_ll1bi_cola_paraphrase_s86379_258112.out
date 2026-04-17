@@ -1,0 +1,79 @@
+======================================================================
+SENSITIVITY EXPERIMENT: LLAMA-3.2-1B-INSTRUCT on COLA
+Config: phase=phase_5  model=llama-3.2-1b-instruct  dataset=cola  samples=500  perturbations=20  method=paraphrase  sensitivity_on_raw=True  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Llama-3.2-1B-Instruct...
+Model loaded successfully
+Loading CoLA dataset...
+Loaded 1043 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 50.0%
+Valid signal threshold: 60.0%
+
+==================================================
+OOTB ACCURACY RESULT: 68.0% (66/97)
+==================================================
+Time: 2.9s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 5294.2s
+  Average Variation Ratio: 0.0128
+  Accuracy: 71.2% (356/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 5417.9s
+  Average Variation Ratio: 0.5060
+  Accuracy: 0.4% (2/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 5866.5s
+  Average Variation Ratio: 0.5902
+  Accuracy: 50.6% (253/500)
+
+[POLITENESS] Running experiment...
+  Completed in 5181.1s
+  Average Variation Ratio: 0.0024
+  Accuracy: 71.6% (358/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=97): 68.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.0128   |  71.2%       | Stable
+metacognition   | 0.5060   |   0.4%       | Unstable
+structure       | 0.5902   |  50.6%       | Unstable
+politeness      | 0.0024   |  71.6%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): politeness (VR=0.0024)
+Least Stable (highest VR): structure (VR=0.5902)
+Highest Accuracy: politeness (71.6%)
+Lowest Accuracy: metacognition (0.4%)
+
+Results saved to ./outputs/results/phase_5/llama-3.2-1b-instruct/cola/paraphrase/n20_s86379_062727.json
+Detailed responses saved to ./outputs/results/phase_5/llama-3.2-1b-instruct/cola/paraphrase/n20_s86379_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

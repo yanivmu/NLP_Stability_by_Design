@@ -1,0 +1,5 @@
+Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  63%|██████▎   | 119/190 [00:00<00:00, 780.52it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 1142.57it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  15%|█▌        | 22/146 [00:00<00:00, 211.92it/s]Loading weights:  30%|███       | 44/146 [00:00<00:00, 206.58it/s]Loading weights:  45%|████▍     | 65/146 [00:00<00:00, 195.90it/s]Loading weights:  58%|█████▊    | 85/146 [00:00<00:00, 188.79it/s]Loading weights:  71%|███████   | 104/146 [00:00<00:00, 188.48it/s]Loading weights:  84%|████████▍ | 123/146 [00:00<00:00, 188.94it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 198.55it/s]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.

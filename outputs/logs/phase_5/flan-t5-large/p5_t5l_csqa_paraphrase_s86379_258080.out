@@ -1,0 +1,11 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-LARGE on CSQA
+Config: phase=phase_5  model=flan-t5-large  dataset=csqa  samples=500  perturbations=20  method=paraphrase  sensitivity_on_raw=True  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Flan-T5-Large...

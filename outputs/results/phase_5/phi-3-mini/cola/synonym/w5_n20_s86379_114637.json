@@ -1,0 +1,41 @@
+{
+  "model": "microsoft/Phi-3-mini-4k-instruct",
+  "model_key": "phi-3-mini",
+  "dataset": "CoLA",
+  "dataset_key": "cola",
+  "perturbation_method": "synonym",
+  "sensitivity_on_raw": true,
+  "ootb_accuracy": 0.79,
+  "ootb_correct": 79,
+  "ootb_total": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 5,
+  "seed": 86379,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.23666432458150746,
+      "accuracy": 0.76,
+      "correct_count": 380,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.39428660517329245,
+      "accuracy": 0.788,
+      "correct_count": 394,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.7476289196183943,
+      "accuracy": 0.01,
+      "correct_count": 5,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.17289690935999005,
+      "accuracy": 0.764,
+      "correct_count": 382,
+      "num_samples": 500
+    }
+  }
+}

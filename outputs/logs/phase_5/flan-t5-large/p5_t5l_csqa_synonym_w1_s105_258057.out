@@ -1,0 +1,77 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-LARGE on CSQA
+Config: phase=phase_5  model=flan-t5-large  dataset=csqa  samples=500  perturbations=20  method=synonym  sensitivity_on_raw=True  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Flan-T5-Large...
+Model loaded successfully
+Loading CommonsenseQA dataset...
+Loaded 1221 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 20.0%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 80.0% (80/100)
+==================================================
+Time: 2.7s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 121.8s
+  Average Variation Ratio: 0.1155
+  Accuracy: 83.2% (416/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 558.1s
+  Average Variation Ratio: 0.5777
+  Accuracy: 62.8% (314/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 674.7s
+  Average Variation Ratio: 0.1670
+  Accuracy: 50.8% (254/500)
+
+[POLITENESS] Running experiment...
+  Completed in 133.0s
+  Average Variation Ratio: 0.1030
+  Accuracy: 82.6% (413/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 80.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.1155   |  83.2%       | Stable
+metacognition   | 0.5777   |  62.8%       | Unstable
+structure       | 0.1670   |  50.8%       | Stable
+politeness      | 0.1030   |  82.6%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): politeness (VR=0.1030)
+Least Stable (highest VR): metacognition (VR=0.5777)
+Highest Accuracy: control (83.2%)
+Lowest Accuracy: structure (50.8%)
+
+Results saved to ./outputs/results/phase_5/flan-t5-large/csqa/synonym/w1_n20_s105_142735.json
+Detailed responses saved to ./outputs/results/phase_5/flan-t5-large/csqa/synonym/w1_n20_s105_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

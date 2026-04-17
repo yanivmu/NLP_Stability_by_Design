@@ -1,0 +1,29 @@
+Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  57%|█████▋    | 109/190 [00:00<00:00, 1054.37it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 1693.91it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
+Loading weights:   0%|          | 0/558 [00:00<?, ?it/s]Loading weights:  29%|██▉       | 161/558 [00:00<00:00, 1599.56it/s]Loading weights:  58%|█████▊    | 321/558 [00:00<00:00, 1219.60it/s]Loading weights:  80%|████████  | 449/558 [00:00<00:00, 998.15it/s] Loading weights: 100%|██████████| 558/558 [00:00<00:00, 1112.36it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 11/20; filling 9 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
+INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
+INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 11/20; filling 9 with synonym fallback
+INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
+INFO: Paraphraser produced 18/20; filling 2 with synonym fallback

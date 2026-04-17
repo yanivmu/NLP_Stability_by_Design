@@ -1,0 +1,34 @@
+Loading weights:   0%|          | 0/558 [00:00<?, ?it/s]Loading weights:  19%|█▉        | 105/558 [00:00<00:00, 1047.69it/s]Loading weights:  38%|███▊      | 210/558 [00:00<00:00, 1034.44it/s]Loading weights:  56%|█████▋    | 315/558 [00:00<00:00, 842.55it/s] Loading weights: 100%|██████████| 558/558 [00:00<00:00, 1420.46it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
+Traceback (most recent call last):
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 562, in <module>
+    main()
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 461, in main
+    result = run_sensitivity_experiment(
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 177, in run_sensitivity_experiment
+    responses = model_handler.generate(prompts, max_new_tokens=max_tokens)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/model_handlers.py", line 132, in generate
+    outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 2438, in generate
+    model_kwargs = self._prepare_encoder_decoder_kwargs_for_generation(
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 785, in _prepare_encoder_decoder_kwargs_for_generation
+    model_kwargs["encoder_outputs"]: ModelOutput = encoder(**encoder_kwargs)  # type: ignore
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py", line 795, in forward
+    hidden_states = self.final_layer_norm(hidden_states)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py", line 61, in forward
+    variance = hidden_states.to(torch.float32).pow(2).mean(-1, keepdim=True)
+RuntimeError: CUDA error: an illegal memory access was encountered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+

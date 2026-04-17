@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260417_034756,phase_5,llama-3.2-1b,csqa,paraphrase,0,20,500,105,1.0000,control,0.5843,0.0040
+20260417_034756,phase_5,llama-3.2-1b,csqa,paraphrase,0,20,500,105,1.0000,metacognition,0.5908,0.0000
+20260417_034756,phase_5,llama-3.2-1b,csqa,paraphrase,0,20,500,105,1.0000,structure,0.0000,0.0000
+20260417_034756,phase_5,llama-3.2-1b,csqa,paraphrase,0,20,500,105,1.0000,politeness,0.0000,0.0000

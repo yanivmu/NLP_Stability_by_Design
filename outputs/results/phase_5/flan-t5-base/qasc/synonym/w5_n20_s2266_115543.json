@@ -1,0 +1,41 @@
+{
+  "model": "google/flan-t5-base",
+  "model_key": "flan-t5-base",
+  "dataset": "QASC",
+  "dataset_key": "qasc",
+  "perturbation_method": "synonym",
+  "sensitivity_on_raw": true,
+  "ootb_accuracy": 0.43,
+  "ootb_correct": 43,
+  "ootb_total": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 5,
+  "seed": 2266,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.2817631956364931,
+      "accuracy": 0.44,
+      "correct_count": 220,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.6279688185825171,
+      "accuracy": 0.416,
+      "correct_count": 208,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.27772478622169033,
+      "accuracy": 0.39,
+      "correct_count": 195,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.29061446238659927,
+      "accuracy": 0.442,
+      "correct_count": 221,
+      "num_samples": 500
+    }
+  }
+}
