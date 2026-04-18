@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260418_005911,phase_5,pythia-410m,cola,paraphrase,0,20,500,2266,0.6923,control,0.6746,0.6080
+20260418_005911,phase_5,pythia-410m,cola,paraphrase,0,20,500,2266,0.6923,metacognition,0.8725,0.0860
+20260418_005911,phase_5,pythia-410m,cola,paraphrase,0,20,500,2266,0.6923,structure,0.4062,0.6040
+20260418_005911,phase_5,pythia-410m,cola,paraphrase,0,20,500,2266,0.6923,politeness,0.6589,0.5920
