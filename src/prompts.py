@@ -175,7 +175,7 @@ _DATASET_PROMPTS: Dict[str, Dict[str, Callable]] = {
 # Structure prompts produce JSON so they need more tokens.
 _MAX_TOKENS: Dict[str, Dict[str, int]] = {
     "qasc": {"control": 20, "metacognition": 20, "structure": 100, "politeness": 20},
-    "cola": {"control": 10, "metacognition": 10, "structure": 50, "politeness": 10},
+    "cola": {"control": 10, "metacognition": 30, "structure": 150, "politeness": 10},
 }
 
 DEFAULT_MAX_TOKENS = 20

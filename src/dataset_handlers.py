@@ -144,6 +144,13 @@ _LETTER_PATTERN = re.compile(r'\b([A-H])\b', re.IGNORECASE)
 _JSON_ANSWER = re.compile(
     r'"final_answer"\s*:\s*"?([^"}\s,]+)"?', re.IGNORECASE
 )
+_MARKDOWN_FENCE = re.compile(r'```(?:json)?\s*(.*?)\s*```', re.DOTALL)
+
+
+def _strip_markdown_fences(text: str) -> str:
+    """Remove markdown code fences (```json ... ```) that some instruct models add."""
+    m = _MARKDOWN_FENCE.search(text)
+    return m.group(1) if m else text
 
 
 def _parse_letter(response: str, is_structured: bool = False) -> str:
@@ -156,11 +163,21 @@ def _parse_letter_verbose(response: str, is_structured: bool = False) -> tuple:
     """Return ``(answer, parse_method)`` describing how the answer was extracted."""
     text = response.strip()
     if is_structured:
-        m = _JSON_ANSWER.search(text)
+        cleaned = _strip_markdown_fences(text)
+        m = _JSON_ANSWER.search(cleaned)
         if m:
             letter = m.group(1).strip().upper()
             if letter and letter[0] in "ABCDEFGH":
                 return letter[0], 'json_key "final_answer"'
+        jm = re.search(r'\{[^}]+\}', cleaned)
+        if jm:
+            try:
+                data = json.loads(jm.group())
+                val = str(data.get("final_answer", "")).strip().upper()
+                if val and val[0] in "ABCDEFGH":
+                    return val[0], 'json_parse "final_answer"'
+            except (json.JSONDecodeError, AttributeError):
+                pass
     upper = text.upper()
     m = _LETTER_PATTERN.search(upper)
     if m:
@@ -180,14 +197,15 @@ def _parse_yes_no_verbose(response: str, is_structured: bool = False) -> tuple:
     """Return ``(answer, parse_method)`` describing how the answer was extracted."""
     text = response.strip()
     if is_structured:
-        m = _JSON_ANSWER.search(text)
+        cleaned = _strip_markdown_fences(text)
+        m = _JSON_ANSWER.search(cleaned)
         if m:
             val = m.group(1).strip().lower()
             if "yes" in val:
                 return "YES", 'json_regex "final_answer"'
             if "no" in val:
                 return "NO", 'json_regex "final_answer"'
-        jm = re.search(r'\{[^}]+\}', text)
+        jm = re.search(r'\{[^}]+\}', cleaned)
         if jm:
             try:
                 data = json.loads(jm.group())
@@ -198,11 +216,18 @@ def _parse_yes_no_verbose(response: str, is_structured: bool = False) -> tuple:
                     return "NO", 'json_parse "final_answer"'
             except (json.JSONDecodeError, AttributeError):
                 pass
-    lower = text.lower()[:30]
+
+    lower = text.lower()[:200]
     if "yes" in lower:
-        return "YES", "text_match first_30_chars"
+        return "YES", "text_match first_200_chars"
     if "no" in lower:
-        return "NO", "text_match first_30_chars"
+        return "NO", "text_match first_200_chars"
+    _neg_kw = ("not correct", "incorrect", "ungrammatical", "grammatical error",
+               "grammar error", "not grammatical")
+    if any(kw in lower for kw in _neg_kw):
+        return "NO", "text_match grammaticality_keyword"
+    if "correct" in lower or "grammatical" in lower:
+        return "YES", "text_match grammaticality_keyword"
     return "", "no_match"
 
 
@@ -375,7 +400,11 @@ class CoLAHandler(DatasetHandler):
         raise ValueError(f"Unknown prompt style: {style!r}")
 
     def get_max_tokens(self, style: str) -> int:
-        return 50 if style == "structure" else 10
+        if style == "structure":
+            return 150
+        if style == "metacognition":
+            return 30
+        return 10
 
     def parse_answer(self, response: str, is_structured: bool = False) -> str:
         return _parse_yes_no(response, is_structured=is_structured)

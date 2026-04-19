@@ -102,14 +102,19 @@ def parse_args() -> ExperimentConfig:
 def run_ootb_accuracy_check(
     model_handler: ModelHandler, dataset,
     dataset_handler: DatasetHandler, sample_size: int, seed: int,
-) -> Tuple[float, int, int]:
-    """Run Out-Of-The-Box accuracy check using Control prompt."""
+) -> Tuple[float, int, int, int]:
+    """Run Out-Of-The-Box accuracy check using Control prompt.
+
+    Returns (accuracy, correct, total_items, total_parsed).
+    Accuracy denominator is *total_items* (not just parsed), matching the
+    reference paper approach — unparseable responses count as wrong.
+    """
     sample_items = dataset_handler.sample_items(dataset, sample_size, seed)
     batch_size = model_handler.batch_size
     max_tokens = dataset_handler.get_max_tokens("control")
 
     correct = 0
-    total = 0
+    total_parsed = 0
 
     for i in range(0, len(sample_items), batch_size):
         batch = sample_items[i:i + batch_size]
@@ -120,12 +125,13 @@ def run_ootb_accuracy_check(
             actual = dataset_handler.get_correct_answer(item)
             predicted = dataset_handler.parse_answer(response)
             if predicted:
-                total += 1
+                total_parsed += 1
                 if predicted == actual:
                     correct += 1
 
-    accuracy = correct / total if total > 0 else 0.0
-    return accuracy, correct, total
+    total_items = len(sample_items)
+    accuracy = correct / total_items if total_items > 0 else 0.0
+    return accuracy, correct, total_items, total_parsed
 
 
 # =====================================================================
@@ -407,6 +413,7 @@ def main():
     accuracy = 0.0
     correct = 0
     total = 0
+    total_parsed = 0
 
     if not cfg.skip_ootb:
         print("\n" + "=" * 70)
@@ -417,15 +424,17 @@ def main():
         print(f"Valid signal threshold: {dataset_handler.CONFIG.valid_threshold * 100:.1f}%")
 
         start_time = time.time()
-        accuracy, correct, total = run_ootb_accuracy_check(
+        accuracy, correct, total, total_parsed = run_ootb_accuracy_check(
             model_handler=model_handler, dataset=dataset,
             dataset_handler=dataset_handler,
             sample_size=cfg.ootb_size, seed=cfg.seed,
         )
         elapsed = time.time() - start_time
 
+        parse_rate = total_parsed / total * 100 if total > 0 else 0.0
         print(f"\n{'=' * 50}")
         print(f"OOTB ACCURACY RESULT: {accuracy * 100:.1f}% ({correct}/{total})")
+        print(f"Parse rate: {parse_rate:.1f}% ({total_parsed}/{total})")
         print(f"{'=' * 50}")
         print(f"Time: {elapsed:.1f}s")
 
@@ -527,6 +536,7 @@ def main():
         "ootb_accuracy": accuracy,
         "ootb_correct": correct,
         "ootb_total": total,
+        "ootb_parsed": total_parsed,
         "sample_size": cfg.sample_size,
         "num_perturbations": cfg.num_perturbations,
         "words_to_replace": cfg.words_to_replace,
