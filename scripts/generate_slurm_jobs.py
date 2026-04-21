@@ -3,7 +3,7 @@ from itertools import product
 from datetime import datetime
 
 # Configuration
-PHASE = "phase_5"
+PHASE = "phase_6"
 BASE_SLURM_DIR = f"scripts/slurm/{PHASE}"
 BASE_LOG_DIR = "outputs/logs"
 PROJECT_DIR = "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/"
