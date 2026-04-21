@@ -193,9 +193,31 @@ def _parse_yes_no(response: str, is_structured: bool = False) -> str:
     return ans
 
 
+_ANSWER_SIGNAL = re.compile(
+    r'(?:the\s+answer\s+is|answer\s*:|therefore|thus|so)\s*(yes|no)\b',
+    re.IGNORECASE,
+)
+
+_NEG_GRAMMAR_KW = (
+    "not correct", "incorrect", "ungrammatical",
+    "grammatical error", "grammar error", "not grammatical",
+)
+
+
 def _parse_yes_no_verbose(response: str, is_structured: bool = False) -> tuple:
-    """Return ``(answer, parse_method)`` describing how the answer was extracted."""
+    """Return ``(answer, parse_method)`` describing how the answer was extracted.
+
+    Uses a 4-pass strategy designed to capture the model's *final* answer
+    rather than intermediate reasoning tokens:
+
+    1. Explicit answer-signal patterns anywhere (take the last match).
+    2. Bare ``yes``/``no`` in the last 50 characters (tail).
+    3. Grammaticality keywords in the tail (negatives checked first).
+    4. Full-scan fallback for bare ``yes``/``no`` anywhere.
+    """
     text = response.strip()
+
+    # --- Structured (JSON) path ---
     if is_structured:
         cleaned = _strip_markdown_fences(text)
         m = _JSON_ANSWER.search(cleaned)
@@ -217,17 +239,33 @@ def _parse_yes_no_verbose(response: str, is_structured: bool = False) -> tuple:
             except (json.JSONDecodeError, AttributeError):
                 pass
 
-    lower = text.lower()[:200]
-    if "yes" in lower:
-        return "YES", "text_match first_200_chars"
-    if "no" in lower:
-        return "NO", "text_match first_200_chars"
-    _neg_kw = ("not correct", "incorrect", "ungrammatical", "grammatical error",
-               "grammar error", "not grammatical")
-    if any(kw in lower for kw in _neg_kw):
-        return "NO", "text_match grammaticality_keyword"
-    if "correct" in lower or "grammatical" in lower:
-        return "YES", "text_match grammaticality_keyword"
+    lower = text.lower()
+
+    # Pass 1 — explicit answer signals (last match wins)
+    signals = list(_ANSWER_SIGNAL.finditer(lower))
+    if signals:
+        last = signals[-1].group(1).lower()
+        return ("YES" if last == "yes" else "NO"), "answer_signal_pattern"
+
+    # Pass 2 — bare yes/no in the tail (last 50 chars)
+    tail = lower[-50:] if len(lower) > 50 else lower
+    if re.search(r'\byes\b', tail):
+        return "YES", "text_match tail_50_chars"
+    if re.search(r'\bno\b', tail):
+        return "NO", "text_match tail_50_chars"
+
+    # Pass 3 — grammaticality keywords in the tail (negatives first)
+    if any(kw in tail for kw in _NEG_GRAMMAR_KW):
+        return "NO", "text_match grammaticality_keyword_tail"
+    if re.search(r'\bcorrect\b', tail) or re.search(r'\bgrammatical(ly)?\b', tail):
+        return "YES", "text_match grammaticality_keyword_tail"
+
+    # Pass 4 — full-scan fallback for very short responses
+    if re.search(r'\byes\b', lower):
+        return "YES", "full_scan"
+    if re.search(r'\bno\b', lower):
+        return "NO", "full_scan"
+
     return "", "no_match"
 
 
@@ -403,7 +441,7 @@ class CoLAHandler(DatasetHandler):
         if style == "structure":
             return 150
         if style == "metacognition":
-            return 30
+            return 200
         return 10
 
     def parse_answer(self, response: str, is_structured: bool = False) -> str:
