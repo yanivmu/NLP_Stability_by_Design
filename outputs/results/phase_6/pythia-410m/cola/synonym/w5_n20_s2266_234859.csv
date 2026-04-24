@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260422_234900,phase_6,pythia-410m,cola,synonym,5,20,500,2266,0.6300,control,0.5315,0.6080
+20260422_234900,phase_6,pythia-410m,cola,synonym,5,20,500,2266,0.6300,metacognition,0.7330,0.2580
+20260422_234900,phase_6,pythia-410m,cola,synonym,5,20,500,2266,0.6300,structure,0.3442,0.6300
+20260422_234900,phase_6,pythia-410m,cola,synonym,5,20,500,2266,0.6300,politeness,0.4643,0.5720

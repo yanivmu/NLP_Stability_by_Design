@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260421_190735,phase_6,llama-3.2-1b-instruct,cola,synonym,5,20,500,105,0.7000,control,0.0685,0.6740
+20260421_190735,phase_6,llama-3.2-1b-instruct,cola,synonym,5,20,500,105,0.7000,metacognition,0.7412,0.3400
+20260421_190735,phase_6,llama-3.2-1b-instruct,cola,synonym,5,20,500,105,0.7000,structure,0.3891,0.5040
+20260421_190735,phase_6,llama-3.2-1b-instruct,cola,synonym,5,20,500,105,0.7000,politeness,0.0075,0.6740

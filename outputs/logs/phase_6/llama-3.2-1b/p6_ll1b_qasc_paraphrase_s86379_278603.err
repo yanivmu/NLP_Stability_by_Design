@@ -1,0 +1,8 @@
+Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  77%|███████▋  | 146/190 [00:00<00:00, 1431.67it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 1002.50it/s]
+The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  16%|█▌        | 23/146 [00:00<00:00, 181.90it/s]Loading weights:  33%|███▎      | 48/146 [00:00<00:00, 199.90it/s]Loading weights:  47%|████▋     | 69/146 [00:00<00:00, 163.61it/s]Loading weights:  62%|██████▏   | 90/146 [00:00<00:00, 174.07it/s]Loading weights:  75%|███████▍  | 109/146 [00:00<00:00, 171.76it/s]Loading weights:  87%|████████▋ | 127/146 [00:00<00:00, 168.60it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 179.45it/s]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
+slurmstepd: error: Cannot write to cgroup.procs for (null)
+slurmstepd: error: Unable to move pid 649207 to init root cgroup (null)

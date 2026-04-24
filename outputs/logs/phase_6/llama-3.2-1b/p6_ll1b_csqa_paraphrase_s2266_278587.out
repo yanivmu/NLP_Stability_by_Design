@@ -1,0 +1,32 @@
+======================================================================
+SENSITIVITY EXPERIMENT: LLAMA-3.2-1B on CSQA
+Config: phase=phase_6  model=llama-3.2-1b  dataset=csqa  samples=500  perturbations=20  method=paraphrase  sensitivity_on_raw=True  seed=2266  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Llama-3.2-1B...
+Model loaded successfully
+Loading CommonsenseQA dataset...
+Loaded 1221 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 20.0%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 0.0% (0/100)
+Parse rate: 0.0% (0/100)
+==================================================
+Time: 1.3s
+
+FAIL: Accuracy (0.0%) is BELOW random baseline (20.0%)!
+   Model cannot perform this task. Skipping sensitivity experiments.
+   (Saves significant Slurm compute time.)

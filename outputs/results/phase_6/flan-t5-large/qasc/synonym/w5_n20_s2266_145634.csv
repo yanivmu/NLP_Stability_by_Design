@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260422_145636,phase_6,flan-t5-large,qasc,synonym,5,20,500,2266,0.5900,control,0.2443,0.6060
+20260422_145636,phase_6,flan-t5-large,qasc,synonym,5,20,500,2266,0.5900,metacognition,0.7421,0.3820
+20260422_145636,phase_6,flan-t5-large,qasc,synonym,5,20,500,2266,0.5900,structure,0.1509,0.2280
+20260422_145636,phase_6,flan-t5-large,qasc,synonym,5,20,500,2266,0.5900,politeness,0.2448,0.6220

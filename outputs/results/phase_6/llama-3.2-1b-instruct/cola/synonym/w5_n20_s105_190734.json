@@ -1,0 +1,42 @@
+{
+  "model": "meta-llama/Llama-3.2-1B-Instruct",
+  "model_key": "llama-3.2-1b-instruct",
+  "dataset": "CoLA",
+  "dataset_key": "cola",
+  "perturbation_method": "synonym",
+  "sensitivity_on_raw": true,
+  "ootb_accuracy": 0.7,
+  "ootb_correct": 70,
+  "ootb_total": 100,
+  "ootb_parsed": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 5,
+  "seed": 105,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.06846239471742563,
+      "accuracy": 0.674,
+      "correct_count": 337,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.741220310958393,
+      "accuracy": 0.34,
+      "correct_count": 170,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.3891198229445131,
+      "accuracy": 0.504,
+      "correct_count": 252,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.007545626269155681,
+      "accuracy": 0.674,
+      "correct_count": 337,
+      "num_samples": 500
+    }
+  }
+}

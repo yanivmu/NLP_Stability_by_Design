@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260422_123922,phase_6,flan-t5-base,csqa,paraphrase,0,20,500,2266,0.6900,control,0.3131,0.7100
+20260422_123922,phase_6,flan-t5-base,csqa,paraphrase,0,20,500,2266,0.6900,metacognition,0.5637,0.6820
+20260422_123922,phase_6,flan-t5-base,csqa,paraphrase,0,20,500,2266,0.6900,structure,0.3180,0.6500
+20260422_123922,phase_6,flan-t5-base,csqa,paraphrase,0,20,500,2266,0.6900,politeness,0.3172,0.6980

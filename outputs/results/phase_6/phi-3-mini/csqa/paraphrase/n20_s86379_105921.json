@@ -1,0 +1,42 @@
+{
+  "model": "microsoft/Phi-3-mini-4k-instruct",
+  "model_key": "phi-3-mini",
+  "dataset": "CommonsenseQA",
+  "dataset_key": "csqa",
+  "perturbation_method": "paraphrase",
+  "sensitivity_on_raw": true,
+  "ootb_accuracy": 0.78,
+  "ootb_correct": 78,
+  "ootb_total": 100,
+  "ootb_parsed": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 0,
+  "seed": 86379,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.30469312619784805,
+      "accuracy": 0.746,
+      "correct_count": 373,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.44729358199420166,
+      "accuracy": 0.726,
+      "correct_count": 363,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.8649869526758079,
+      "accuracy": 0.706,
+      "correct_count": 353,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.44442835397316854,
+      "accuracy": 0.75,
+      "correct_count": 375,
+      "num_samples": 500
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "model": "google/flan-t5-base",
+  "model_key": "flan-t5-base",
+  "dataset": "CommonsenseQA",
+  "dataset_key": "csqa",
+  "perturbation_method": "paraphrase",
+  "sensitivity_on_raw": true,
+  "ootb_accuracy": 0.76,
+  "ootb_correct": 76,
+  "ootb_total": 100,
+  "ootb_parsed": 100,
+  "sample_size": 500,
+  "num_perturbations": 20,
+  "words_to_replace": 0,
+  "seed": 86379,
+  "results": {
+    "control": {
+      "avg_variation_ratio": 0.3116021266401304,
+      "accuracy": 0.74,
+      "correct_count": 370,
+      "num_samples": 500
+    },
+    "metacognition": {
+      "avg_variation_ratio": 0.5625407120743031,
+      "accuracy": 0.706,
+      "correct_count": 353,
+      "num_samples": 500
+    },
+    "structure": {
+      "avg_variation_ratio": 0.31388510491916155,
+      "accuracy": 0.658,
+      "correct_count": 329,
+      "num_samples": 500
+    },
+    "politeness": {
+      "avg_variation_ratio": 0.3087438559634386,
+      "accuracy": 0.716,
+      "correct_count": 358,
+      "num_samples": 500
+    }
+  }
+}

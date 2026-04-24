@@ -1,0 +1,78 @@
+======================================================================
+SENSITIVITY EXPERIMENT: PHI-3-MINI on QASC
+Config: phase=phase_6  model=phi-3-mini  dataset=qasc  samples=500  perturbations=20  method=synonym  sensitivity_on_raw=True  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Phi-3-Mini-4K-Instruct...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 74.0% (74/100)
+Parse rate: 100.0% (100/100)
+==================================================
+Time: 9.2s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 305.1s
+  Average Variation Ratio: 0.3555
+  Accuracy: 77.6% (388/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 627.5s
+  Average Variation Ratio: 0.6252
+  Accuracy: 76.8% (384/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 2462.4s
+  Average Variation Ratio: 0.8431
+  Accuracy: 71.6% (358/500)
+
+[POLITENESS] Running experiment...
+  Completed in 499.2s
+  Average Variation Ratio: 0.4301
+  Accuracy: 77.8% (389/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 74.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.3555   |  77.6%       | Moderate
+metacognition   | 0.6252   |  76.8%       | Unstable
+structure       | 0.8431   |  71.6%       | Unstable
+politeness      | 0.4301   |  77.8%       | Unstable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): control (VR=0.3555)
+Least Stable (highest VR): structure (VR=0.8431)
+Highest Accuracy: politeness (77.8%)
+Lowest Accuracy: structure (71.6%)
+
+Results saved to ./outputs/results/phase_6/phi-3-mini/qasc/synonym/w3_n20_s105_035011.json
+Detailed responses saved to ./outputs/results/phase_6/phi-3-mini/qasc/synonym/w3_n20_s105_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

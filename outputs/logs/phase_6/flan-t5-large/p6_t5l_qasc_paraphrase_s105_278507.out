@@ -1,0 +1,80 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-LARGE on QASC
+Config: phase=phase_6  model=flan-t5-large  dataset=qasc  samples=500  perturbations=20  method=paraphrase  sensitivity_on_raw=True  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: paraphrase
+Available seeds for multi-run: (105, 2266, 86379)
+Loading paraphrase model (flan-t5-small)...
+Paraphraser ready.
+Loading Flan-T5-Large...
+Model loaded successfully
+Loading QASC dataset...
+Loaded 926 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 12.5%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 62.0% (62/100)
+Parse rate: 100.0% (100/100)
+==================================================
+Time: 3.1s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 4129.1s
+  Average Variation Ratio: 0.3434
+  Accuracy: 63.4% (317/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 5035.1s
+  Average Variation Ratio: 0.6375
+  Accuracy: 37.0% (185/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 3112.0s
+  Average Variation Ratio: 0.1553
+  Accuracy: 22.2% (111/500)
+
+[POLITENESS] Running experiment...
+  Completed in 2534.2s
+  Average Variation Ratio: 0.3469
+  Accuracy: 63.4% (317/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 62.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.3434   |  63.4%       | Moderate
+metacognition   | 0.6375   |  37.0%       | Unstable
+structure       | 0.1553   |  22.2%       | Stable
+politeness      | 0.3469   |  63.4%       | Moderate
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): structure (VR=0.1553)
+Least Stable (highest VR): metacognition (VR=0.6375)
+Highest Accuracy: control (63.4%)
+Lowest Accuracy: structure (22.2%)
+
+Results saved to ./outputs/results/phase_6/flan-t5-large/qasc/paraphrase/n20_s105_163615.json
+Detailed responses saved to ./outputs/results/phase_6/flan-t5-large/qasc/paraphrase/n20_s105_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

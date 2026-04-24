@@ -1,0 +1,5 @@
+timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
+20260422_113747,phase_6,flan-t5-large,cola,synonym,3,20,500,105,0.6200,control,0.0983,0.6340
+20260422_113747,phase_6,flan-t5-large,cola,synonym,3,20,500,105,0.6200,metacognition,0.1094,0.6720
+20260422_113747,phase_6,flan-t5-large,cola,synonym,3,20,500,105,0.6200,structure,0.1263,0.6820
+20260422_113747,phase_6,flan-t5-large,cola,synonym,3,20,500,105,0.6200,politeness,0.1283,0.6840

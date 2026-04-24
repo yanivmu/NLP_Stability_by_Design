@@ -1,0 +1,78 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-LARGE on CSQA
+Config: phase=phase_6  model=flan-t5-large  dataset=csqa  samples=500  perturbations=20  method=synonym  sensitivity_on_raw=True  seed=86379  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Flan-T5-Large...
+Model loaded successfully
+Loading CommonsenseQA dataset...
+Loaded 1221 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 20.0%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 85.0% (85/100)
+Parse rate: 99.0% (99/100)
+==================================================
+Time: 2.9s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 129.0s
+  Average Variation Ratio: 0.2343
+  Accuracy: 82.6% (413/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 581.7s
+  Average Variation Ratio: 0.7739
+  Accuracy: 57.6% (288/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 708.5s
+  Average Variation Ratio: 0.2413
+  Accuracy: 49.4% (247/500)
+
+[POLITENESS] Running experiment...
+  Completed in 135.0s
+  Average Variation Ratio: 0.2159
+  Accuracy: 82.8% (414/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 85.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.2343   |  82.6%       | Moderate
+metacognition   | 0.7739   |  57.6%       | Unstable
+structure       | 0.2413   |  49.4%       | Moderate
+politeness      | 0.2159   |  82.8%       | Moderate
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): politeness (VR=0.2159)
+Least Stable (highest VR): metacognition (VR=0.7739)
+Highest Accuracy: politeness (82.8%)
+Lowest Accuracy: structure (49.4%)
+
+Results saved to ./outputs/results/phase_6/flan-t5-large/csqa/synonym/w3_n20_s86379_154837.json
+Detailed responses saved to ./outputs/results/phase_6/flan-t5-large/csqa/synonym/w3_n20_s86379_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

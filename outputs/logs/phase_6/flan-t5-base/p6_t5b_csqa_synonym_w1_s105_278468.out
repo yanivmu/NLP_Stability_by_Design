@@ -1,0 +1,78 @@
+======================================================================
+SENSITIVITY EXPERIMENT: FLAN-T5-BASE on CSQA
+Config: phase=phase_6  model=flan-t5-base  dataset=csqa  samples=500  perturbations=20  method=synonym  sensitivity_on_raw=True  seed=105  styles=control,metacognition,structure,politeness
+======================================================================
+
+Device: cuda
+Perturbation method: synonym
+Available seeds for multi-run: (105, 2266, 86379)
+Loading Flan-T5-Base...
+Model loaded successfully
+Loading CommonsenseQA dataset...
+Loaded 1221 items
+
+======================================================================
+STEP 1: OUT-OF-THE-BOX (OOTB) ACCURACY CHECK
+======================================================================
+
+Verifying model accuracy using Control prompt...
+Random baseline: 20.0%
+Valid signal threshold: 40.0%
+
+==================================================
+OOTB ACCURACY RESULT: 74.0% (74/100)
+Parse rate: 100.0% (100/100)
+==================================================
+Time: 1.7s
+
+PASS: Accuracy exceeds threshold. Proceeding with experiments.
+
+======================================================================
+STEP 2: SENSITIVITY EXPERIMENTS
+======================================================================
+
+[CONTROL] Running experiment...
+  Completed in 54.2s
+  Average Variation Ratio: 0.1423
+  Accuracy: 71.8% (359/500)
+
+[METACOGNITION] Running experiment...
+  Completed in 256.8s
+  Average Variation Ratio: 0.4534
+  Accuracy: 69.2% (346/500)
+
+[STRUCTURE] Running experiment...
+  Completed in 64.2s
+  Average Variation Ratio: 0.1439
+  Accuracy: 66.0% (330/500)
+
+[POLITENESS] Running experiment...
+  Completed in 56.9s
+  Average Variation Ratio: 0.1371
+  Accuracy: 70.0% (350/500)
+
+======================================================================
+RESULTS SUMMARY
+======================================================================
+
+OOTB Accuracy (Control prompt, N=100): 74.0%
+
+Prompt Style    | VR       | Accuracy     | Interpretation
+----------------------------------------------------------------------
+control         | 0.1423   |  71.8%       | Stable
+metacognition   | 0.4534   |  69.2%       | Unstable
+structure       | 0.1439   |  66.0%       | Stable
+politeness      | 0.1371   |  70.0%       | Stable
+
+----------------------------------------------------------------------
+Most Stable (lowest VR): politeness (VR=0.1371)
+Least Stable (highest VR): metacognition (VR=0.4534)
+Highest Accuracy: control (71.8%)
+Lowest Accuracy: structure (66.0%)
+
+Results saved to ./outputs/results/phase_6/flan-t5-base/csqa/synonym/w1_n20_s105_093139.json
+Detailed responses saved to ./outputs/results/phase_6/flan-t5-base/csqa/synonym/w1_n20_s105_detail.csv
+
+======================================================================
+EXPERIMENT COMPLETE
+======================================================================

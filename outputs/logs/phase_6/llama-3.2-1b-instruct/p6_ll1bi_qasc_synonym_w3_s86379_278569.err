@@ -1,0 +1,3 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  24%|██▍       | 35/146 [00:00<00:00, 311.40it/s]Loading weights:  46%|████▌     | 67/146 [00:00<00:00, 225.02it/s]Loading weights:  62%|██████▏   | 91/146 [00:00<00:00, 221.27it/s]Loading weights:  78%|███████▊  | 114/146 [00:00<00:00, 208.27it/s]Loading weights:  93%|█████████▎| 136/146 [00:00<00:00, 202.43it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 224.77it/s]
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
