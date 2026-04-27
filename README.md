@@ -38,7 +38,7 @@ Instruct models (Llama-Instruct, Phi-3-Mini) automatically use chat templates vi
 |---------|------|--------|-----------------|--------|
 | [QASC](https://huggingface.co/datasets/allenai/qasc) | 8-way multiple-choice science QA (no facts) | A-H | 12.5% | Active |
 | [CoLA](https://huggingface.co/datasets/nyu-mll/glue) | Binary grammaticality judgment | acceptable / unacceptable | 50% | Active |
-| [CommonsenseQA](https://huggingface.co/datasets/tau/commonsense_qa) | 5-way multiple-choice commonsense | A-E | 20% | Registered (stub) |
+| [CommonsenseQA](https://huggingface.co/datasets/tau/commonsense_qa) | 5-way multiple-choice commonsense | A-E | 20% | Active |
 | [GSM8K](https://huggingface.co/datasets/openai/gsm8k) | Grade-school math, free-form numeric | numeric | 0% | Registered (stub) |
 
 New datasets are added by implementing a `DatasetHandler` subclass — zero changes to the pipeline code.
@@ -79,24 +79,30 @@ Uses a separate small model (`google/flan-t5-small`) to rewrite inputs:
 ```text
 NLP_Stability_by_Design/
 ├── outputs/
-│   └── results/                     # Experiment output JSONs
-│       ├── flan-t5-base/            # Results per model
-│       ├── flan-t5-large/
-│       ├── pythia-410m/
-│       ├── llama-3.2-1b/
-│       ├── llama-3.2-1b-instruct/
-│       ├── phi-3-mini/
-│       └── qasc_no_facts/           # QASC no-facts baseline eval
+│   ├── results/                     # Experiment outputs (JSON + CSV)
+│   │   ├── phase_1/ … phase_6/     # Results organized by phase
+│   │   │   ├── flan-t5-base/       # Per-model directories
+│   │   │   │   └── cola/qasc/csqa/ # Per-dataset, contains summary + detail CSVs
+│   │   │   ├── flan-t5-large/
+│   │   │   ├── pythia-410m/
+│   │   │   ├── llama-3.2-1b/
+│   │   │   ├── llama-3.2-1b-instruct/
+│   │   │   └── phi-3-mini/
+│   │   └── qasc_no_facts/          # QASC no-facts baseline eval
+│   ├── figures/                     # Generated plots (by phase)
+│   └── logs/                        # Slurm job output logs
 ├── reference_paper_code/            # Original paper's code (read-only reference)
+├── scripts/slurm/                   # Slurm job scripts (by phase/model/seed)
 ├── src/                             # Source code
 │   ├── run_experiment.py            # Main CLI entry point (model- and dataset-agnostic)
 │   ├── model_handlers.py            # Model Handler ABC + Registry (Seq2Seq, Causal, Instruct)
 │   ├── dataset_handlers.py          # Dataset Handler ABC + Registry (CoLA, QASC, CSQA, GSM8K)
 │   ├── config.py                    # ExperimentConfig dataclass, experiment seeds
 │   ├── perturbations.py             # Synonym + paraphrase perturbation generation
+│   ├── visualize_results.py         # Control-centric dual-axis plots (accuracy + VR)
 │   ├── eval_qasc_no_facts.py        # Isolated QASC-without-facts evaluation script
 │   ├── models.py                    # ModelConfig definitions, device detection (legacy)
-│   ├── prompts.py                   # Four prompt style templates (legacy)
+│   ├── prompts.py                   # Four prompt style templates + max_tokens per style
 │   ├── datasets_config.py           # DatasetConfig definitions (legacy)
 │   ├── data_analysis.py             # DataManager, ResultAnalyzer, parsing, VR math
 │   ├── data_demo.py                 # Standalone demo of the data pipeline
@@ -109,16 +115,17 @@ NLP_Stability_by_Design/
 
 | File | Owner | Purpose |
 |------|-------|---------|
-| `run_experiment.py` | All | Unified CLI runner — fully model- and dataset-agnostic via handler registries |
+| `run_experiment.py` | All | Unified CLI runner — fully model- and dataset-agnostic via handler registries. Produces JSON + detailed per-response CSV. OOTB denominator uses total items (not just parsed). |
 | `model_handlers.py` | TM1 | `ModelHandler` ABC + concrete handlers (`Seq2SeqModelHandler`, `CausalModelHandler`, `InstructCausalModelHandler`) + registry |
-| `dataset_handlers.py` | TM2 | `DatasetHandler` ABC + concrete handlers (`QASCHandler`, `CoLAHandler`, `CSQAHandler`, `GSM8KHandler`) + registry |
-| `config.py` | TM3 | `ExperimentConfig` dataclass, `EXPERIMENT_SEEDS` (3 seeds for statistical significance) |
+| `dataset_handlers.py` | TM2 | `DatasetHandler` ABC + concrete handlers (`QASCHandler`, `CoLAHandler`, `CSQAHandler`, `GSM8KHandler`) + registry. Includes multi-pass yes/no parser and letter parser with markdown fence stripping. |
+| `config.py` | TM3 | `ExperimentConfig` dataclass with `sensitivity_on_raw` flag, `EXPERIMENT_SEEDS` (3 seeds for statistical significance) |
 | `perturbations.py` | TM3 | WordNet synonym replacement + Flan-T5-Small paraphrase generation, seed management (`set_all_seeds`), validation |
+| `visualize_results.py` | All | Aggregates phase CSVs and generates control-centric dual-axis plots (accuracy + VR) per model/dataset combination |
 | `eval_qasc_no_facts.py` | All | Isolated evaluation of Flan-T5-Large on QASC without fact injection (ceiling-effect investigation) |
 | `models.py` | TM1 | `ModelConfig` definitions, `load_model_and_tokenizer()`, `run_inference()`, device detection (legacy, still importable) |
-| `prompts.py` | TM3 | Generic and dataset-specific prompt templates for all four styles (legacy, still importable) |
+| `prompts.py` | TM3 | Generic and dataset-specific prompt templates for all four styles. Includes per-dataset per-style `max_tokens` settings. |
 | `datasets_config.py` | TM2 | `DatasetConfig` definitions, HuggingFace dataset loading (legacy, still importable) |
-| `data_analysis.py` | TM2 | `DataManager` (data loading/sampling), `ResultAnalyzer` (response parsing, VR calculation) |
+| `data_analysis.py` | TM2 | `DataManager` (data loading/sampling), `ResultAnalyzer` (response parsing, VR calculation with raw/parsed modes) |
 | `data_demo.py` | TM2 | Interactive demo showing raw data, prompt formatting, model responses |
 | `interface.py` | All | Architecture overview, re-exports from all modules, quick-start example |
 
@@ -212,7 +219,7 @@ python run_experiment.py --model flan-t5-large --dataset qasc --facts
 | Option | Description | Default |
 |--------|-------------|---------|
 | `--model` | Model key: `flan-t5-base`, `flan-t5-large`, `pythia-410m`, `llama-3.2-1b`, `llama-3.2-1b-instruct`, `phi-3-mini` | *required* |
-| `--dataset` | Dataset key: `qasc`, `cola` (also registered: `csqa`, `gsm8k`) | *required* |
+| `--dataset` | Dataset key: `qasc`, `cola`, `csqa` (also registered: `gsm8k`) | *required* |
 | `--sample-size` | Number of samples for sensitivity measurement | 500 |
 | `--num-perturbations` | Number of perturbations per sample (N) | 10 |
 | `--words-to-replace` | Words to replace per synonym perturbation | 1 |
@@ -222,16 +229,25 @@ python run_experiment.py --model flan-t5-large --dataset qasc --facts
 | `--seed` | Random seed for reproducibility | 2266 |
 | `--output-dir` | Output directory | `../outputs/results` |
 | `--skip-ootb` | Skip the OOTB accuracy check | false |
+| `--sensitivity-on-parsed` | Use extracted answers (strip+upper) for VR instead of raw decoded strings | off (raw by default) |
+| `--phase` | Experiment phase label (e.g., `phase_6`) | `phase_1` |
 
 ### Output
 
-Each experiment produces a JSON file in `outputs/results/<model-key>/`:
+Each experiment produces files in `outputs/results/<phase>/<model-key>/<dataset>/<perturbation-method>/`:
 
 ```
-outputs/results/flan-t5-base/sensitivity_results_flan-t5-base_qasc.json
+outputs/results/phase_6/flan-t5-large/cola/synonym/
+├── w3_n20_s105.csv               # Summary CSV: one row per prompt style (accuracy, VR, etc.)
+├── w3_n20_s105_detail.csv        # Detailed CSV: one row per response (raw_response, parsed_answer, parse_method, is_correct, etc.)
+└── w3_n20_s105.json              # Full JSON with OOTB accuracy, experiment config, and per-style results
 ```
 
-The JSON contains OOTB accuracy, experiment parameters, and per-style results (VR, accuracy, sample count).
+The **summary CSV** contains per-style aggregated metrics (accuracy, VR, correct count, sample size).
+
+The **detail CSV** contains every individual model response with columns: `item_idx`, `prompt_style`, `perturbation_idx`, `correct_answer`, `variation_ratio`, `base_text`, `perturbed_text`, `prompt`, `raw_response`, `parsed_answer`, `parse_method`, `is_valid_parse`, `is_correct`.
+
+The **JSON** contains OOTB accuracy (with `ootb_parsed` count and `parse_rate`), experiment parameters (including `sensitivity_on_raw`), and per-style results.
 
 ## Reproducibility
 
@@ -247,20 +263,91 @@ The paraphrase generator additionally re-seeds torch before every individual gen
 
 Default seed: **2266** (from the reference paper). Three seeds are used for statistical significance: **105**, **2266**, **86379** (defined in `config.EXPERIMENT_SEEDS`).
 
+## Sensitivity Calculation: Raw vs Parsed
+
+By default, the **Variation Ratio** (sensitivity metric) is computed on the **raw decoded model outputs** (stripped of whitespace), not on the parsed/extracted answers. This is controlled by the `sensitivity_on_raw` flag in `ExperimentConfig` (default: `True`).
+
+| Mode | VR computed on | Accuracy computed on | When to use |
+|------|---------------|---------------------|-------------|
+| **Raw (default)** | Full decoded strings (strip only) | Parsed answers (strip + upper) | Standard — captures formatting changes as real sensitivity |
+| **Parsed** | Extracted final answers (strip + upper) | Parsed answers (strip + upper) | When you only care about the final label, not surface form |
+
+**Why raw is the default:** Two responses like `"A"` and `"The answer is A"` give the same parsed answer but are different raw outputs. Raw mode counts this as variation (the model is sensitive to the perturbation), which is the more conservative and informative measure. Use `--sensitivity-on-parsed` to switch to parsed mode if needed.
+
 ## Methodology
 
 1. **Fix seeds** across all libraries for reproducibility
 2. **Load model & dataset** from HuggingFace
-3. **OOTB accuracy check** on unperturbed data (verifies model can perform the task)
+3. **OOTB accuracy check** on unperturbed data (verifies model can perform the task; denominator is total samples, not just parsed — unparseable responses count as wrong)
 4. **For each prompt style** (Control, Metacognition, Structure, Politeness):
    - For each sample in the dataset:
      - Format the question with the prompt style
      - Get the model's answer on the original input
      - Generate N semantic-preserving perturbations
      - Get the model's answer on each perturbation
-     - Compute the Variation Ratio across all N+1 predictions
+     - Compute the Variation Ratio across all N+1 predictions (on raw outputs by default)
    - Report average VR and accuracy across all samples
-5. **Save results** as JSON
+5. **Save results** as JSON + detailed per-response CSV
+
+## Visualization
+
+The `visualize_results.py` script generates **control-centric dual-axis plots** for each model × dataset combination per phase. Each plot shows:
+
+- **Left Y-axis (solid lines):** Accuracy per prompt style
+- **Right Y-axis (dashed lines):** Variation Ratio (sensitivity) per prompt style
+- **Lines from Control:** Each non-control style is connected to the Control baseline, making it easy to see the impact of each prompt attribute
+
+### Generating Plots
+
+```bash
+cd src
+
+# Generate plots for a specific phase
+python visualize_results.py --phase phase_6
+
+# Custom results/output directories
+python visualize_results.py --phase phase_6 --results-dir outputs/results --output-dir outputs/figures
+```
+
+Plots are saved to `outputs/figures/<phase>/impact_plot_<model>_<dataset>.png`.
+
+### How It Works
+
+1. Loads all summary CSVs (non-detail) for the specified phase
+2. Aggregates across seeds (mean ± std for accuracy and VR)
+3. Creates one plot per model × dataset combination
+4. Uses unique colors per style: Metacognition (green), Structure (red), Politeness (purple), Control (gray)
+
+## Code Changes (Phase 5 → Phase 6)
+
+Several bugs were identified and fixed between Phase 5 and Phase 6:
+
+### Fix 1: OOTB Accuracy Denominator
+**File:** `run_experiment.py`
+The OOTB accuracy denominator was changed from `total_parsed` to `total_items`. Previously, if only 1 out of 100 responses was parseable and that 1 was correct, OOTB showed 100%. Now, unparseable responses count as wrong (accuracy = 1/100 = 1%).
+
+### Fix 2: CoLA Structure `max_tokens`
+**File:** `dataset_handlers.py`, `prompts.py`
+Increased from 50 → 150. The JSON output format requires more tokens than a bare letter, and 50 tokens was truncating JSON responses mid-field.
+
+### Fix 3: CoLA Metacognition `max_tokens`
+**File:** `dataset_handlers.py`, `prompts.py`
+Increased from 10 → 200. The metacognition prompt asks models to "think step by step", which produces verbose responses. With only 10 tokens the model was cut off mid-sentence before reaching a conclusion.
+
+### Fix 4: Markdown Fence Stripping
+**File:** `dataset_handlers.py`
+Models like phi-3-mini wrap JSON output in `` ```json ... ``` `` markdown fences. Added `_strip_markdown_fences()` that runs before JSON parsing in both the letter parser and yes/no parser.
+
+### Fix 5: Improved Yes/No Parser (4-Pass Strategy)
+**File:** `dataset_handlers.py`
+The `_parse_yes_no_verbose` function was rewritten with a 4-pass strategy for CoLA and similar binary tasks:
+
+1. **Answer signal patterns** — looks for "the answer is Yes/No", "Answer: Yes/No", "therefore Yes/No" anywhere (last match wins)
+2. **Tail yes/no** — bare "yes"/"no" in the last 50 characters
+3. **Grammaticality keywords in tail** — "correct"/"grammatical" → YES, "incorrect"/"ungrammatical" → NO (negatives checked first, last 50 chars only)
+4. **Full-scan fallback** — bare "yes"/"no" anywhere in the response
+
+The tail-focused design avoids the "metacognition trap" where a model says "correct" in its reasoning but concludes "No".
 
 ## Experiment Results
 
