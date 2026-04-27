@@ -40,8 +40,8 @@ Instruct models (Llama-Instruct, Phi-3-Mini) automatically use chat templates vi
 |---------|------|--------|-----------------|--------|
 | [QASC](https://huggingface.co/datasets/allenai/qasc) | 8-way multiple-choice science QA (no facts) | A-H | 12.5% | Active |
 | [CoLA](https://huggingface.co/datasets/nyu-mll/glue) | Binary grammaticality judgment | acceptable / unacceptable | 50% | Active |
-| [CommonsenseQA](https://huggingface.co/datasets/tau/commonsense_qa) | 5-way multiple-choice commonsense | A-E | 20% | Active |
-| [GSM8K](https://huggingface.co/datasets/openai/gsm8k) | Grade-school math, free-form numeric | numeric | 0% | Registered (stub) |
+| [CommonsenseQA](https://huggingface.co/datasets/tau/commonsense_qa) CSQA| 5-way multiple-choice commonsense | A-E | 20% | Active |
+
 
 New datasets are added by implementing a `DatasetHandler` subclass — zero changes to the pipeline code.
 
