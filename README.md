@@ -462,11 +462,6 @@ All Phase 1 experiments: 100 samples, 10 perturbations per sample, synonym mode,
 
 Lu, S., Schuff, H., & Gurevych, I. (2024). *How are Prompts Different in Terms of Sensitivity?* NAACL 2024. [arXiv:2311.07230](https://arxiv.org/abs/2311.07230)
 
-## Team
-
-- **Team Member 1** -- DevOps & Infrastructure: model loading, device management, inference pipeline
-- **Team Member 2** -- Data & Parsing: dataset configs, response parsing, VR calculation
-- **Team Member 3** -- Prompt Engineering: prompt templates, perturbation generation, configuration, reproducibility
 
 ## License
 
