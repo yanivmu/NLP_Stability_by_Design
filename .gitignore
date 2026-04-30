@@ -1,2 +1,30 @@
-src/__pycache__
-/.vscode
+# Python
+src/__pycache__/
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# VS Code
+.vscode/
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.xdv
+
+
+# macOS
+.DS_Store
+
+# AI MD files
+GEMINI.md
