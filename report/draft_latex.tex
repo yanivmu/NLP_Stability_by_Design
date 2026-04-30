@@ -231,7 +231,10 @@ Second, \textbf{Metacognition} is the riskiest style. It can help on a binary ta
 
 Third, \textbf{Structure} has mixed effects. On CoLA, structured JSON prompting can be genuinely helpful. On multiple-choice tasks, however, structure often produces the largest accuracy drops. In these cases, lower variation ratio may reflect rigid output behavior rather than robust reasoning.
 
-These results also suggest that task type matters. The binary CoLA setting tolerates prompt modifications better than the multiple-choice settings. By contrast, CSQA and QASC are both more brittle under prompt changes, and the negative effects are especially large when the prompt encourages extra reasoning or enforces a rigid output schema. Prompt robustness in small models therefore depends not only on the prompt itself, but also on the interaction between model capability and task structure.
+Furthermore, we analyzed the computational load of different prompt styles. In our experiments with Phi-3-Mini on CSQA, the \textbf{Structure} prompt (which requires generating a JSON object with reasoning) increased average inference latency by approximately 14.6x compared to the Control prompt. This highlights a significant deployment trade-off: while structured outputs improve parsing reliability and can sometimes improve robustness, they introduce a heavy computational bottleneck, especially in decoder-only causal models where sequence length directly impacts generation time.
+
+These results also suggest that task type matters.
+ The binary CoLA setting tolerates prompt modifications better than the multiple-choice settings. By contrast, CSQA and QASC are both more brittle under prompt changes, and the negative effects are especially large when the prompt encourages extra reasoning or enforces a rigid output schema. Prompt robustness in small models therefore depends not only on the prompt itself, but also on the interaction between model capability and task structure.
 
 \section{Limitations}
 
