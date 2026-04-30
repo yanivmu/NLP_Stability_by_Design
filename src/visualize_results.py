@@ -147,11 +147,77 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir):
     plt.savefig(save_path, bbox_inches='tight')
     plt.close()
 
+def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str):
+    """
+    Creates a global summary bar chart showing the average delta (change) 
+    in Accuracy and Variation Ratio relative to the Control for each style.
+    """
+    # Filter out styles that aren't in our core set
+    valid_styles = ['control', 'metacognition', 'structure', 'politeness']
+    df = df[df['prompt_style'].str.lower().isin(valid_styles)].copy()
+    df['prompt_style'] = df['prompt_style'].str.capitalize()
+    
+    # Calculate deltas per (model, dataset, seed) group
+    groups = df.groupby(['model', 'dataset', 'seed'])
+    delta_list = []
+    
+    for name, group in groups:
+        control_rows = group[group['prompt_style'] == 'Control']
+        if control_rows.empty:
+            continue
+        
+        c_acc = control_rows['accuracy'].values[0]
+        c_vr = control_rows['variation_ratio'].values[0]
+        
+        for i, row in group.iterrows():
+            if row['prompt_style'] == 'Control':
+                continue
+            
+            delta_list.append({
+                'style': row['prompt_style'],
+                'delta_acc': row['accuracy'] - c_acc,
+                'delta_vr': row['variation_ratio'] - c_vr
+            })
+    
+    if not delta_list:
+        print("Warning: No deltas could be calculated for summary plot.")
+        return
+        
+    delta_df = pd.DataFrame(delta_list)
+    
+    # Melt for grouped plotting
+    plot_df = delta_df.melt(id_vars='style', value_vars=['delta_acc', 'delta_vr'],
+                           var_name='Metric', value_name='Delta')
+    plot_df['Metric'] = plot_df['Metric'].map({
+        'delta_acc': 'Change in Accuracy',
+        'delta_vr': 'Change in Sensitivity (VR)'
+    })
+
+    plt.figure(figsize=(12, 7))
+    sns.barplot(data=plot_df, x='style', y='Delta', hue='Metric', 
+                palette=['#1f77b4', '#ff7f0e'], capsize=.1, errorbar='sd')
+    
+    plt.axhline(0, color='black', linewidth=1.5, linestyle='--')
+    plt.title(f"Global Summary ({phase.upper()}): Average Impact of Prompt Attributes\nRelative to Control Baseline (N={len(delta_df)})", 
+              fontsize=16, pad=20)
+    plt.ylabel("Absolute Change", fontsize=14)
+    plt.xlabel("Prompt Attribute", fontsize=14)
+    plt.legend(title="Metric Impact", loc='upper right')
+    
+    # Save to phase directory
+    phase_fig_dir = os.path.join(output_dir, phase)
+    os.makedirs(phase_fig_dir, exist_ok=True)
+    save_path = os.path.join(phase_fig_dir, "summary_impact.png")
+    plt.savefig(save_path, bbox_inches='tight')
+    plt.close()
+    print(f"Summary plot saved to {save_path}")
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--phase", type=str, default="phase_1", help="Which phase to visualize")
     parser.add_argument("--results-dir", type=str, default="outputs/results")
     parser.add_argument("--output-dir", type=str, default="outputs/figures")
+    parser.add_argument("--summary-only", action="store_true", help="Only generate the global summary plot")
     args = parser.parse_args()
 
     df = load_results_for_phase(args.results_dir, args.phase)
@@ -162,13 +228,18 @@ def main():
     # Clean data
     df['accuracy'] = pd.to_numeric(df['accuracy'], errors='coerce')
     df['variation_ratio'] = pd.to_numeric(df['variation_ratio'], errors='coerce')
+    df = df.dropna(subset=['accuracy', 'variation_ratio'])
 
-    print(f"Generating Multi-Color analytics for: {args.phase}")
+    print(f"Generating analytics for: {args.phase}")
 
-    # Generate plots for every model/dataset combination
-    for model in df['model'].unique():
-        for dataset in df['dataset'].unique():
-            create_control_centric_plot(df, model, dataset, args.phase, args.output_dir)
+    # Global summary plot
+    create_summary_impact_plot(df, args.phase, args.output_dir)
+
+    if not args.summary_only:
+        # Generate plots for every model/dataset combination
+        for model in df['model'].unique():
+            for dataset in df['dataset'].unique():
+                create_control_centric_plot(df, model, dataset, args.phase, args.output_dir)
 
     print(f"Figures saved to {args.output_dir}/{args.phase}/")
 
