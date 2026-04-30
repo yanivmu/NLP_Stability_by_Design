@@ -216,13 +216,12 @@ The two multiple-choice tasks show a very different pattern. On CSQA, the contro
 
 \begin{figure}[t]
 \centering
-% Placeholder for future plot: dual-axis comparison for Flan-T5-Large on CoLA
-\rule{\linewidth}{0.6\linewidth} 
-\caption{Control-centered prompt-style comparison for Flan-T5-Large on CoLA. The plot shows the clearest positive case in our experiments: structure improves both accuracy and variation ratio relative to the control prompt.}
-\label{fig:cola-impact}
+\includegraphics[width=\linewidth]{../outputs/figures/phase_6/summary_impact.pdf}
+\caption{Impact of prompt attributes relative to the Control baseline across all tasks. Accuracy improvements are seen on CoLA, but structured prompting induces a significant trade-off on multiple-choice tasks.}
+\label{fig:summary}
 \end{figure}
 
-\textbf{PLACEHOLDER FOR DESCRIBING THE FIGURE}Figure: ~\ref{fig:cola-impact} visualizes the clearest positive result in our experiments. The CoLA setting shows that prompt design can improve both performance and robustness, but this effect is not general. The same styles that help on CoLA can harm performance sharply on CSQA and QASC. \textbf{SUGGESTED PLOT} 
+Figure~\ref{fig:summary} visualizes the clearest positive result in our experiments. The CoLA setting shows that prompt design can improve both performance and robustness, but this effect is not general. The same styles that help on CoLA can harm performance sharply on CSQA and QASC.
 
 \section{Discussion}
 
