@@ -106,9 +106,50 @@ For each instance, we compare four prompt styles. The \textbf{control} condition
 
 \subsection{Approach}
 
-Our framework is inference-only. We do not fine-tune any model parameters. Instead, we evaluate how the same pretrained model behaves when the same task is presented through different prompt styles and through semantic-preserving input perturbations.
+Our framework is inference-only. We do not fine-tune any model parameters. Instead, we evaluate how the same pretrained model behaves when the same task is presented through different prompt styles and through semantic-preserving input perturbations. The overall evaluation flow is summarized in Algorithm~\ref{alg:pipeline}.
 
-For each model-dataset pair, we first run an out-of-the-box (OOTB) accuracy check using the control prompt. This step verifies that the model performs the task at a level that makes sensitivity analysis meaningful. Only after this screening step do we run the full sensitivity experiment.
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lp{12cm}}
+\toprule
+\textbf{Style} & \textbf{Example Prompt (CoLA)} \\ \midrule
+Control & Is this sentence grammatically correct? Answer Yes or No. \newline Sentence: "The problem perceives easily." \newline Answer: \\
+Metacognition & Is this sentence grammatically correct? Answer Yes or No. Before answering, carefully check the grammar rules. Verify your answer is correct. \newline Sentence: "The problem perceives easily." \newline Think about it carefully, then answer: \\
+Structure & Analyze whether the following sentence is grammatically correct. \newline Sentence: "The problem perceives easily." \newline You MUST respond with valid JSON in this exact format: \{"reasoning": "...", "final\_answer": "Yes or No"\} \\
+Politeness & Hello! I would really appreciate your help with this. Could you please tell me if this sentence is grammatically correct? Please answer with Yes or No. \newline Sentence: "The problem perceives easily." \newline Thank you! Your answer: \\ \bottomrule
+\end{tabular}
+\caption{Examples of the four prompt styles applied to a single instance from the CoLA dataset.}
+\label{tab:prompt-examples}
+\end{table*}
+
+\begin{figure}[h]
+\begin{minipage}{\columnwidth}
+\begin{small}
+\begin{tabular}{p{0.95\columnwidth}}
+\hline
+\textbf{Algorithm 1:} Sensitivity Evaluation Pipeline \\ \hline
+\textbf{Input:} Dataset $D$, Model $M$, Style $S$ \\
+\textbf{1. OOTB Screening:} \\
+\hspace{1em} Evaluate $M$ on $D$ using Control prompt. \\
+\hspace{1em} \textbf{If} Accuracy $<$ Threshold: \textbf{Exit}. \\
+\textbf{2. Perturbation:} \\
+\hspace{1em} \textbf{For} each item $x \in D$: \\
+\hspace{2em} Generate $N$ semantic variants $\{x'_1, ..., x'_N\}$. \\
+\textbf{3. Inference:} \\
+\hspace{1em} Collect responses $R = \{M(S, x), M(S, x'_1), ..., M(S, x'_N)\}$. \\
+\textbf{4. Metric Calculation:} \\
+\hspace{1em} Calculate Sensitivity $s = 1 - \frac{modal\_count(R)}{N+1}$. \\
+\hspace{1em} Parse $R$ to calculate Accuracy $a$. \\ \hline
+\end{tabular}
+\end{small}
+\caption{The sensitivity-based evaluation process.}
+\label{alg:pipeline}
+\end{minipage}
+\end{figure}
+
+For each model-dataset pair, we first run an out-of-the-box (OOTB) accuracy check using the control prompt.
+ This step verifies that the model performs the task at a level that makes sensitivity analysis meaningful. Only after this screening step do we run the full sensitivity experiment.
 
 In the main experiment, we sample input instances and evaluate each prompt style separately. For every sampled instance, we construct one original prompt and $N$ perturbed variants. The model is run on all $N+1$ versions. We then record both the raw decoded outputs and the parsed task-level answers. For QASC and CSQA, parsing extracts a single answer letter. For CoLA, parsing extracts a Yes or No judgment. In the structure condition, the parser reads the \texttt{final\_answer} field from the JSON output; in the other conditions, it extracts the relevant label from plain-text output.
 
