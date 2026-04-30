@@ -89,13 +89,15 @@ Our setting includes three task types. In QASC, the input is a multiple-choice s
 \begin{table}[h]
 \centering
 \small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}llllll@{}}
 \toprule
 Dataset & Task Type & Domain & Split & Classes & Random \\ \midrule
 CoLA & Binary Class. & Grammar & Val & 2 & 50.0\% \\
 QASC & 8-way MC & Science & Val & 8 & 12.5\% \\
 CSQA & 5-way MC & Commonsense & Val & 5 & 20.0\% \\ \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Statistics for the evaluation datasets.}
 \label{tab:datasets}
 \end{table}
@@ -255,4 +257,4 @@ We used AI tools (mainly GPT 5.4) for language editing, structural planning, and
 \bibliographystyle{acl_natbib}
 \bibliography{custom}
 
-\end{document}
+\end{document}{acl_natbib}
