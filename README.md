@@ -21,6 +21,13 @@ The reference paper shows that **sensitivity** (measured via variation ratio) is
 | **OOTB accuracy** | Out-Of-The-Box accuracy on unperturbed data with the **Control** prompt, evaluated before sensitivity runs. Used with dataset-specific **random** and **valid-signal** thresholds to decide whether to run the full experiment (see *OOTB screening gate*). Denominator is all OOTB samples; unparseable outputs count as incorrect. |
 | **Prompt styles** | Four framing strategies tested: Control (baseline), Metacognition (self-check), Structure (JSON output), Politeness (courteous phrasing). |
 
+## Recent Findings & Refinements (Phase 6)
+
+- **Instructional Shutdown:** We identified that base models (e.g., Llama-3.2-1B) can experience "total collapse" on structured JSON prompts, producing empty responses. This results in an artificial **0.0 Variation Ratio**, which highlights the necessity of the OOTB screening gate—low sensitivity is only meaningful when the model retains task competence.
+- **Computational Cost of Robustness:** The **Structure** style, while sometimes improving robustness on binary tasks, introduces a significant latency bottleneck (~14.6x slower on Phi-3-Mini) due to the overhead of generating reasoning tokens and JSON schemas.
+- **High-Quality Reporting:** The visualization pipeline now exports all plots in both **PNG** and **PDF (vector)** formats to ensure publication-quality visuals for the final LaTeX report.
+- **Methodological Alignment:** Generation is strictly **greedy** to isolate structural sensitivity from sampling noise, and the variation ratio is calculated on **raw decoded text** to remain strictly aligned with the Lu et al. (2024) methodology.
+
 ## Models
 
 | Model | Architecture | Parameters | HuggingFace ID |
