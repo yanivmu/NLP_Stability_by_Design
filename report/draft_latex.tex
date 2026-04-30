@@ -86,6 +86,20 @@ We study prompt robustness as a conditional prediction problem under semantic-pr
 
 Our setting includes three task types. In QASC, the input is a multiple-choice science question with eight answer options, and the target output is a single answer letter from A to H. In CoLA, the input is a sentence and the target output is a binary grammaticality judgment, represented as Yes or No. In CSQA, the input is a multiple-choice commonsense question with five answer options, and the target output is a single answer letter from A to E. In all cases, the task content remains fixed across prompt styles; only the framing of the instruction changes.
 
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}llllll@{}}
+\toprule
+Dataset & Task Type & Domain & Split & Classes & Random \\ \midrule
+CoLA & Binary Class. & Grammar & Val & 2 & 50.0\% \\
+QASC & 8-way MC & Science & Val & 8 & 12.5\% \\
+CSQA & 5-way MC & Commonsense & Val & 5 & 20.0\% \\ \bottomrule
+\end{tabular}
+\caption{Statistics for the evaluation datasets.}
+\label{tab:datasets}
+\end{table}
+
 For each instance, we compare four prompt styles. The \textbf{control} condition is a standard zero-shot instruction. The \textbf{metacognition} condition adds self-check and verification cues. The \textbf{structure} condition constrains the model to respond in a fixed JSON format that separates a brief explanation from a final answer field. The \textbf{politeness} condition adds courteous conversational phrasing. The goal is not to optimize prompts for a single benchmark, but to test whether these prompt properties change the stability of model predictions under controlled reformulations of the same underlying input.
 
 \subsection{Approach}
