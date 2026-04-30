@@ -396,67 +396,95 @@ The tail-focused design avoids the "metacognition trap" where a model says "corr
 
 ## Experiment Results
 
-### Phase 1 (with fact injection)
+### Phase 6 (canonical results)
 
-All Phase 1 experiments: 100 samples, 10 perturbations per sample, synonym mode, seed=2266, **QASC with fact injection** (`--facts`). Note: QASC with facts produces a ceiling effect (~99-100% accuracy on Flan-T5). Phase 2 experiments use the no-facts default (~63% accuracy on Flan-T5-Large).
+All Phase 6 experiments: 500 samples, 20 perturbations per sample, averaged across synonym (w1/w3/w5) and paraphrase perturbation methods, averaged across 3 seeds (105, 2266, 86379). QASC without fact injection. VR computed on raw decoded outputs (default mode).
+
+**Note on Llama-3.2-1B Structure:** The structure prompt produces `0.000` VR and `0%` accuracy on CoLA for all runs, indicating the model outputs a constant empty/unparseable response for that style — degenerate rather than stable.
 
 ### Flan-T5-Base
 
 | Dataset | OOTB Acc. | Style | VR | Accuracy |
 |---------|-----------|-------|----|----------|
-| QASC | 99% | Control | 0.026 | 99% |
-| | | Metacognition | 0.030 | 96% |
-| | | Structure | 0.031 | 96% |
-| | | Politeness | 0.028 | 98% |
-| CoLA | 29% | Control | 0.000 | 29% |
-| | | Metacognition | 0.000 | 29% |
-| | | Structure | 0.116 | 46% |
-| | | Politeness | 0.000 | 29% |
+| QASC | 44% | Control | 0.263 | 45% |
+| | | Metacognition | 0.592 | 41% |
+| | | Structure | 0.269 | 40% |
+| | | Politeness | 0.271 | 45% |
+| CSQA | 73% | Control | 0.249 | 72% |
+| | | Metacognition | 0.559 | 69% |
+| | | Structure | 0.251 | 66% |
+| | | Politeness | 0.248 | 70% |
 
 ### Flan-T5-Large
 
 | Dataset | OOTB Acc. | Style | VR | Accuracy |
 |---------|-----------|-------|----|----------|
-| QASC | 100% | Control | 0.012 | 100% |
-| | | Metacognition | 0.013 | 100% |
-| | | Structure | 0.006 | 100% |
-| | | Politeness | 0.012 | 100% |
-| CoLA | 64% | Control | 0.124 | 64% |
-| | | Metacognition | 0.134 | 63% |
-| | | Structure | 0.107 | 66% |
-| | | Politeness | 0.132 | 71% |
+| CoLA | 63% | Control | 0.162 | 64% |
+| | | Metacognition | 0.169 | 68% |
+| | | Structure | 0.134 | 70% |
+| | | Politeness | 0.178 | 70% |
+| QASC | 62% | Control | 0.235 | 62% |
+| | | Metacognition | 0.653 | 37% |
+| | | Structure | 0.143 | 22% |
+| | | Politeness | 0.238 | 62% |
+| CSQA | 82% | Control | 0.224 | 83% |
+| | | Metacognition | 0.702 | 60% |
+| | | Structure | 0.224 | 50% |
+| | | Politeness | 0.217 | 83% |
 
 ### Pythia-410M
 
 | Dataset | OOTB Acc. | Style | VR | Accuracy |
 |---------|-----------|-------|----|----------|
-| QASC | 3% | Control | 0.000 | 11% |
-| | | Metacognition | 0.000 | 13% |
-| | | Structure | 0.000 | 13% |
-| | | Politeness | 0.000 | 13% |
-| CoLA | 77% | Control | 0.000 | 6% |
-| | | Metacognition | 0.000 | 1% |
-| | | Structure | 0.000 | 5% |
-| | | Politeness | 0.000 | 6% |
+| CoLA | 64% | Control | 0.568 | 60% |
+| | | Metacognition | 0.794 | 27% |
+| | | Structure | 0.369 | 63% |
+| | | Politeness | 0.525 | 58% |
 
 ### Llama-3.2-1B
 
 | Dataset | OOTB Acc. | Style | VR | Accuracy |
 |---------|-----------|-------|----|----------|
-| QASC | 1% | Control | 0.000 | 6% |
-| | | Metacognition | 0.000 | 0% |
+| CoLA | 69% | Control | 0.415 | 69% |
+| | | Metacognition | 0.641 | 49% |
 | | | Structure | 0.000 | 0% |
-| | | Politeness | 0.000 | 0% |
-| CoLA | 77% | Control | 0.000 | 6% |
-| | | Metacognition | 0.000 | 6% |
-| | | Structure | 0.000 | 0% |
-| | | Politeness | 0.000 | 6% |
+| | | Politeness | 0.488 | 69% |
+
+### Llama-3.2-1B-Instruct
+
+| Dataset | OOTB Acc. | Style | VR | Accuracy |
+|---------|-----------|-------|----|----------|
+| CoLA | 69% | Control | 0.050 | 69% |
+| | | Metacognition | 0.807 | 34% |
+| | | Structure | 0.453 | 51% |
+| | | Politeness | 0.004 | 69% |
+
+### Phi-3-Mini-4K-Instruct
+
+| Dataset | OOTB Acc. | Style | VR | Accuracy |
+|---------|-----------|-------|----|----------|
+| CoLA | 76% | Control | 0.275 | 76% |
+| | | Metacognition | 0.803 | 76% |
+| | | Structure | 0.823 | 79% |
+| | | Politeness | 0.184 | 76% |
+| QASC | 76% | Control | 0.330 | 79% |
+| | | Metacognition | 0.579 | 77% |
+| | | Structure | 0.818 | 70% |
+| | | Politeness | 0.395 | 79% |
+| CSQA | 73% | Control | 0.273 | 74% |
+| | | Metacognition | 0.432 | 72% |
+| | | Structure | 0.881 | 71% |
+| | | Politeness | 0.402 | 74% |
 
 ### Interpretation
 
-- **Flan-T5 models** perform well on QASC (instruction-tuned, encoder-decoder architecture suits QA). Sensitivity is low across all styles, with Structure prompts showing the lowest VR on Flan-T5-Large.
-- **Flan-T5-Large on CoLA** shows meaningful sensitivity differences between prompt styles. Politeness achieves the highest accuracy (71%) while Structure achieves the lowest VR (0.107).
-- **Pythia and Llama** produce near-random accuracy, and VR = 0.000 reflects consistent (but wrong) answers rather than true stability. These models lack the instruction-tuning needed for zero-shot QA and grammaticality tasks. Sensitivity analysis requires models that can actually perform the task to be meaningful.
+- **Flan-T5-Large on CoLA** shows the clearest prompt-design signal: Structure achieves the lowest VR (0.134) with accuracy comparable to other styles, making it the most stable prompt. Politeness also achieves high accuracy (70%) with moderate VR.
+- **Flan-T5-Large on QASC and CSQA** reveals a striking pattern: Metacognition dramatically increases VR (0.65–0.70) while reducing accuracy, suggesting that the "think carefully" prompt causes these models to become erratic rather than more careful. Structure keeps VR low but collapses accuracy (22% on QASC), likely because the JSON format confuses output parsing. Politeness and Control behave nearly identically.
+- **Flan-T5-Base** passes the OOTB gate on QASC and CSQA but shows lower overall accuracy than Flan-T5-Large. The Metacognition prompt consistently raises VR across both datasets, mirroring the large model pattern.
+- **Phi-3-Mini** achieves the highest raw accuracy (76–79%) across datasets but shows extremely high VR for Structure (0.82–0.88) — reflecting the instability introduced by JSON formatting constraints. Politeness stands out as the most stable style (VR=0.18 on CoLA), matching Control accuracy. Metacognition similarly inflates VR without accuracy gains.
+- **Llama-3.2-1B-Instruct** is the most stable model for Control and Politeness (VR ≈ 0.05 and 0.004 respectively on CoLA), but Metacognition completely destabilizes outputs (VR=0.807, accuracy drops to 34%).
+- **Llama-3.2-1B (base)** and **Pythia-410M** show high VR overall (0.4–0.8), consistent with the lack of instruction tuning. The Structure prompt for Llama-3.2-1B produces VR=0.000 and accuracy=0%, which reflects degenerate constant outputs rather than genuine stability.
+- **Cross-model pattern:** Metacognition consistently raises VR and often hurts accuracy — the "think carefully" instruction appears counterproductive for small models. Politeness is generally the safest style, preserving accuracy while modestly controlling VR. Structure's effect is model-dependent: beneficial for Flan-T5-Large CoLA (low VR, good accuracy) but catastrophic for instruction-tuned models on structured output tasks.
 
 ## Reference Paper
 
