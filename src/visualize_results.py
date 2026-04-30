@@ -140,11 +140,15 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir):
     ax1.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.15, 1))
 
     # Save by phase
-    phase_fig_dir = os.path.join(output_dir, phase)
-    os.makedirs(phase_fig_dir, exist_ok=True)
+    pdf_phase_fig_dir = os.path.join(output_dir, phase, "pdf")
+    png_phase_fig_dir = os.path.join(output_dir, phase, "png")
+    os.makedirs(pdf_phase_fig_dir, exist_ok=True)
+    os.makedirs(png_phase_fig_dir, exist_ok=True)
     
-    save_path = os.path.join(phase_fig_dir, f"impact_plot_{model}_{dataset}.png")
-    plt.savefig(save_path, bbox_inches='tight')
+    base_save_path = os.path.join(png_phase_fig_dir, f"impact_plot_{model}_{dataset}")
+    plt.savefig(f"{base_save_path}.png", bbox_inches='tight')
+    base_save_path = os.path.join(pdf_phase_fig_dir, f"impact_plot_{model}_{dataset}")
+    plt.savefig(f"{base_save_path}.pdf", bbox_inches='tight')
     plt.close()
 
 def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str):
@@ -207,10 +211,11 @@ def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str):
     # Save to phase directory
     phase_fig_dir = os.path.join(output_dir, phase)
     os.makedirs(phase_fig_dir, exist_ok=True)
-    save_path = os.path.join(phase_fig_dir, "summary_impact.png")
-    plt.savefig(save_path, bbox_inches='tight')
+    base_save_path = os.path.join(phase_fig_dir, "summary_impact")
+    plt.savefig(f"{base_save_path}.png", bbox_inches='tight')
+    plt.savefig(f"{base_save_path}.pdf", bbox_inches='tight')
     plt.close()
-    print(f"Summary plot saved to {save_path}")
+    print(f"Summary plots saved to {base_save_path}.png/pdf")
 
 def main():
     parser = argparse.ArgumentParser()
