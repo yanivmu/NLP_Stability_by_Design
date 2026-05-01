@@ -36,7 +36,7 @@ Avner Fivelovich (ID: 314948811) \\
 \maketitle
 
 \begin{abstract}
-Prompt wording can have a large effect on small language models, yet the effect is not always visible through task accuracy alone. We study prompt robustness through input sensitivity under semantic-preserving perturbations, and ask whether three prompt properties, metacognition, structure, and politeness, systematically affect model behavior. We evaluate an inference-only framework on CoLA \citep{warstadt2019neural}, QASC \citep{khot2020qasc}, and CSQA \citep{talmor2019commonsenseqa} using locally runnable models spanning encoder-decoder and decoder-only architectures, including both base and instruction-tuned variants. Our evaluation separates baseline task competence from sensitivity so that repeated wrong answers are not mistaken for useful stability. The final results show a strong interaction between prompt style, model capability, and task type. Structured prompting helps most clearly on CoLA, but can sharply reduce accuracy on multiple-choice tasks. Politeness is the safest intervention overall, while metacognitive prompting is the most unstable. These findings suggest that prompt robustness in small models should be evaluated jointly with task competence, parseability, and output behavior rather than through sensitivity alone.
+Prompt wording can have a large effect on small language models, yet the effect is not always visible through task accuracy alone. We study prompt robustness through input sensitivity under semantic-preserving perturbations, and ask whether three prompt properties, metacognition, structure, and politeness, systematically affect model behavior. We evaluate an inference-only framework on CoLA, QASC, and CSQA using locally runnable models spanning encoder-decoder and decoder-only architectures, including both base and instruction-tuned variants. Our evaluation separates baseline task competence from sensitivity so that repeated wrong answers are not mistaken for useful stability. The final results show a strong interaction between prompt style, model capability, and task type. Structured prompting helps most clearly on CoLA, but can sharply reduce accuracy on multiple-choice tasks. Politeness is the safest intervention overall, while etacognitive prompting is the most unstable. These findings suggest that prompt robustness in small models should be evaluated jointly with task competence, parseability, and output behavior rather than through sensitivity alone.
 \end{abstract}
 
 \section{Introduction}
@@ -296,5 +296,288 @@ We used AI tools (mainly GPT 5.4) for language editing, structural planning, and
 
 \bibliographystyle{acl_natbib}
 \bibliography{custom}
+
+
+\clearpage
+\onecolumn
+\appendix
+\setcounter{section}{0}
+
+\begin{center}
+{\Large \textbf{Appendix}}
+\end{center}
+\vspace{1em}
+
+\section{Full Prompt Templates}
+\label{app:prompts}
+
+This appendix lists the prompt templates used in the experiments. The templates differ only in the instruction framing; the underlying task input remains unchanged across prompt styles.
+
+\subsection{CoLA Prompt Templates}
+
+For CoLA, the model receives a sentence and must answer whether it is grammatically acceptable.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{0.15\linewidth}p{0.80\linewidth}}
+\toprule
+Style & Template \\
+\midrule
+Control &
+\texttt{Is this sentence grammatically correct? Answer Yes or No.} \newline
+\texttt{Sentence: "\{sentence\}"} \newline
+\texttt{Answer:} \\[0.7em]
+
+Metacognition &
+\texttt{Is this sentence grammatically correct? Answer Yes or No.} \newline
+\texttt{Before answering, carefully check the grammar rules. Verify your answer is correct.} \newline
+\texttt{Sentence: "\{sentence\}"} \newline
+\texttt{Think about it carefully, then answer:} \\[0.7em]
+
+Structure &
+\texttt{Analyze whether the following sentence is grammatically correct.} \newline
+\texttt{Sentence: "\{sentence\}"} \newline
+\texttt{You MUST respond with valid JSON in this exact format:} \newline
+\texttt{\{"reasoning": "your brief explanation here", "final\_answer": "Yes or No"\}} \newline
+\texttt{(Yes = grammatically correct, No = has error)} \newline
+\texttt{Output only the JSON, nothing else.} \\[0.7em]
+
+Politeness &
+\texttt{Hello! I would really appreciate your help with this.} \newline
+\texttt{Could you please tell me if this sentence is grammatically correct?} \newline
+\texttt{Please answer with Yes or No.} \newline
+\texttt{Sentence: "\{sentence\}"} \newline
+\texttt{Thank you! Your answer:} \\
+\bottomrule
+\end{tabular}
+\caption{Full CoLA prompt templates.}
+\label{tab:app-cola-prompts}
+\end{table}
+
+\subsection{QASC and CSQA Prompt Templates}
+
+QASC and CSQA share the same general multiple-choice format. QASC uses answer letters A--H, while CSQA uses answer letters A--E. In QASC, the reported experiments use the question and answer choices without supporting fact injection.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{0.15\linewidth}p{0.80\linewidth}}
+\toprule
+Style & Template \\
+\midrule
+Control &
+\texttt{\{question and choices\}} \newline
+\texttt{Answer with just the letter (A-H/A-E):} \\[0.7em]
+
+Metacognition &
+\texttt{\{question and choices\}} \newline
+\texttt{Think carefully about the information provided.} \newline
+\texttt{Verify your reasoning before answering.} \newline
+\texttt{Answer with just the letter (A-H/A-E):} \\[0.7em]
+
+Structure &
+\texttt{\{question and choices\}} \newline
+\texttt{You MUST respond with valid JSON in this exact format:} \newline
+\texttt{\{"reasoning": "your brief explanation here", "final\_answer": "X"\}} \newline
+\texttt{Where X is the letter A-H/A-E. Output only the JSON, nothing else.} \\[0.7em]
+
+Politeness &
+\texttt{Hello! I would really appreciate your help with this.} \newline
+\texttt{\{question and choices\}} \newline
+\texttt{Please provide your answer (just the letter A-H/A-E). Thank you!} \\
+\bottomrule
+\end{tabular}
+\caption{Full multiple-choice prompt templates for QASC and CSQA. QASC uses A--H answer labels; CSQA uses A--E answer labels.}
+\label{tab:app-mc-prompts}
+\end{table}
+
+\section{Extended Results Across Models}
+\label{app:extended-results}
+
+The main paper reports the cross-task prompt-style comparison for Flan-T5-Large. Here we provide extended results for the additional model-dataset pairs that passed or were analyzed in the final result pool. Values are reported as task accuracy and variation ratio (VR). Deltas are relative to the Control prompt for the same model and dataset.
+
+\subsection{CoLA}
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llrrrr}
+\toprule
+Model & Style & Acc. (\%) & VR & $\Delta$ Acc. & $\Delta$ VR \\
+\midrule
+Flan-T5-Large & Control & 63.7 & 0.1621 & -- & -- \\
+ & Metacognition & 67.7 & 0.1693 & +3.9 & +0.0072 \\
+ & Structure & 70.3 & 0.1344 & +6.5 & -0.0277 \\
+ & Politeness & 69.9 & 0.1778 & +6.2 & +0.0158 \\
+\midrule
+Llama-3.2-1B & Control & 68.7 & 0.4153 & -- & -- \\
+ & Metacognition & 48.6 & 0.6413 & -20.2 & +0.2260 \\
+ & Structure & 0.0 & 0.0000 & -68.7 & -0.4153 \\
+ & Politeness & 68.7 & 0.4881 & +0.0 & +0.0728 \\
+\midrule
+Llama-3.2-1B-Instruct & Control & 68.5 & 0.0498 & -- & -- \\
+ & Metacognition & 33.7 & 0.8074 & -34.8 & +0.7575 \\
+ & Structure & 51.3 & 0.4527 & -17.2 & +0.4029 \\
+ & Politeness & 68.7 & 0.0043 & +0.2 & -0.0456 \\
+\midrule
+Phi-3-Mini & Control & 76.0 & 0.2750 & -- & -- \\
+ & Metacognition & 76.4 & 0.8032 & +0.4 & +0.5282 \\
+ & Structure & 79.2 & 0.8226 & +3.2 & +0.5475 \\
+ & Politeness & 76.0 & 0.1841 & +0.0 & -0.0909 \\
+\midrule
+Pythia-410M & Control & 59.8 & 0.5680 & -- & -- \\
+ & Metacognition & 26.6 & 0.7937 & -33.2 & +0.2257 \\
+ & Structure & 62.6 & 0.3686 & +2.7 & -0.1994 \\
+ & Politeness & 57.9 & 0.5250 & -2.0 & -0.0431 \\
+\bottomrule
+\end{tabular}
+\caption{Extended CoLA results across models and prompt styles.}
+\label{tab:app-cola-results}
+\end{table}
+
+\subsection{QASC}
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llrrrr}
+\toprule
+Model & Style & Acc. (\%) & VR & $\Delta$ Acc. & $\Delta$ VR \\
+\midrule
+Flan-T5-Base & Control & 44.7 & 0.2625 & -- & -- \\
+ & Metacognition & 41.5 & 0.5915 & -3.3 & +0.3290 \\
+ & Structure & 39.7 & 0.2693 & -5.0 & +0.0067 \\
+ & Politeness & 45.3 & 0.2708 & +0.5 & +0.0082 \\
+\midrule
+Flan-T5-Large & Control & 62.2 & 0.2345 & -- & -- \\
+ & Metacognition & 36.9 & 0.6529 & -25.2 & +0.4184 \\
+ & Structure & 22.1 & 0.1428 & -40.0 & -0.0917 \\
+ & Politeness & 62.2 & 0.2377 & +0.0 & +0.0032 \\
+\midrule
+Phi-3-Mini & Control & 78.7 & 0.3295 & -- & -- \\
+ & Metacognition & 77.2 & 0.5792 & -1.5 & +0.2497 \\
+ & Structure & 70.0 & 0.8177 & -8.7 & +0.4882 \\
+ & Politeness & 78.7 & 0.3954 & +0.0 & +0.0660 \\
+\bottomrule
+\end{tabular}
+\caption{Extended QASC results across models and prompt styles. QASC is evaluated without fact injection.}
+\label{tab:app-qasc-results}
+\end{table}
+
+\subsection{CSQA}
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llrrrr}
+\toprule
+Model & Style & Acc. (\%) & VR & $\Delta$ Acc. & $\Delta$ VR \\
+\midrule
+Flan-T5-Base & Control & 72.3 & 0.2487 & -- & -- \\
+ & Metacognition & 69.3 & 0.5594 & -2.9 & +0.3107 \\
+ & Structure & 65.6 & 0.2512 & -6.7 & +0.0026 \\
+ & Politeness & 70.5 & 0.2478 & -1.8 & -0.0008 \\
+\midrule
+Flan-T5-Large & Control & 83.2 & 0.2242 & -- & -- \\
+ & Metacognition & 59.9 & 0.7021 & -23.3 & +0.4780 \\
+ & Structure & 50.4 & 0.2237 & -32.8 & -0.0004 \\
+ & Politeness & 83.4 & 0.2170 & +0.2 & -0.0071 \\
+\midrule
+Phi-3-Mini & Control & 73.5 & 0.2731 & -- & -- \\
+ & Metacognition & 72.3 & 0.4321 & -1.2 & +0.1590 \\
+ & Structure & 70.5 & 0.8810 & -3.0 & +0.6079 \\
+ & Politeness & 74.2 & 0.4023 & +0.6 & +0.1292 \\
+\bottomrule
+\end{tabular}
+\caption{Extended CSQA results across models and prompt styles.}
+\label{tab:app-csqa-results}
+\end{table}
+
+\section{Evaluation and Parsing Details}
+\label{app:evaluation-details}
+
+Table~\ref{tab:app-eval-rules} summarizes the evaluation rules used in the final experiments. These rules are important because sensitivity and accuracy measure different aspects of model behavior.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{p{0.23\linewidth}p{0.70\linewidth}}
+\toprule
+Component & Rule \\
+\midrule
+OOTB screening &
+Each model-dataset pair is first evaluated with the Control prompt on unperturbed examples. If the model fails the dataset-specific threshold, sensitivity results are not treated as meaningful evidence. \\
+
+OOTB denominator &
+Accuracy is computed over all sampled items. Unparseable outputs count as incorrect rather than being removed from the denominator. \\
+
+Task accuracy &
+Accuracy is computed over parsed task labels: A--H for QASC, A--E for CSQA, and Yes/No for CoLA. \\
+
+Structured parsing &
+For Structure prompts, the parser first attempts to read the \texttt{final\_answer} field from the JSON output. Markdown code fences are stripped before parsing when present. \\
+
+CoLA parsing &
+For CoLA, the parser uses final-answer-oriented rules: explicit answer patterns, Yes/No near the end of the response, grammaticality keywords near the end of the response, and a fallback scan for bare Yes/No tokens. \\
+
+Variation ratio &
+The main reported VR is computed over raw decoded strings after minimal normalization. This means that formatting and response-style changes are counted as output instability. \\
+
+Parsed-label VR &
+The implementation also supports computing VR over parsed labels, but this is not the main setting reported in the paper. \\
+\bottomrule
+\end{tabular}
+\caption{Summary of final evaluation and parsing rules.}
+\label{tab:app-eval-rules}
+\end{table}
+
+\section{Representative Failure Modes}
+\label{app:failure-modes}
+
+Table~\ref{tab:app-failure-modes} summarizes representative failure modes observed in the experiments. These examples help explain why accuracy and variation ratio must be interpreted together.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{p{0.22\linewidth}p{0.34\linewidth}p{0.34\linewidth}}
+\toprule
+Case & Typical behavior & Effect on metrics \\
+\midrule
+Low VR with poor accuracy &
+The model repeatedly produces the same answer or the same rigid output pattern, but the answer is often wrong. This occurs most clearly for structured prompts on some multiple-choice settings. &
+VR can look low even though the prompt is not useful. This motivates reporting accuracy and sensitivity together. \\
+
+Metacognition-induced verbosity &
+The model produces a longer explanation and may delay or omit the final answer. This is especially problematic when the task expects a short label such as Yes/No or a single answer letter. &
+Accuracy can drop because outputs become harder to parse or because the model drifts away from the requested format. VR often increases because generations become more diverse. \\
+
+Structured-output failure &
+A model may fail to follow the JSON instruction, produce malformed JSON, or generate a valid-looking structure with an incorrect final answer. Base decoder-only models are especially vulnerable to this failure mode. &
+Accuracy drops when the final answer cannot be extracted or is wrong. In some cases, VR decreases because the output format becomes rigid, but this does not imply robust task performance. \\
+
+Task-dependent prompt effects &
+A prompt style that helps on a binary task such as CoLA may harm multiple-choice tasks such as QASC and CSQA. &
+Prompt properties do not have uniform effects across tasks. The same intervention can improve accuracy and stability in one setting and damage both in another. \\
+\bottomrule
+\end{tabular}
+\caption{Representative failure modes observed during prompt-style evaluation.}
+\label{tab:app-failure-modes}
+\end{table}
+
+
+
+
+
+
+
+
 
 \end{document}{acl_natbib}
