@@ -45,11 +45,9 @@ METHOD_MAP = {
 }
 
 def save_plot(fig, output_dir, filename):
-    """Saves the current figure to both PNG and PDF subdirectories."""
-    for fmt in ['png', 'pdf']:
-        fmt_dir = os.path.join(output_dir, fmt)
-        os.makedirs(fmt_dir, exist_ok=True)
-        fig.savefig(os.path.join(fmt_dir, f"{filename}.{fmt}"), bbox_inches='tight')
+    """Saves the current figure directly to the output directory as PDF."""
+    os.makedirs(output_dir, exist_ok=True)
+    fig.savefig(os.path.join(output_dir, f"{filename}.pdf"), bbox_inches='tight')
 
 def load_results_for_phase(base_dir: str, phase: str) -> pd.DataFrame:
     """Find all summary CSVs specifically for one phase."""
@@ -226,7 +224,7 @@ def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str, su
     # Save to directory
     save_plot(fig, output_dir, filename)
     plt.close()
-    print(f"Summary plot saved to {output_dir}/{filename}.png/pdf")
+    print(f"Summary plot saved to {output_dir}/{filename}.pdf")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -266,23 +264,24 @@ def main():
                     create_control_centric_plot(method_df, model, dataset, args.phase, method_output_dir, sub_label=method_name.capitalize())
 
     # 2. Process "totals" (all methods combined)
-    totals_output_dir = os.path.join(args.output_dir, args.phase, "totals")
-    print(f"Processing totals -> {totals_output_dir}")
+    summary_output_dir = os.path.join(args.output_dir, args.phase, "summary")
+    both_output_dir = os.path.join(args.output_dir, args.phase, "both")
+    print(f"Processing totals: summary -> {summary_output_dir}, both -> {both_output_dir}")
     
     # Global summary for all models
-    create_summary_impact_plot(df, args.phase, totals_output_dir, sub_label="Totals")
+    create_summary_impact_plot(df, args.phase, summary_output_dir, sub_label="Totals")
     
-    # Per-model summary plots in totals
+    # Per-model summary plots in summary dir
     for model in df['model'].unique():
         model_df = df[df['model'] == model]
-        create_summary_impact_plot(model_df, args.phase, totals_output_dir, 
+        create_summary_impact_plot(model_df, args.phase, summary_output_dir, 
                                    sub_label=f"Totals - {model.upper()}", 
                                    filename=f"summary_impact_{model}")
     
     if not args.summary_only:
         for model in df['model'].unique():
             for dataset in df['dataset'].unique():
-                create_control_centric_plot(df, model, dataset, args.phase, totals_output_dir, sub_label="Totals")
+                create_control_centric_plot(df, model, dataset, args.phase, both_output_dir, sub_label="Totals")
 
     print(f"All figures for {args.phase} saved to {args.output_dir}/{args.phase}/")
 
