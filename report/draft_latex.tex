@@ -559,6 +559,26 @@ The implementation also supports computing VR over parsed labels, but this is no
 
 This appendix provides detailed impact plots for each model-dataset pair across three perturbation settings: aggregate totals, synonym-based perturbations, and paraphrase-based perturbations. Each row corresponds to a model, and each column corresponds to a dataset (CoLA, CSQA, QASC).
 
+\subsection{Model-Specific Aggregate Summaries}
+\label{app:model-summaries}
+
+This section provides a global summary for each model, aggregating results across all datasets and perturbation types. These plots show the average absolute change in Accuracy and Sensitivity relative to the Control baseline.
+
+\begin{figure*}[ht]
+\centering
+\begin{tabular}{cc}
+\includegraphics[width=0.45\textwidth]{../outputs/figures/phase_6/summary/summary_impact_flan-t5-base.pdf} & \includegraphics[width=0.45\textwidth]{../outputs/figures/phase_6/summary/summary_impact_flan-t5-large.pdf} \\
+\small Flan-T5-Base & \small Flan-T5-Large \\[1em]
+\includegraphics[width=0.45\textwidth]{../outputs/figures/phase_6/summary/summary_impact_llama-3.2-1b.pdf} & \includegraphics[width=0.45\textwidth]{../outputs/figures/phase_6/summary/summary_impact_llama-3.2-1b-instruct.pdf} \\
+\small Llama-3.2-1B & \small Llama-3.2-1B-Instruct \\[1em]
+\includegraphics[width=0.45\textwidth]{../outputs/figures/phase_6/summary/summary_impact_phi-3-mini.pdf} & \includegraphics[width=0.45\textwidth]{../outputs/figures/phase_6/summary/summary_impact_pythia-410m.pdf} \\
+\small Phi-3-Mini & \small Pythia-410M \\
+\end{tabular}
+\caption{Aggregate summary impact plots per model.}
+\label{fig:model-summaries}
+\end{figure*}
+
+\clearpage
 \subsection{Aggregate Stability Impact}
 \label{app:impact-totals}
 
@@ -570,27 +590,27 @@ This section shows the aggregate impact across all perturbation types (synonyms 
 \textbf{CoLA} & \textbf{CSQA} & \textbf{QASC} \\
 \midrule
 % Flan-T5-Base
-{\small OOTB Accuracy too low} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_flan-t5-base_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_flan-t5-base_qasc.pdf} \\
+{\small OOTB Accuracy too low} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_flan-t5-base_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_flan-t5-base_qasc.pdf} \\
  \multicolumn{3}{c}{\small Flan-T5-Base} \\[0.5em]
 
 % Flan-T5-Large
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_flan-t5-large_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_flan-t5-large_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_flan-t5-large_qasc.pdf} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_flan-t5-large_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_flan-t5-large_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_flan-t5-large_qasc.pdf} \\
  \multicolumn{3}{c}{\small Flan-T5-Large} \\[0.5em]
 
 % Llama-3.2-1B
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_llama-3.2-1b_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_llama-3.2-1b_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Llama-3.2-1B} \\[0.5em]
 
 % Llama-3.2-1B-Instruct
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_llama-3.2-1b-instruct_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_llama-3.2-1b-instruct_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Llama-3.2-1B-Instruct} \\[0.5em]
 
 % Phi-3-Mini
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_phi-3-mini_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_phi-3-mini_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_phi-3-mini_qasc.pdf} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_phi-3-mini_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_phi-3-mini_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_phi-3-mini_qasc.pdf} \\
  \multicolumn{3}{c}{\small Phi-3-Mini} \\[0.5em]
 
 % Pythia-410M
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/totals/pdf/impact_plot_pythia-410m_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/both/impact_plot_pythia-410m_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Pythia-410M} \\
 \end{tabular}
 \caption{Aggregate impact plots (Totals) across all models and datasets.}
@@ -609,27 +629,27 @@ This section shows the impact of synonym-based perturbations only.
 \textbf{CoLA} & \textbf{CSQA} & \textbf{QASC} \\
 \midrule
 % Flan-T5-Base
-{\small OOTB Accuracy too low} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_flan-t5-base_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_flan-t5-base_qasc.pdf} \\
+{\small OOTB Accuracy too low} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_flan-t5-base_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_flan-t5-base_qasc.pdf} \\
  \multicolumn{3}{c}{\small Flan-T5-Base} \\[0.5em]
 
 % Flan-T5-Large
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_flan-t5-large_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_flan-t5-large_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_flan-t5-large_qasc.pdf} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_flan-t5-large_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_flan-t5-large_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_flan-t5-large_qasc.pdf} \\
  \multicolumn{3}{c}{\small Flan-T5-Large} \\[0.5em]
 
 % Llama-3.2-1B
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_llama-3.2-1b_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_llama-3.2-1b_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Llama-3.2-1B} \\[0.5em]
 
 % Llama-3.2-1B-Instruct
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_llama-3.2-1b-instruct_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_llama-3.2-1b-instruct_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Llama-3.2-1B-Instruct} \\[0.5em]
 
 % Phi-3-Mini
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_phi-3-mini_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_phi-3-mini_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_phi-3-mini_qasc.pdf} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_phi-3-mini_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_phi-3-mini_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_phi-3-mini_qasc.pdf} \\
  \multicolumn{3}{c}{\small Phi-3-Mini} \\[0.5em]
 
 % Pythia-410M
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/pdf/impact_plot_pythia-410m_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/synonyms/impact_plot_pythia-410m_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Pythia-410M} \\
 \end{tabular}
 \caption{Impact plots for synonym-based perturbations across all models and datasets.}
@@ -648,27 +668,27 @@ This section shows the impact of paraphrase-based perturbations only. Note that 
 \textbf{CoLA} & \textbf{CSQA} & \textbf{QASC} \\
 \midrule
 % Flan-T5-Base
-{\small OOTB Accuracy too low} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_flan-t5-base_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_flan-t5-base_qasc.pdf} \\
+{\small OOTB Accuracy too low} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_flan-t5-base_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_flan-t5-base_qasc.pdf} \\
  \multicolumn{3}{c}{\small Flan-T5-Base} \\[0.5em]
 
 % Flan-T5-Large
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_flan-t5-large_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_flan-t5-large_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_flan-t5-large_qasc.pdf} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_flan-t5-large_cola.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_flan-t5-large_csqa.pdf} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_flan-t5-large_qasc.pdf} \\
  \multicolumn{3}{c}{\small Flan-T5-Large} \\[0.5em]
 
 % Llama-3.2-1B
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_llama-3.2-1b_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_llama-3.2-1b_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Llama-3.2-1B} \\[0.5em]
 
 % Llama-3.2-1B-Instruct
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_llama-3.2-1b-instruct_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_llama-3.2-1b-instruct_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Llama-3.2-1B-Instruct} \\[0.5em]
 
 % Phi-3-Mini
-{\small Plot not available} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_phi-3-mini_csqa.pdf} & {\small Plot not available} \\
+{\small Plot not available} & \includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_phi-3-mini_csqa.pdf} & {\small Plot not available} \\
  \multicolumn{3}{c}{\small Phi-3-Mini} \\[0.5em]
 
 % Pythia-410M
-\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/pdf/impact_plot_pythia-410m_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+\includegraphics[width=0.25\textwidth]{../outputs/figures/phase_6/paraphrasing/impact_plot_pythia-410m_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
  \multicolumn{3}{c}{\small Pythia-410M} \\
 \end{tabular}
 \caption{Impact plots for paraphrase-based perturbations across all models and datasets.}
