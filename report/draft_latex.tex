@@ -117,7 +117,7 @@ Our framework is inference-only. We do not fine-tune any model parameters. Inste
 \textbf{Style} & \textbf{Example Prompt (CoLA)} \\ \midrule
 Control & Is this sentence grammatically correct? Answer Yes or No. \newline Sentence: "The problem perceives easily." \newline Answer: \\
 Metacognition & Is this sentence grammatically correct? Answer Yes or No. Before answering, carefully check the grammar rules. Verify your answer is correct. \newline Sentence: "The problem perceives easily." \newline Think about it carefully, then answer: \\
-Structure & Analyze whether the following sentence is grammatically correct. \newline Sentence: "The problem perceives easily." \newline You MUST respond with valid JSON in this exact format: \{"reasoning": "...", "final\_answer": "Yes or No"\} \\
+Structure & Analyze whether the following sentence is grammatically correct. \newline Sentence: "The problem perceives easily." \newline You MUST respond with valid JSON in this exact format:\newline \{"reasoning": "your brief explanation here", "final\_answer": "Yes or No"\} \\
 Politeness & Hello! I would really appreciate your help with this. Could you please tell me if this sentence is grammatically correct? Please answer with Yes or No. \newline Sentence: "The problem perceives easily." \newline Thank you! Your answer: \\ \bottomrule
 \end{tabular}
 \caption{Examples of the four prompt styles applied to a single instance from the CoLA dataset.}
@@ -183,11 +183,11 @@ All models are loaded directly from HuggingFace and evaluated without any parame
 
 \subsection{Implementation Details}
 
-Because our study focuses on prompt sensitivity rather than adaptation or fine-tuning, there is no training stage. All experiments are performed with frozen pretrained models and deterministic inference.
+As our study focuses on prompt sensitivity rather than adaptation or fine-tuning, there is no training stage. All experiments are performed with frozen pretrained models and deterministic inference.
 
 Generation is run with greedy decoding so that differences in output are driven by prompt and input changes rather than by sampling noise in the evaluated model itself. For each dataset, we sample 500 instances, and for each instance we generate $N=10$ semantic-preserving perturbations. The maximum number of generated tokens is task- and style-dependent. Plain answer formats use shorter generation limits, while structured prompts use longer budgets because the model must produce a valid JSON object. Metacognitive prompts on CoLA are also allowed longer outputs so that self-check instructions are not systematically truncated before the model reaches a final answer.
 
-The implementation is designed for reproducibility. Random seeds are fixed across Python, NumPy, PyTorch, and the Transformers library. The framework uses three experiment seeds (105, 2266, and 86379), and each run is fully determined by its seed and configuration. The perturbation pipeline also uses seed control at the level of individual examples so that the same configuration reproduces the same perturbation set across runs. Models are executed on the best available device, including CUDA, Apple MPS, or CPU, and half precision is used for selected decoder-only models when supported.
+The implementation is designed for reproducibility. Random seeds are fixed across Python, NumPy, PyTorch, and the Transformers library. The framework uses three experiment seeds (105, 2266, and 86379), and each run is fully determined by its seed and configuration. The perturbation pipeline also uses seed control at the level of individual examples so that the same configuration reproduces the same perturbation set across runs. Models are executed on the best available device, including CUDA, Apple MPS, or CPU, and half precision is used for selected decoder-only models when supported to improve the inference speed.
 
 \section{Evaluation}
 
