@@ -163,7 +163,7 @@ For each instance and prompt style, we compute sensitivity using the variation r
 
 \subsection{Data}
 
-We evaluate the framework on three benchmarks with different task structures.
+The framework is evaluated on three benchmarks with different task structures.
 
 The first is QASC, an 8-way multiple-choice science question answering benchmark. Each example contains a question and eight candidate answers. To isolate reading comprehension bounds and avoid ceiling effects, QASC is evaluated exclusively on questions and answer choices, without supporting facts. This setup ensures that model behavior reflects prompt-driven reasoning rather than trivial fact-retrieval, making the benchmark more suitable for studying whether prompt style changes both robustness and performance under a non-trivial level of difficulty.
 
@@ -175,9 +175,9 @@ All experiments use the validation split of each benchmark. The final reported r
 
 \subsection{Models}
 
-We evaluate a set of locally runnable models chosen to vary along two dimensions: architecture and instruction tuning. The model suite includes both encoder-decoder and decoder-only systems, as well as both base and instruction-tuned variants.
+A set of locally runnable models is evaluated, chosen to vary along two dimensions: architecture and instruction tuning. The model suite includes both encoder-decoder and decoder-only systems, as well as both base and instruction-tuned variants.
 
-Our encoder-decoder models are Flan-T5-Base and Flan-T5-Large. These models are useful reference points because they are explicitly instruction-tuned and relatively strong on zero-shot text-to-text tasks. Our decoder-only base models are Pythia-410M and Llama-3.2-1B. These models enable an examination of whether prompt sensitivity behaves differently when instruction-following ability is limited. Our instruction-tuned decoder-only models are Llama-3.2-1B-Instruct and Phi-3-Mini-4K-Instruct. These provide a comparison point within the decoder-only family between base and instruction-tuned behavior.
+The encoder-decoder models are Flan-T5-Base and Flan-T5-Large. These models are useful reference points because they are explicitly instruction-tuned and relatively strong on zero-shot text-to-text tasks. The decoder-only base models are Pythia-410M and Llama-3.2-1B. These models enable an examination of whether prompt sensitivity behaves differently when instruction-following ability is limited. The instruction-tuned decoder-only models are Llama-3.2-1B-Instruct and Phi-3-Mini-4K-Instruct. These provide a comparison point within the decoder-only family between base and instruction-tuned behavior.
 
 All models are loaded directly from HuggingFace and evaluated without any parameter updates. For causal models, padding is set on the left and the end-of-sequence token is used as a padding token when necessary. For instruction-tuned chat models, the framework automatically applies the tokenizer's chat template before generation. This keeps model-specific formatting separate from the core evaluation loop and ensures that each model is used in a way that is consistent with its intended interface.
 
@@ -191,21 +191,21 @@ The implementation is designed for reproducibility. Random seeds are fixed acros
 
 \section{Evaluation}
 
-We evaluate each model-prompt combination along two axes: task performance and sensitivity.
+Each model-prompt combination is evaluated along two axes: task performance and sensitivity.
 
-The first metric is \textbf{OOTB accuracy}. Before running sensitivity experiments, we measure the model's accuracy on unperturbed inputs using the control prompt. This serves as a screening step. If a model performs at or near random guessing, then sensitivity is not informative, because the model may simply be repeating the same wrong answer. In the final implementation, OOTB accuracy is computed over all sampled items rather than only over successfully parsed responses, so unparseable responses count as incorrect. We also track parse rate separately in order to distinguish low task accuracy from formatting or parsing failures. The screening thresholds are dataset-specific. For QASC, the random baseline is 12.5\% and the valid-signal threshold is 40\%. For CoLA, the random baseline is 50\% and the valid-signal threshold is 60\%. For CSQA, the random baseline is 20\% and the valid-signal threshold is 40\%.
+The first metric is \textbf{OOTB accuracy}. Before running sensitivity experiments, the model's accuracy on unperturbed inputs is measured using the control prompt. This serves as a screening step. If a model performs at or near random guessing, then sensitivity is not informative, because the model may simply be repeating the same wrong answer. In the final implementation, OOTB accuracy is computed over all sampled items rather than only over successfully parsed responses, so unparseable responses count as incorrect. Parse rate is also tracked separately in order to distinguish low task accuracy from formatting or parsing failures. The screening thresholds are dataset-specific. For QASC, the random baseline is 12.5\% and the valid-signal threshold is 40\%. For CoLA, the random baseline is 50\% and the valid-signal threshold is 60\%. For CSQA, the random baseline is 20\% and the valid-signal threshold is 40\%.
 
 The second metric is \textbf{variation ratio}, which measures the dispersion of outputs across the original input and its perturbations:
 \[
 s = 1 - \frac{f_m}{N+1},
 \]
-where $f_m$ is the frequency of the modal output across the original prompt and its $N$ perturbed variants. Lower values indicate greater consistency, while higher values indicate greater sensitivity to reformulation. In the main setting of our experiments, this score is computed over raw decoded outputs after minimal normalization rather than over parsed task labels. This design choice treats changes in generated form as part of prompt instability, which is especially relevant for structured prompts and for instruction-following settings where formatting itself is part of the response behavior. At the same time, we keep task accuracy separate and always compute it over parsed task labels.
+where $f_m$ is the frequency of the modal output across the original prompt and its $N$ perturbed variants. Lower values indicate greater consistency, while higher values indicate greater sensitivity to reformulation. In the main setting of the experiments, this score is computed over raw decoded outputs after minimal normalization rather than over parsed task labels. This design choice treats changes in generated form as part of prompt instability, which is especially relevant for structured prompts and for instruction-following settings where formatting itself is part of the response behavior. At the same time, task accuracy is kept separate and is always computed over parsed task labels.
 
-In addition to average variation ratio, we report \textbf{style-specific accuracy} on the original, unperturbed inputs used in the main experiment. This lets us compare prompt styles not only in terms of stability, but also in terms of whether increased consistency coincides with better or worse task performance. Together, these metrics allow us to distinguish several cases: prompts that are both accurate and stable, prompts that are accurate but unstable, prompts that are stable only at the level of output format, and prompts that appear stable only because the model gives the same incorrect answer repeatedly.
+In addition to average variation ratio, \textbf{style-specific accuracy} is reported on the original, unperturbed inputs used in the main experiment. This lets prompt styles be compared not only in terms of stability, but also in terms of whether increased consistency coincides with better or worse task performance. Together, these metrics allow the distinction of several cases: prompts that are both accurate and stable, prompts that are accurate but unstable, prompts that are stable only at the level of output format, and prompts that appear stable only because the model gives the same incorrect answer repeatedly.
 
 \section{Results}
 
-We report results obtained with the finalized evaluation pipeline described above. The values below summarize the final aggregated result pool.
+Results obtained with the finalized evaluation pipeline described above are reported here. The values below summarize the final aggregated result pool.
 
 \begin{table}[t]
 \centering
