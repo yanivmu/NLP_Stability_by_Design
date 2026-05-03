@@ -157,7 +157,7 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir, sub_label
     save_plot(fig, output_dir, f"impact_plot_{model}_{dataset}")
     plt.close()
 
-def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str, sub_label=""):
+def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str, sub_label="", filename="summary_impact"):
     """
     Creates a global summary bar chart showing the average delta (change) 
     in Accuracy and Variation Ratio relative to the Control for each style.
@@ -218,9 +218,9 @@ def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str, su
     plt.legend(title="Metric Impact", loc='upper right')
     
     # Save to directory
-    save_plot(fig, output_dir, "summary_impact")
+    save_plot(fig, output_dir, filename)
     plt.close()
-    print(f"Summary plots saved to {output_dir}/summary_impact.png/pdf")
+    print(f"Summary plot saved to {output_dir}/{filename}.png/pdf")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -262,7 +262,16 @@ def main():
     # 2. Process "totals" (all methods combined)
     totals_output_dir = os.path.join(args.output_dir, args.phase, "totals")
     print(f"Processing totals -> {totals_output_dir}")
+    
+    # Global summary for all models
     create_summary_impact_plot(df, args.phase, totals_output_dir, sub_label="Totals")
+    
+    # Per-model summary plots in totals
+    for model in df['model'].unique():
+        model_df = df[df['model'] == model]
+        create_summary_impact_plot(model_df, args.phase, totals_output_dir, 
+                                   sub_label=f"Totals - {model.upper()}", 
+                                   filename=f"summary_impact_{model}")
     
     if not args.summary_only:
         for model in df['model'].unique():
