@@ -8,9 +8,9 @@ An NLP research project investigating how **prompt design choices** affect the *
 
 ## Background
 
-The reference paper shows that **sensitivity** (measured via variation ratio) is an unsupervised proxy for model performance and that different prompt designs lead to different sensitivity levels. We adapt this framework to **small models on shared cluster GPUs**, where hard benchmarks often collapse to chance: the pipeline and dataset choices below are built so that **most reported runs** use tasks on which at least some of our models already show usable accuracy, and so that expensive sensitivity passes only run after an automatic out-of-the-box check. We also use a cleaner perturbation pipeline based on NLTK WordNet.
+The reference paper shows that **sensitivity** (measured via variation ratio) is an unsupervised proxy for model performance and that different prompt designs lead to different sensitivity levels. This framework is adapted to **small models on shared cluster GPUs**, where hard benchmarks often collapse to chance: the pipeline and dataset choices below are built so that **most reported runs** use tasks on which at least some of the evaluated models already show usable accuracy, and so that expensive sensitivity passes only run after an automatic out-of-the-box check. A cleaner perturbation pipeline based on NLTK WordNet is also used.
 
-**Reference code in this repo:** Our pipeline follows the same **variation-ratio on raw model generations** convention as in the original papar (see *Sensitivity (Variation Ratio) and alignment with Lu et al. (2024)* below); the sensitivity definition matches the methodology we adopted from there.
+**Reference code in this repo:** The pipeline follows the same **variation-ratio on raw model generations** convention as in the original papar (see *Sensitivity (Variation Ratio) and alignment with Lu et al. (2024)* below); the sensitivity definition matches the methodology adopted from there.
 
 ## Key Concepts
 
@@ -23,9 +23,11 @@ The reference paper shows that **sensitivity** (measured via variation ratio) is
 
 ## Recent Findings & Refinements (Phase 6)
 
-- **Instructional Shutdown:** We identified that base models (e.g., Llama-3.2-1B) can experience "total collapse" on structured JSON prompts, producing empty responses. This results in an artificial **0.0 Variation Ratio**, which highlights the necessity of the OOTB screening gate—low sensitivity is only meaningful when the model retains task competence.
+Phase 6 represents the **final, canonical evaluation** of the project. All legacy data and logs from Phases 1–5 have been removed to consolidate the workspace around these results.
+
+- **Instructional Shutdown:** Identification of "total collapse" in base models (e.g., Llama-3.2-1B) on structured JSON prompts, resulting in empty responses. This produces an artificial **0.0 Variation Ratio**, highlighting the necessity of the OOTB screening gate—low sensitivity is only meaningful when the model retains task competence.
 - **Computational Cost of Robustness:** The **Structure** style, while sometimes improving robustness on binary tasks, introduces a significant latency bottleneck (~14.6x slower on Phi-3-Mini) due to the overhead of generating reasoning tokens and JSON schemas.
-- **High-Quality Reporting:** The visualization pipeline now exports all plots in both **PNG** and **PDF (vector)** formats to ensure publication-quality visuals for the final LaTeX report.
+- **High-Quality Reporting:** A complete LaTeX report is included in the `report/` directory. The visualization pipeline exports all plots in **PDF (vector)** formats to ensure publication-quality visuals.
 - **Methodological Alignment:** Generation is strictly **greedy** to isolate structural sensitivity from sampling noise, and the variation ratio is calculated on **raw decoded text** to remain strictly aligned with the Lu et al. (2024) methodology.
 
 ## Models
@@ -90,29 +92,19 @@ Uses a separate small model (`google/flan-t5-small`) to rewrite inputs:
 ```text
 NLP_Stability_by_Design/
 ├── outputs/
-│   ├── results/                     # Experiment outputs (JSON + CSV)
-│   │   ├── phase_1/ … phase_6/     # Results organized by phase
-│   │   │   ├── flan-t5-base/       # Per-model directories
-│   │   │   │   └── cola/qasc/csqa/ # Per-dataset, contains summary + detail CSVs
-│   │   │   ├── flan-t5-large/
-│   │   │   ├── pythia-410m/
-│   │   │   ├── llama-3.2-1b/
-│   │   │   ├── llama-3.2-1b-instruct/
-│   │   │   └── phi-3-mini/
-│   │   └── qasc_no_facts/          # QASC no-facts baseline eval
-│   ├── figures/                     # Generated plots (by phase)
-│   └── logs/                        # Slurm job output logs
-├── scripts/slurm/                   # Slurm job scripts (by phase/model/seed)
+│   ├── results/                     # Final Phase 6 results (JSON + CSV)
+│   ├── figures/                     # Generated plots for Phase 6
+│   └── logs/                        # Slurm job output logs (Phase 6)
+├── report/                          # Final LaTeX report and PDF
+├── scripts/slurm/                   # Slurm job scripts (Phase 6)
+├── slurm/                           # General SLURM configuration and guides
 ├── src/                             # Source code
-│   ├── run_experiment.py            # Main CLI entry point (model- and dataset-agnostic)
-│   ├── model_handlers.py            # Model Handler ABC + Registry (Seq2Seq, Causal, Instruct)
-│   ├── dataset_handlers.py          # Dataset Handler ABC + Registry (CoLA, QASC, CSQA)
-│   ├── config.py                    # ExperimentConfig dataclass, experiment seeds
-│   ├── perturbations.py             # Synonym + paraphrase perturbation generation
-│   ├── visualize_results.py         # Control-centric dual-axis plots (accuracy + VR)
-│   ├── models.py                    # ModelConfig definitions, device detection (legacy)
-│   ├── datasets_config.py           # DatasetConfig definitions (legacy)
-│   └── data_analysis.py             # ResultAnalyzer, VR math
+│   ├── run_experiment.py            # Main CLI entry point
+│   ├── model_handlers.py            # Model abstraction layer
+│   ├── dataset_handlers.py          # Dataset abstraction layer
+│   ├── perturbations.py             # Synonym + paraphrase generation
+│   ├── visualize_results.py         # Results visualization (Accuracy + VR)
+│   └── data_analysis.py             # VR math and results parsing
 ├── requirements.txt                 # Python dependencies
 └── README.md
 ```
@@ -486,6 +478,13 @@ All Phase 6 experiments: 500 samples, 20 perturbations per sample, averaged acro
 ## Reference Paper
 
 Lu, S., Schuff, H., & Gurevych, I. (2024). *How are Prompts Different in Terms of Sensitivity?* NAACL 2024. [arXiv:2311.07230](https://arxiv.org/abs/2311.07230)
+
+## Report
+
+The final project report, **"Stability by Design: Optimizing Prompt Properties in Small Language Models via Sensitivity Metrics"**, is available in the `report/` directory:
+- [Stability_by_Design_Group_14_Project.pdf](report/Stability_by_Design_Group_14_Project.pdf) (Final Submission)
+- [draft_latex.tex](report/draft_latex.tex) (LaTeX Source)
+- [custom.bib](report/custom.bib) (Bibliography)
 
 
 ## License
