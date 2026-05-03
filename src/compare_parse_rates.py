@@ -6,7 +6,7 @@ This script analyzes detailed results CSVs to compare the 'parseability' (is_val
 of model responses between the 'Control' prompt and a specific prompt 'Attribute'.
 
 Usage:
-    python src/compare_parse_rates.py --model <model_key> --dataset <dataset_key> --attribute <style_key>
+    python src/compare_parse_rates.py --model <model_key> --dataset <dataset_key> --attribute <style_key> [--phase <phase_name>]
 
 Flag Options:
     --model:
@@ -27,11 +27,13 @@ Flag Options:
         - structure     (Enforces JSON output)
         - politeness    (Adds social framing)
 
+    --phase (Optional):
+        - phase_1, phase_2, ..., phase_6 (Filter by specific experiment phase)
+
 Description:
-    The script scans all 'detail.csv' files in the 'outputs/results' directory that match 
-    the provided model and dataset. It aggregates the 'is_valid_parse' column to calculate
-    what percentage of the model's responses were successfully parsed into a standard
-    answer format (e.g., A-H for QASC or Yes/No for CoLA).
+    The script scans 'detail.csv' files in the 'outputs/results' directory. It aggregates
+    the 'is_valid_parse' column to calculate what percentage of the model's responses
+    were successfully parsed into a standard answer format.
 """
 
 import csv
@@ -39,19 +41,23 @@ import glob
 import os
 import argparse
 
-def calculate_parse_comparison(model_key, dataset_key, attribute):
-    # Pattern to find all relevant detailed CSV files
-    # Scans through phase-specific and root results directories
-    pattern = f"outputs/results/**/{model_key}/{dataset_key}/**/*detail.csv"
+def calculate_parse_comparison(model_key, dataset_key, attribute, phase=None):
+    # Build search pattern
+    if phase:
+        pattern = f"outputs/results/{phase}/{model_key}/{dataset_key}/**/*detail.csv"
+    else:
+        pattern = f"outputs/results/**/{model_key}/{dataset_key}/**/*detail.csv"
+        
     files = glob.glob(pattern, recursive=True)
 
     if not files:
-        # Fallback for different directory structures
-        alt_pattern = f"outputs/results/{model_key}/{dataset_key}/**/*detail.csv"
-        files = glob.glob(alt_pattern, recursive=True)
+        # Fallback for different directory structures if phase is not specified
+        if not phase:
+            alt_pattern = f"outputs/results/{model_key}/{dataset_key}/**/*detail.csv"
+            files = glob.glob(alt_pattern, recursive=True)
 
     if not files:
-        print(f"No results found for Model: {model_key}, Dataset: {dataset_key}")
+        print(f"No results found for Model: {model_key}, Dataset: {dataset_key}" + (f" in Phase: {phase}" if phase else ""))
         print(f"Searched pattern: {pattern}")
         return
 
@@ -78,6 +84,8 @@ def calculate_parse_comparison(model_key, dataset_key, attribute):
     print(f"PARSE RATE ANALYSIS")
     print(f"Model:     {model_key}")
     print(f"Dataset:   {dataset_key}")
+    if phase:
+        print(f"Phase:     {phase}")
     print(f"Data Source: {processed_files} detailed CSV files")
     print("-" * 70)
 
@@ -106,6 +114,7 @@ if __name__ == "__main__":
     parser.add_argument("--model", required=True, help="Model key (e.g., llama-3.2-1b-instruct)")
     parser.add_argument("--dataset", required=True, help="Dataset key (e.g., cola)")
     parser.add_argument("--attribute", required=True, help="Attribute key (e.g., metacognition, structure, politeness)")
+    parser.add_argument("--phase", help="Phase directory to filter by (e.g., phase_6)")
     
     args = parser.parse_args()
     
@@ -114,4 +123,4 @@ if __name__ == "__main__":
     d_key = args.dataset.lower()
     a_key = args.attribute.lower()
     
-    calculate_parse_comparison(m_key, d_key, a_key)
+    calculate_parse_comparison(m_key, d_key, a_key, phase=args.phase)
