@@ -398,7 +398,7 @@ Politeness &
 \section{Extended Results Across Models}
 \label{app:extended-results}
 
-The main paper reports the cross-task prompt-style comparison for Flan-T5-Large. Here we provide extended results for the additional model-dataset pairs that passed or were analyzed in the final result pool. Values are reported as task accuracy and variation ratio (VR). Deltas are relative to the Control prompt for the same model and dataset.
+The main paper reports the cross-task prompt-style comparison for Flan-T5-Large. Here we provide extended results for the additional model-dataset pairs that passed or were analyzed in the final result pool. Values are reported as task accuracy (\%), variation ratio (VR), and parse rate (\%). Deltas ($\Delta$) are relative to the Control prompt for the same model and dataset. Parse rate measures the percentage of model responses that were successfully parsed into the expected task format.
 
 \subsection{CoLA}
 
@@ -406,34 +406,34 @@ The main paper reports the cross-task prompt-style comparison for Flan-T5-Large.
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
-\begin{tabular}{llrrrr}
+\begin{tabular}{llrrrrrr}
 \toprule
-Model & Style & Acc. (\%) & VR & $\Delta$ Acc. & $\Delta$ VR \\
+Model & Style & Acc. (\%) & VR & Parse (\%) & $\Delta$ Acc. & $\Delta$ VR & $\Delta$ Parse \\
 \midrule
-Flan-T5-Large & Control & 63.7 & 0.1621 & -- & -- \\
- & Metacognition & 67.7 & 0.1693 & +3.9 & +0.0072 \\
- & Structure & 70.3 & 0.1344 & +6.5 & -0.0277 \\
- & Politeness & 69.9 & 0.1778 & +6.2 & +0.0158 \\
+Flan-T5-Large & Control & 63.7 & 0.1621 & 100.0 & -- & -- & -- \\
+ & Metacognition & 67.7 & 0.1693 & 100.0 & +3.9 & +0.0072 & +0.0 \\
+ & Structure & 70.3 & 0.1344 & 100.0 & +6.5 & -0.0277 & +0.0 \\
+ & Politeness & 69.9 & 0.1778 & 100.0 & +6.2 & +0.0158 & +0.0 \\
 \midrule
-Llama-3.2-1B & Control & 68.7 & 0.4153 & -- & -- \\
- & Metacognition & 48.6 & 0.6413 & -20.2 & +0.2260 \\
- & Structure & 0.0 & 0.0000 & -68.7 & -0.4153 \\
- & Politeness & 68.7 & 0.4881 & +0.0 & +0.0728 \\
+Llama-3.2-1B & Control & 68.7 & 0.4153 & 100.0 & -- & -- & -- \\
+ & Metacognition & 48.6 & 0.6413 & 63.0 & -20.2 & +0.2260 & -37.0 \\
+ & Structure & 0.0 & 0.0000 & 0.0 & -68.7 & -0.4153 & -100.0 \\
+ & Politeness & 68.7 & 0.4881 & 100.0 & +0.0 & +0.0728 & +0.0 \\
 \midrule
-Llama-3.2-1B-Instruct & Control & 68.5 & 0.0498 & -- & -- \\
- & Metacognition & 33.7 & 0.8074 & -34.8 & +0.7575 \\
- & Structure & 51.3 & 0.4527 & -17.2 & +0.4029 \\
- & Politeness & 68.7 & 0.0043 & +0.2 & -0.0456 \\
+Llama-3.2-1B-Instruct & Control & 68.5 & 0.0498 & 100.0 & -- & -- & -- \\
+ & Metacognition & 33.7 & 0.8074 & 45.1 & -34.8 & +0.7575 & -54.9 \\
+ & Structure & 51.3 & 0.4527 & 99.9 & -17.2 & +0.4029 & -0.1 \\
+ & Politeness & 68.7 & 0.0043 & 99.9 & +0.2 & -0.0456 & -0.1 \\
 \midrule
-Phi-3-Mini & Control & 76.0 & 0.2750 & -- & -- \\
- & Metacognition & 76.4 & 0.8032 & +0.4 & +0.5282 \\
- & Structure & 79.2 & 0.8226 & +3.2 & +0.5475 \\
- & Politeness & 76.0 & 0.1841 & +0.0 & -0.0909 \\
+Phi-3-Mini & Control & 76.0 & 0.2750 & 100.0 & -- & -- & -- \\
+ & Metacognition & 76.4 & 0.8032 & 100.0 & +0.4 & +0.5282 & +0.0 \\
+ & Structure & 79.2 & 0.8226 & 99.7 & +3.2 & +0.5475 & -0.3 \\
+ & Politeness & 76.0 & 0.1841 & 100.0 & +0.0 & -0.0909 & +0.0 \\
 \midrule
-Pythia-410M & Control & 59.8 & 0.5680 & -- & -- \\
- & Metacognition & 26.6 & 0.7937 & -33.2 & +0.2257 \\
- & Structure & 62.6 & 0.3686 & +2.7 & -0.1994 \\
- & Politeness & 57.9 & 0.5250 & -2.0 & -0.0431 \\
+Pythia-410M & Control & 59.8 & 0.5680 & 86.8 & -- & -- & -- \\
+ & Metacognition & 26.6 & 0.7937 & 37.8 & -33.2 & +0.2257 & -49.0 \\
+ & Structure & 62.6 & 0.3686 & 82.9 & +2.7 & -0.1994 & -3.9 \\
+ & Politeness & 57.9 & 0.5250 & 79.5 & -2.0 & -0.0431 & -7.3 \\
 \bottomrule
 \end{tabular}
 \caption{Extended CoLA results across models and prompt styles.}
@@ -446,59 +446,72 @@ Pythia-410M & Control & 59.8 & 0.5680 & -- & -- \\
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
-\begin{tabular}{llrrrr}
+\begin{tabular}{llrrrrrr}
 \toprule
-Model & Style & Acc. (\%) & VR & $\Delta$ Acc. & $\Delta$ VR \\
+Model & Style & Acc. (\%) & VR & Parse (\%) & $\Delta$ Acc. & $\Delta$ VR & $\Delta$ Parse \\
 \midrule
-Flan-T5-Base & Control & 44.7 & 0.2625 & -- & -- \\
- & Metacognition & 41.5 & 0.5915 & -3.3 & +0.3290 \\
- & Structure & 39.7 & 0.2693 & -5.0 & +0.0067 \\
- & Politeness & 45.3 & 0.2708 & +0.5 & +0.0082 \\
+Flan-T5-Base & Control & 44.7 & 0.2625 & 99.8 & -- & -- & -- \\
+ & Metacognition & 41.5 & 0.5915 & 94.9 & -3.3 & +0.3290 & -4.9 \\
+ & Structure & 39.7 & 0.2693 & 89.7 & -5.0 & +0.0067 & -10.1 \\
+ & Politeness & 45.3 & 0.2708 & 99.8 & +0.5 & +0.0082 & +0.0 \\
 \midrule
-Flan-T5-Large & Control & 62.2 & 0.2345 & -- & -- \\
- & Metacognition & 36.9 & 0.6529 & -25.2 & +0.4184 \\
- & Structure & 22.1 & 0.1428 & -40.0 & -0.0917 \\
- & Politeness & 62.2 & 0.2377 & +0.0 & +0.0032 \\
+Flan-T5-Large & Control & 62.2 & 0.2345 & 99.4 & -- & -- & -- \\
+ & Metacognition & 36.9 & 0.6529 & 84.3 & -25.2 & +0.4184 & -15.1 \\
+ & Structure & 22.1 & 0.1428 & 24.2 & -40.0 & -0.0917 & -75.2 \\
+ & Politeness & 62.2 & 0.2377 & 99.7 & +0.0 & +0.0032 & +0.3 \\
 \midrule
-Phi-3-Mini & Control & 78.7 & 0.3295 & -- & -- \\
- & Metacognition & 77.2 & 0.5792 & -1.5 & +0.2497 \\
- & Structure & 70.0 & 0.8177 & -8.7 & +0.4882 \\
- & Politeness & 78.7 & 0.3954 & +0.0 & +0.0660 \\
+Phi-3-Mini & Control & 78.7 & 0.3295 & 100.0 & -- & -- & -- \\
+ & Metacognition & 77.2 & 0.5792 & 99.2 & -1.5 & +0.2497 & -0.8 \\
+ & Structure & 70.0 & 0.8177 & 97.2 & -8.7 & +0.4882 & -2.8 \\
+ & Politeness & 78.7 & 0.3954 & 98.9 & +0.0 & +0.0660 & -1.1 \\
 \bottomrule
 \end{tabular}
 \caption{Extended QASC results across models and prompt styles. QASC is evaluated without fact injection.}
 \label{tab:app-qasc-results}
 \end{table}
 
+\clearpage
 \subsection{CSQA}
 
 \begin{table}[h]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
-\begin{tabular}{llrrrr}
+\begin{tabular}{llrrrrrr}
 \toprule
-Model & Style & Acc. (\%) & VR & $\Delta$ Acc. & $\Delta$ VR \\
+Model & Style & Acc. (\%) & VR & Parse (\%) & $\Delta$ Acc. & $\Delta$ VR & $\Delta$ Parse \\
 \midrule
-Flan-T5-Base & Control & 72.3 & 0.2487 & -- & -- \\
- & Metacognition & 69.3 & 0.5594 & -2.9 & +0.3107 \\
- & Structure & 65.6 & 0.2512 & -6.7 & +0.0026 \\
- & Politeness & 70.5 & 0.2478 & -1.8 & -0.0008 \\
+Flan-T5-Base & Control & 72.3 & 0.2487 & 99.9 & -- & -- & -- \\
+ & Metacognition & 69.3 & 0.5594 & 99.8 & -2.9 & +0.3107 & -0.1 \\
+ & Structure & 65.6 & 0.2512 & 94.3 & -6.7 & +0.0026 & -5.6 \\
+ & Politeness & 70.5 & 0.2478 & 99.9 & -1.8 & -0.0008 & +0.0 \\
 \midrule
-Flan-T5-Large & Control & 83.2 & 0.2242 & -- & -- \\
- & Metacognition & 59.9 & 0.7021 & -23.3 & +0.4780 \\
- & Structure & 50.4 & 0.2237 & -32.8 & -0.0004 \\
- & Politeness & 83.4 & 0.2170 & +0.2 & -0.0071 \\
+Flan-T5-Large & Control & 83.2 & 0.2242 & 99.1 & -- & -- & -- \\
+ & Metacognition & 59.9 & 0.7021 & 93.1 & -23.3 & +0.4780 & -6.0 \\
+ & Structure & 50.4 & 0.2237 & 48.8 & -32.8 & -0.0004 & -50.3 \\
+ & Politeness & 83.4 & 0.2170 & 99.9 & +0.2 & -0.0071 & +0.8 \\
 \midrule
-Phi-3-Mini & Control & 73.5 & 0.2731 & -- & -- \\
- & Metacognition & 72.3 & 0.4321 & -1.2 & +0.1590 \\
- & Structure & 70.5 & 0.8810 & -3.0 & +0.6079 \\
- & Politeness & 74.2 & 0.4023 & +0.6 & +0.1292 \\
+Phi-3-Mini & Control & 73.5 & 0.2731 & 100.0 & -- & -- & -- \\
+ & Metacognition & 72.3 & 0.4321 & 100.0 & -1.2 & +0.1590 & 0.0 \\
+ & Structure & 70.5 & 0.8810 & 99.6 & -3.0 & +0.6079 & -0.4 \\
+ & Politeness & 74.2 & 0.4023 & 99.9 & +0.6 & +0.1292 & -0.1 \\
 \bottomrule
 \end{tabular}
 \caption{Extended CSQA results across models and prompt styles.}
 \label{tab:app-csqa-results}
 \end{table}
+
+\subsection{Key Observations from Extended Results}
+\label{app:key-observations}
+
+Several key patterns emerge from the extended cross-model and cross-dataset evaluation:
+
+\begin{enumerate}
+    \item \textbf{Structured Prompt Fragility:} Base models, particularly decoder-only architectures like Llama-3.2-1B and Pythia-410M, show catastrophic failures when tasked with structured JSON output. Llama-3.2-1B (Base) failed to produce a single parseable JSON response for CoLA ($\Delta$ Parse -100.0). Even instruction-tuned models like Flan-T5-Large show significant degradation in parseability on multiple-choice tasks (QASC/CSQA) under structured constraints, which accounts for the majority of their accuracy loss in those settings.
+    \item \textbf{Metacognition and Induced Verbosity:} Instructions that encourage reasoning (e.g., "Think carefully") tend to increase output verbosity. While this can slightly improve task performance for some models (e.g., Flan-T5-Large on CoLA), it often destroys parseability for weaker models. For Pythia-410M on CoLA, the metacognition style led to a 49.0 percentage point drop in parse rate as the model shifted from binary labels to discursive text. For example, instead of a "Yes/No" label, Pythia-410M often repeated the input sentence multiple times or generated a list of numbered repetitions.\footnote{See for example row 6,451 in \texttt{outputs/results/phase\_6/pythia-410m/cola/synonym/w1\_n20\_s105\_detail.csv}.} Instruction-tuned models like Llama-3.2-1B-Instruct also exhibited this failure mode, providing detailed grammatical analyses while omitting the required "Yes" or "No" label entirely.\footnote{See for example row 10,505 in \texttt{outputs/results/phase\_6/llama-3.2-1b-instruct/cola/paraphrase/n20\_s105\_detail.csv}.} 
+    \item \textbf{Stability-Accuracy Trade-off:} Forced structure can sometimes reduce the variation ratio (VR), suggesting higher stability. However, this stability is often "empty" if the model cannot accurately follow the task or the format. For example, Llama-3.2-1B-Instruct on CoLA showed a sharp increase in VR variability under the Structure prompt (+0.40) while suffering a 17.2\% drop in accuracy.
+    \item \textbf{Instruction Tuning Resilience:} Models that have undergone instruction tuning (Llama-3.2-1B-Instruct, Phi-3-Mini) are generally much more resilient to prompt style interventions. They maintain higher parse rates and more consistent accuracy across diverse styles compared to their base or smaller counterparts.
+\end{enumerate}
 
 \clearpage
 \section{Evaluation and Parsing Details}
