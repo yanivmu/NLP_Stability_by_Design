@@ -229,7 +229,7 @@ Pythia-410M & 65.0 & 11.0 & 17.0 \\
 
 Table~\ref{tab:ootb} shows that model capability varies sharply by task. Flan-T5-Large and Phi-3-Mini are the only models that perform solidly across all three datasets. Flan-T5-Base performs well on the multiple-choice tasks but fails on CoLA. The smaller base decoder-only models (Llama-3.2-1B and Pythia-410M) perform competitively on CoLA but collapse on QASC and CSQA. This likely reflects the fact that these models are not instruction-tuned: they can handle CoLA's simple binary format but struggle to select and output a single answer letter from multiple choices, often producing text continuations instead of valid answers. This confirms that low sensitivity on weak model-task pairs would be difficult to interpret as genuine robustness.
 
-Because Flan-T5-Large performs strongly across all three benchmarks, we use it as the main cross-task comparison in Table~\ref{tab:main-results}. This model also exhibits both positive and negative prompt-style effects, which makes it the most informative single case for the paper's main argument.
+Although both models succeeded across all datasets, the high Variation Ratio (VR) of Phi-3-Mini makes its results less instructive. Therefore, we focus on Flan-T5-Large as the main cross-task comparison in Table~\ref{tab:main-results}.
 
 \begin{table*}[t]
 \centering
@@ -251,9 +251,11 @@ Politeness & 69.9 & 0.1778 & 83.4 & 0.2170 & 62.2 & 0.2377 \\
 \label{tab:main-results}
 \end{table*}
 
-Table~\ref{tab:main-results} reveals a clear interaction between prompt style and task structure. On CoLA, all three non-control prompt styles improve accuracy, and \textbf{Structure} is the strongest overall condition. It reaches 70.3\% accuracy and the lowest variation ratio, 0.1344, improving on the control prompt on both axes. \textbf{Politeness} also improves accuracy substantially, reaching 69.9\%, but it does so with a somewhat higher variation ratio. \textbf{Metacognition} improves CoLA accuracy as well, but only slightly and with a small increase in sensitivity. It is worth noting that Control accuracy on CoLA (63.7\%) falls below the majority-class baseline of 69.1\% (Table~\ref{tab:datasets}), indicating a label distribution mismatch under the control prompt that the non-control styles partially correct.
+Table~\ref{tab:main-results} demonstrates that the effectiveness of a prompt style is highly dependent on the underlying task structure. The most striking pattern is the split between CoLA and the multiple-choice tasks: every non-control style improves accuracy on CoLA, but the same styles hurt performance on CSQA and QASC. This suggests that CoLA's simple binary output space is more forgiving of prompt modifications, while multiple-choice tasks are brittle when the prompt adds complexity.
 
-The two multiple-choice tasks show a very different pattern. On CSQA, the control and politeness prompts perform best, at 83.2\% and 83.4\% accuracy respectively, while metacognition and structure cause large accuracy drops. Metacognition is especially unstable, with a variation ratio of 0.7021. On QASC, the same pattern becomes even stronger. Control and politeness again perform best, both at 62.2\% accuracy, while metacognition and structure cause very large degradations. Structure reduces QASC accuracy to 22.1\%, even though it also reduces variation ratio relative to the control prompt. This is exactly the kind of misleading stability that motivated our setup: low variation ratio does not necessarily indicate useful robustness if accuracy collapses at the same time.
+The multiple-choice tasks (CSQA and QASC) show that complex prompts can be actively destructive. While Politeness remains a safe and effective approach as the only style that never degrades accuracy on any task, both Metacognition and Structure cause massive performance degradations, likely because the added reasoning instructions cause the model to generate longer, more variable outputs that drift from the requested answer format.
+
+The most crucial takeaway emerges from the QASC task: applying the Structure prompt severely crashes the accuracy (dropping to 22.1\%), yet it appears highly `stable' due to a reduced variation ratio. This exemplifies the `misleading stability' that motivated our research, demonstrating that a low variation ratio is not a measure of robust competence if the model is merely producing consistent errors.
 
 \begin{figure}[t]
 \centering
