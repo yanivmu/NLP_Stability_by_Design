@@ -85,7 +85,7 @@ The gap we address lies in the connection between \textbf{how prompts differ in 
 
 We study prompt robustness as a conditional prediction problem under semantic-preserving reformulation. Let $x$ denote an input instance, let $y$ denote its gold label, and let $p$ denote a prompt style. A model receives a prompted version of the input, produces a prediction $\hat{y}$, and is then evaluated both on the original input and on lightly perturbed variants of that same input.
 
-Our setting includes three task types. In QASC, the input is a multiple-choice science question with eight answer options, and the target output is a single answer letter from A to H. In CoLA, the input is a sentence and the target output is a binary grammaticality judgment, represented as Yes or No. In CSQA, the input is a multiple-choice commonsense question with five answer options, and the target output is a single answer letter from A to E. In all cases, the task content remains fixed across prompt styles; only the framing of the instruction changes.
+Our setting includes three task types. In QASC, the input is a multiple-choice science question with eight answer options, and the target output is a single answer letter from A to H. In CoLA, the input is a sentence and the target output is a binary grammaticality judgment, represented as Yes or No. In CSQA, the input is a multiple-choice commonsense question with five answer options, and the target output is a single answer letter from A to E. In all cases, the task content remains fixed across prompt styles; only the framing of the instruction changes. Detailed statistics and baseline performance for each dataset are summarized in Table~\ref{tab:datasets}.
 
 \begin{table}[h]
 \centering
