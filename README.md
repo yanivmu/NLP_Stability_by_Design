@@ -54,7 +54,7 @@ New datasets are added by implementing a `DatasetHandler` subclass — zero chan
 
 **QASC fact injection:** Disabled by default to avoid a ceiling effect (~99% → ~63% accuracy on Flan-T5-Large). Use `--facts` to re-enable for comparison—this turns on **fact1 / fact2** (and related context) in the prompt, similar to minimal-unblocking QASC setups that make the task solvable for smaller LMs.
 
-**Which datasets we lean on:** **QASC** and **CoLA** carry most of the analysis because encoder–decoder instruction-tuned models reach accuracies clearly above chance. **CommonsenseQA** is run when a given model passes the same out-of-the-box gates as the other tasks; small decoder-only checkpoints often fail those gates and **never enter** the sensitivity phase, so we do not treat near-random behavior as prompt-design signal. **GSM8K** stays **registered but stub-level**: free-form numeric answers are difficult for this model class and parsing is fragile, so the project does not anchor conclusions on GSM8K. Together with the mandatory OOTB step in `run_experiment.py` (see *OOTB screening gate*), this keeps experiments on tasks where variation ratio is interpretable rather than a side effect of uniform wrong answers.
+**Which datasets we lean on:** **QASC** and **CoLA** carry most of the analysis because encoder–decoder instruction-tuned models reach accuracies clearly above chance. **CommonsenseQA** is run when a given model passes the same out-of-the-box gates as the other tasks; small decoder-only checkpoints often fail those gates and **never enter** the sensitivity phase, so we do not treat near-random behavior as prompt-design signal. Together with the mandatory OOTB step in `run_experiment.py` (see *OOTB screening gate*), this keeps experiments on tasks where variation ratio is interpretable rather than a side effect of uniform wrong answers.
 
 ## Prompt Styles
 
@@ -102,22 +102,17 @@ NLP_Stability_by_Design/
 │   │   └── qasc_no_facts/          # QASC no-facts baseline eval
 │   ├── figures/                     # Generated plots (by phase)
 │   └── logs/                        # Slurm job output logs
-├── reference_paper_code/            # Original paper's code (read-only reference)
 ├── scripts/slurm/                   # Slurm job scripts (by phase/model/seed)
 ├── src/                             # Source code
 │   ├── run_experiment.py            # Main CLI entry point (model- and dataset-agnostic)
 │   ├── model_handlers.py            # Model Handler ABC + Registry (Seq2Seq, Causal, Instruct)
-│   ├── dataset_handlers.py          # Dataset Handler ABC + Registry (CoLA, QASC, CSQA, GSM8K)
+│   ├── dataset_handlers.py          # Dataset Handler ABC + Registry (CoLA, QASC, CSQA)
 │   ├── config.py                    # ExperimentConfig dataclass, experiment seeds
 │   ├── perturbations.py             # Synonym + paraphrase perturbation generation
 │   ├── visualize_results.py         # Control-centric dual-axis plots (accuracy + VR)
-│   ├── eval_qasc_no_facts.py        # Isolated QASC-without-facts evaluation script
 │   ├── models.py                    # ModelConfig definitions, device detection (legacy)
-│   ├── prompts.py                   # Four prompt style templates + max_tokens per style
 │   ├── datasets_config.py           # DatasetConfig definitions (legacy)
-│   ├── data_analysis.py             # DataManager, ResultAnalyzer, parsing, VR math
-│   ├── data_demo.py                 # Standalone demo of the data pipeline
-│   └── interface.py                 # Architecture overview and import hub
+│   └── data_analysis.py             # ResultAnalyzer, VR math
 ├── requirements.txt                 # Python dependencies
 └── README.md
 ```
@@ -128,17 +123,13 @@ NLP_Stability_by_Design/
 |------|-------|---------|
 | `run_experiment.py` | All | Unified CLI runner — fully model- and dataset-agnostic via handler registries. Produces JSON + detailed per-response CSV. OOTB denominator uses total items (not just parsed). |
 | `model_handlers.py` | TM1 | `ModelHandler` ABC + concrete handlers (`Seq2SeqModelHandler`, `CausalModelHandler`, `InstructCausalModelHandler`) + registry |
-| `dataset_handlers.py` | TM2 | `DatasetHandler` ABC + concrete handlers (`QASCHandler`, `CoLAHandler`, `CSQAHandler`, `GSM8KHandler`) + registry. Includes multi-pass yes/no parser and letter parser with markdown fence stripping. |
+| `dataset_handlers.py` | TM2 | `DatasetHandler` ABC + concrete handlers (`QASCHandler`, `CoLAHandler`, `CSQAHandler`) + registry. Includes multi-pass yes/no parser and letter parser with markdown fence stripping. |
 | `config.py` | TM3 | `ExperimentConfig` dataclass with `sensitivity_on_raw` flag, `EXPERIMENT_SEEDS` (3 seeds for statistical significance) |
 | `perturbations.py` | TM3 | WordNet synonym replacement + Flan-T5-Small paraphrase generation, seed management (`set_all_seeds`), validation |
 | `visualize_results.py` | All | Aggregates phase CSVs and generates control-centric dual-axis plots (accuracy + VR) per model/dataset combination |
-| `eval_qasc_no_facts.py` | All | Isolated evaluation of Flan-T5-Large on QASC without fact injection (ceiling-effect investigation) |
 | `models.py` | TM1 | `ModelConfig` definitions, `load_model_and_tokenizer()`, `run_inference()`, device detection (legacy, still importable) |
-| `prompts.py` | TM3 | Generic and dataset-specific prompt templates for all four styles. Includes per-dataset per-style `max_tokens` settings. |
 | `datasets_config.py` | TM2 | `DatasetConfig` definitions, HuggingFace dataset loading (legacy, still importable) |
-| `data_analysis.py` | TM2 | `DataManager` (data loading/sampling), `ResultAnalyzer` (response parsing, VR calculation with raw/parsed modes) |
-| `data_demo.py` | TM2 | Interactive demo showing raw data, prompt formatting, model responses |
-| `interface.py` | All | Architecture overview, re-exports from all modules, quick-start example |
+| `data_analysis.py` | TM2 | `ResultAnalyzer` (VR calculation with raw/parsed modes) |
 
 ## Installation
 
@@ -236,7 +227,7 @@ python run_experiment.py --model flan-t5-large --dataset qasc --facts
 | Option | Description | Default |
 |--------|-------------|---------|
 | `--model` | Model key: `flan-t5-base`, `flan-t5-large`, `pythia-410m`, `llama-3.2-1b`, `llama-3.2-1b-instruct`, `phi-3-mini` | *required* |
-| `--dataset` | Dataset key: `qasc`, `cola`, `csqa` (also registered: `gsm8k`) | *required* |
+| `--dataset` | Dataset key: `qasc`, `cola`, `csqa` | *required* |
 | `--sample-size` | Number of samples for sensitivity measurement | 500 |
 | `--num-perturbations` | Number of perturbations per sample (N) | 10 |
 | `--words-to-replace` | Words to replace per synonym perturbation | 1 |
@@ -284,7 +275,7 @@ Default seed: **2266** (from the reference paper). Three seeds are used for stat
 
 **Definition (unchanged):** For one item we collect the model’s output on the **original** text plus **N** perturbed variants (\(N+1\) members of a **multiset**). Let \(f_m\) be the **largest frequency** among those members—how many of the \(N+1\) outputs are identical to the mode—after a chosen normalization. Lu et al. use \(s = 1 - f_m / (N+1)\). See the *Key Concepts* table for the intuition (VR = 0 is stable, VR = 1 is maximally unstable).
 
-**Raw outputs vs parsed labels (matches reference methodology):** In `run_experiment.py`, when `sensitivity_on_raw` is true (the default, `ExperimentConfig.sensitivity_on_raw=True`), the multiset passed into `ResultAnalyzer.calculate_variation_ratio` contains the **decoded generation text** for each of the \(N+1\) runs, after **`.strip()` only** — not the dataset handler’s parsed letter / Yes–No / JSON field. That mirrors the spirit of the original sensitivity pipeline in `reference_paper_code/sensetivity_article_project/`: sensitivity is measured over **what the model actually emitted**, so differences in JSON layout, punctuation, or hedging count as instability in the same way as in the paper’s setup (they are not “noise” to be washed out before measuring sensitivity).
+**Raw outputs vs parsed labels (matches reference methodology):** In `run_experiment.py`, when `sensitivity_on_raw` is true (the default, `ExperimentConfig.sensitivity_on_raw=True`), the multiset passed into `ResultAnalyzer.calculate_variation_ratio` contains the **decoded generation text** for each of the \(N+1\) runs, after **`.strip()` only** — not the dataset handler’s parsed letter / Yes–No / JSON field. That mirrors the spirit of the original sensitivity pipeline from Lu et al.: sensitivity is measured over **what the model actually emitted**, so differences in JSON layout, punctuation, or hedging count as instability in the same way as in the paper’s setup (they are not “noise” to be washed out before measuring sensitivity).
 
 **Structured task accuracy:** Regardless of VR mode, **task accuracy** is always computed on **parsed** structured answers (letters, Yes/No, `final_answer` from JSON, etc.) against the gold label. So “did it answer the question correctly?” is always a discrete structured comparison; VR answers whether **generations** (default) or **extracted labels** (optional) stay tied together under paraphrase.
 
@@ -306,12 +297,11 @@ Before any sensitivity loop, `run_experiment.py` runs an **out-of-the-box (OOTB)
 | QASC (8-way) | 12.5% | 40% |
 | CoLA (binary) | 50% | 60% |
 | CommonsenseQA (5-way) | 20% | 40% |
-| GSM8K (numeric) | 0% (no meaningful random guess) | 20% |
 
 **Decision logic:**
 
 1. If OOTB accuracy is **strictly below** `random_baseline`, the run **stops** (exit code 0): the model is not better than guessing on that task, so sensitivity numbers would not support meaningful conclusions about prompt design.
-2. Else if OOTB accuracy is **strictly below** `valid_threshold`, the run **stops**: there is some signal above chance, but not enough to treat downstream VR/accuracy as a reliable probe of prompt stability (aligned with the “valid signal” idea in `DataManager` / dataset configs).
+2. Else if OOTB accuracy is **strictly below** `valid_threshold`, the run **stops**: there is some signal above chance, but not enough to treat downstream VR/accuracy as a reliable probe of prompt stability (aligned with the “valid signal” idea in dataset configs).
 3. Otherwise the run **continues** with the full four-style sensitivity experiment.
 
 **Why we gate on these thresholds:** Variation ratio is most informative when the model **can** solve a non-trivial fraction of items; otherwise low VR often reflects **repeated wrong or degenerate outputs** rather than desirable robustness (see README interpretation for small base models). Gating saves cluster time and keeps reported cases comparable to the paper’s setting where models are actually engaged with the task. For debugging or forced runs on weak models, use `--skip-ootb` (not recommended for final reported numbers).
@@ -379,11 +369,11 @@ Several bugs were identified and fixed between Phase 5 and Phase 6:
 The OOTB accuracy denominator was changed from `total_parsed` to `total_items`. Previously, if only 1 out of 100 responses was parseable and that 1 was correct, OOTB showed 100%. Now, unparseable responses count as wrong (accuracy = 1/100 = 1%).
 
 ### Fix 2: CoLA Structure `max_tokens`
-**File:** `dataset_handlers.py`, `prompts.py`
+**File:** `dataset_handlers.py`
 Increased from 50 → 150. The JSON output format requires more tokens than a bare letter, and 50 tokens was truncating JSON responses mid-field.
 
 ### Fix 3: CoLA Metacognition `max_tokens`
-**File:** `dataset_handlers.py`, `prompts.py`
+**File:** `dataset_handlers.py`
 Increased from 10 → 200. The metacognition prompt asks models to "think step by step", which produces verbose responses. With only 10 tokens the model was cut off mid-sentence before reaching a conclusion.
 
 ### Fix 4: Markdown Fence Stripping

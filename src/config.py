@@ -2,8 +2,8 @@
 """
 Centralized experiment configuration.
 
-All tuneable knobs live here so that run_experiment.py, perturbations.py,
-and prompts.py can share a single source of truth.  CLI arguments in
+All tuneable knobs live here so that run_experiment.py and perturbations.py
+can share a single source of truth.  CLI arguments in
 run_experiment.py override the defaults defined below.
 """
 
@@ -58,8 +58,3 @@ class ExperimentConfig:
             f"sensitivity_on_raw={self.sensitivity_on_raw}  "
             f"seed={self.seed}  styles={','.join(self.prompt_styles)}"
         )
-
-
-# ---- Default config singleton (importable) ----
-
-DEFAULT_CONFIG = ExperimentConfig()
