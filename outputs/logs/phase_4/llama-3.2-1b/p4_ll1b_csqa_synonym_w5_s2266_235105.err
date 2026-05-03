@@ -1,8 +1,0 @@
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  18%|█▊        | 27/146 [00:00<00:00, 228.79it/s]Loading weights:  34%|███▍      | 50/146 [00:00<00:00, 162.52it/s]Loading weights:  49%|████▊     | 71/146 [00:00<00:00, 163.09it/s]Loading weights:  62%|██████▏   | 90/146 [00:00<00:00, 167.62it/s]Loading weights:  74%|███████▍  | 108/146 [00:00<00:00, 157.30it/s]Loading weights:  85%|████████▍ | 124/146 [00:00<00:00, 150.97it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 171.97it/s]
-Using the latest cached version of the dataset since tau/commonsense_qa couldn't be found on the Hugging Face Hub
-Found the latest cached dataset configuration 'default' at /vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/huggingface_cache/datasets/tau___commonsense_qa/default/0.0.0/94630fe30dad47192a8546eb75f094926d47e155 (last modified on Tue Apr  7 17:49:36 2026).
-The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
-slurmstepd: error: Cannot write to cgroup.procs for (null)
-slurmstepd: error: Unable to move pid 2825054 to init root cgroup (null)

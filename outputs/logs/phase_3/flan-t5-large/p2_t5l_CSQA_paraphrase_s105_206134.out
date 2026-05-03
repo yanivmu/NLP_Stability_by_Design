@@ -1,4 +1,0 @@
-======================================================================
-SENSITIVITY EXPERIMENT: FLAN-T5-LARGE on CSQA
-Config: model=flan-t5-large  dataset=CSQA  samples=500  perturbations=20  method=paraphrase  seed=105  styles=control,metacognition,structure,politeness
-======================================================================

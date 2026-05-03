@@ -1,26 +1,0 @@
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/tokenizer_config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/models/EleutherAI/pythia-410m/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/models/EleutherAI/pythia-410m/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/config.json "HTTP/1.1 200 OK"
-Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  90%|████████▉ | 262/292 [00:00<00:00, 2616.52it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 2524.35it/s]
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/nyu-mll/glue/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/README.md "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/glue.py "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/nyu-mll/glue/nyu-mll/glue.py "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/revision/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=nyu-mll/glue "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/ax?recursive=true&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c?recursive=false&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/cola?recursive=true&expand=false "HTTP/1.1 200 OK"
-slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
-slurmstepd: error: Cannot write to cgroup.procs for (null)
-slurmstepd: error: Unable to move pid 307361 to init root cgroup (null)

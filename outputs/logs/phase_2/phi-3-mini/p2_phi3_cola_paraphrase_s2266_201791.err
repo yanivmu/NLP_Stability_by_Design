@@ -1,61 +1,0 @@
-Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  41%|████      | 77/190 [00:00<00:00, 705.70it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 1232.20it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/195 [00:00<?, ?it/s]Loading weights:   5%|▌         | 10/195 [00:00<00:01, 92.59it/s]Loading weights:  10%|█         | 20/195 [00:00<00:02, 85.92it/s]Loading weights:  15%|█▍        | 29/195 [00:00<00:02, 82.57it/s]Loading weights:  19%|█▉        | 38/195 [00:00<00:02, 76.95it/s]Loading weights:  27%|██▋       | 52/195 [00:00<00:01, 95.78it/s]Loading weights:  32%|███▏      | 62/195 [00:00<00:01, 88.54it/s]Loading weights:  37%|███▋      | 72/195 [00:00<00:01, 87.40it/s]Loading weights:  43%|████▎     | 83/195 [00:00<00:01, 82.41it/s]Loading weights:  49%|████▊     | 95/195 [00:01<00:01, 87.21it/s]Loading weights:  55%|█████▍    | 107/195 [00:01<00:00, 89.73it/s]Loading weights:  61%|██████    | 118/195 [00:01<00:00, 91.86it/s]Loading weights:  67%|██████▋   | 130/195 [00:01<00:00, 97.72it/s]Loading weights:  72%|███████▏  | 140/195 [00:01<00:00, 91.18it/s]Loading weights:  77%|███████▋  | 150/195 [00:01<00:00, 89.57it/s]Loading weights:  82%|████████▏ | 160/195 [00:01<00:00, 90.85it/s]Loading weights:  88%|████████▊ | 171/195 [00:01<00:00, 96.02it/s]Loading weights:  93%|█████████▎| 181/195 [00:02<00:00, 91.80it/s]Loading weights:  98%|█████████▊| 191/195 [00:02<00:00, 89.13it/s]Loading weights: 100%|██████████| 195/195 [00:02<00:00, 90.93it/s]
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 11/20; filling 9 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-Traceback (most recent call last):
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 417, in <module>
-    main()
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 324, in main
-    result = run_sensitivity_experiment(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 164, in run_sensitivity_experiment
-    responses = model_handler.generate(prompts, max_new_tokens=max_tokens)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/model_handlers.py", line 177, in generate
-    outputs = self.model.generate(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
-    return func(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 2535, in generate
-    result = decoding_method(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 2728, in _sample
-    outputs = self._prefill(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 3776, in _prefill
-    return self(**model_inputs, return_dict=True)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/generic.py", line 843, in wrapper
-    output = func(self, *args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 491, in forward
-    outputs: BaseModelOutputWithPast = self.model(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/generic.py", line 917, in wrapper
-    output = func(self, *args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/output_capturing.py", line 253, in wrapper
-    outputs = func(self, *args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 427, in forward
-    hidden_states = decoder_layer(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/modeling_layers.py", line 93, in __call__
-    return super().__call__(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 338, in forward
-    hidden_states = self.mlp(hidden_states)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 62, in forward
-    up_states = up_states * self.activation_fn(gate)
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 94.00 MiB. GPU 0 has a total capacity of 10.57 GiB of which 56.06 MiB is free. Including non-PyTorch memory, this process has 10.51 GiB memory in use. Of the allocated memory 9.55 GiB is allocated by PyTorch, and 767.92 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

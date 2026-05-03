@@ -1,57 +1,0 @@
-Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 2513.93it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  40%|███▉      | 58/146 [00:00<00:00, 571.95it/s]Loading weights:  82%|████████▏ | 120/146 [00:00<00:00, 595.88it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 621.41it/s]
-The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 13/20; filling 7 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 12/20; filling 8 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 13/20; filling 7 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 12/20; filling 8 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 13/20; filling 7 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 12/20; filling 8 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 13/20; filling 7 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 12/20; filling 8 with synonym fallback

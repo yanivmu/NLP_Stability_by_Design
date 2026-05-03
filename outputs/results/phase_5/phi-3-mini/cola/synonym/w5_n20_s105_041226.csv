@@ -1,5 +1,0 @@
-timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
-20260417_041227,phase_5,phi-3-mini,cola,synonym,5,20,500,105,0.7700,control,0.2557,0.7600
-20260417_041227,phase_5,phi-3-mini,cola,synonym,5,20,500,105,0.7700,metacognition,0.3784,0.7720
-20260417_041227,phase_5,phi-3-mini,cola,synonym,5,20,500,105,0.7700,structure,0.7494,0.0140
-20260417_041227,phase_5,phi-3-mini,cola,synonym,5,20,500,105,0.7700,politeness,0.1793,0.7560

@@ -1,53 +1,0 @@
-Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  71%|███████   | 134/190 [00:00<00:00, 956.63it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 1249.55it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/195 [00:00<?, ?it/s]Loading weights:   8%|▊         | 15/195 [00:00<00:01, 132.64it/s]Loading weights:  15%|█▍        | 29/195 [00:00<00:01, 102.02it/s]Loading weights:  21%|██        | 40/195 [00:00<00:01, 101.18it/s]Loading weights:  26%|██▌       | 51/195 [00:00<00:01, 94.58it/s] Loading weights:  33%|███▎      | 64/195 [00:00<00:01, 88.85it/s]Loading weights:  39%|███▉      | 76/195 [00:00<00:01, 89.73it/s]Loading weights:  45%|████▌     | 88/195 [00:00<00:01, 93.81it/s]Loading weights:  52%|█████▏    | 101/195 [00:01<00:00, 96.59it/s]Loading weights:  57%|█████▋    | 111/195 [00:01<00:00, 94.53it/s]Loading weights:  63%|██████▎   | 122/195 [00:01<00:00, 97.16it/s]Loading weights:  68%|██████▊   | 132/195 [00:01<00:00, 87.52it/s]Loading weights:  73%|███████▎  | 143/195 [00:01<00:00, 87.36it/s]Loading weights:  79%|███████▉  | 155/195 [00:01<00:00, 94.93it/s]Loading weights:  86%|████████▌ | 167/195 [00:01<00:00, 100.17it/s]Loading weights:  91%|█████████▏| 178/195 [00:01<00:00, 94.69it/s] Loading weights:  96%|█████████▋| 188/195 [00:01<00:00, 94.70it/s]Loading weights: 100%|██████████| 195/195 [00:02<00:00, 96.75it/s]
-Traceback (most recent call last):
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 761, in hf_raise_for_status
-    response.raise_for_status()
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
-    raise HTTPStatusError(message, request=request, response=self)
-httpx.HTTPStatusError: Server error '504 Gateway Time-out' for url 'https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/cola?recursive=true&expand=false'
-For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 545, in <module>
-    main()
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 386, in main
-    dataset = dataset_handler.load()
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/dataset_handlers.py", line 323, in load
-    ds = hf_load(self.CONFIG.hf_name, self.CONFIG.hf_subset, split=split)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/load.py", line 1485, in load_dataset
-    builder_instance = load_dataset_builder(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/load.py", line 1164, in load_dataset_builder
-    builder_instance: DatasetBuilder = builder_cls(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/builder.py", line 343, in __init__
-    self.config, self.config_id = self._create_builder_config(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/builder.py", line 558, in _create_builder_config
-    builder_config._resolve_data_files(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/builder.py", line 206, in _resolve_data_files
-    self.data_files = self.data_files.resolve(base_path, download_config)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/data_files.py", line 808, in resolve
-    out[key] = data_files_patterns_list.resolve(base_path, download_config)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/data_files.py", line 761, in resolve
-    resolve_pattern(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/datasets/data_files.py", line 367, in resolve_pattern
-    for filepath, info in fs.glob(pattern, detail=True, **glob_kwargs).items()
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/hf_file_system.py", line 759, in glob
-    return super().glob(path, maxdepth=maxdepth, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/fsspec/spec.py", line 642, in glob
-    allpaths = self.find(root, maxdepth=depth, withdirs=True, detail=True, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/hf_file_system.py", line 798, in find
-    out = self._ls_tree(path, recursive=True, refresh=refresh, maxdepth=maxdepth, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/hf_file_system.py", line 645, in _ls_tree
-    for path_info in tree:
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/hf_api.py", line 3419, in list_repo_tree
-    for path_info in paginate(path=tree_url, headers=headers, params={"recursive": recursive, "expand": expand}):
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/utils/_pagination.py", line 37, in paginate
-    hf_raise_for_status(r)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 889, in hf_raise_for_status
-    raise _format(HfHubHTTPError, str(e), response) from e
-huggingface_hub.errors.HfHubHTTPError: Server error '504 Gateway Time-out' for url 'https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/cola?recursive=true&expand=false' (Amz CF ID: lqbyMcAqIBj3hbRlqkamUUq39eAoviOPu40SwisdfZfR4sb1DJHWTw==)
-For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504

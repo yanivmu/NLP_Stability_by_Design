@@ -1,29 +1,0 @@
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer_config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer_config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/tokenizer.model "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/special_tokens_map.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.2-1B "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
-`torch_dtype` is deprecated! Use `dtype` instead!
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/model.safetensors "HTTP/1.1 302 Found"
-Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:   1%|          | 1/146 [00:09<24:09, 10.00s/it]Loading weights:  32%|███▏      | 46/146 [00:10<00:15,  6.42it/s]Loading weights:  48%|████▊     | 70/146 [00:13<00:11,  6.88it/s]Loading weights:  57%|█████▋    | 83/146 [00:14<00:08,  7.37it/s]Loading weights:  63%|██████▎   | 92/146 [00:15<00:07,  7.50it/s]Loading weights:  67%|██████▋   | 98/146 [00:16<00:06,  7.29it/s]Loading weights:  70%|██████▉   | 102/146 [00:17<00:06,  6.73it/s]Loading weights:  72%|███████▏  | 105/146 [00:17<00:05,  6.94it/s]Loading weights:  75%|███████▌  | 110/146 [00:18<00:04,  8.14it/s]Loading weights:  77%|███████▋  | 113/146 [00:19<00:05,  6.08it/s]Loading weights:  81%|████████  | 118/146 [00:19<00:03,  7.90it/s]Loading weights:  83%|████████▎ | 121/146 [00:20<00:04,  6.04it/s]Loading weights:  84%|████████▍ | 123/146 [00:20<00:03,  6.70it/s]Loading weights:  86%|████████▌ | 125/146 [00:20<00:02,  7.42it/s]Loading weights:  88%|████████▊ | 129/146 [00:21<00:02,  6.44it/s]Loading weights:  90%|████████▉ | 131/146 [00:21<00:02,  7.39it/s]Loading weights:  92%|█████████▏| 135/146 [00:21<00:01,  9.81it/s]Loading weights:  95%|█████████▍| 138/146 [00:22<00:01,  7.11it/s]Loading weights:  96%|█████████▌| 140/146 [00:22<00:00,  7.66it/s]Loading weights: 100%|██████████| 146/146 [00:22<00:00,  6.43it/s]
-INFO: HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/generation_config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/generation_config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/nyu-mll/glue/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/README.md "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/glue.py "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/nyu-mll/glue/nyu-mll/glue.py "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/revision/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=nyu-mll/glue "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/ax?recursive=true&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c?recursive=false&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/nyu-mll/glue/resolve/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/nyu-mll/glue/tree/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c/cola?recursive=true&expand=false "HTTP/1.1 200 OK"
-The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.

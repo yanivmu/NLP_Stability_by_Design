@@ -1,2 +1,0 @@
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/195 [00:00<?, ?it/s]Loading weights:  15%|█▍        | 29/195 [00:00<00:00, 261.06it/s]Loading weights:  32%|███▏      | 62/195 [00:00<00:00, 268.12it/s]Loading weights:  46%|████▌     | 89/195 [00:00<00:00, 265.59it/s]Loading weights:  59%|█████▉    | 116/195 [00:00<00:00, 257.71it/s]Loading weights:  73%|███████▎  | 142/195 [00:00<00:00, 256.72it/s]Loading weights:  86%|████████▌ | 168/195 [00:00<00:00, 252.09it/s]Loading weights: 100%|██████████| 195/195 [00:00<00:00, 262.66it/s]

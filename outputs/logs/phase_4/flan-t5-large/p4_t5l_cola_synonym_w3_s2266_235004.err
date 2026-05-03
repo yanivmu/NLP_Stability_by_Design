@@ -1,5 +1,0 @@
-Loading weights:   0%|          | 0/558 [00:00<?, ?it/s]Loading weights:   9%|▉         | 51/558 [00:00<00:01, 506.33it/s]Loading weights:  28%|██▊       | 158/558 [00:00<00:00, 836.75it/s]Loading weights:  61%|██████    | 338/558 [00:00<00:00, 1210.15it/s]Loading weights:  82%|████████▏ | 457/558 [00:00<00:00, 898.34it/s] Loading weights:  99%|█████████▉| 554/558 [00:00<00:00, 642.02it/s]Loading weights: 100%|██████████| 558/558 [00:00<00:00, 741.87it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
-slurmstepd: error: Cannot write to cgroup.procs for (null)
-slurmstepd: error: Unable to move pid 1891196 to init root cgroup (null)

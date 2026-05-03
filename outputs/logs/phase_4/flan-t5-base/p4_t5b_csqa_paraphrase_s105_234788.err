@@ -1,15 +1,0 @@
-Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  22%|██▏       | 41/190 [00:00<00:01, 141.69it/s]Loading weights:  29%|██▉       | 56/190 [00:00<00:02, 64.12it/s] Loading weights:  36%|███▋      | 69/190 [00:00<00:01, 75.46it/s]Loading weights:  50%|█████     | 95/190 [00:00<00:00, 111.98it/s]Loading weights:  59%|█████▉    | 112/190 [00:01<00:00, 81.82it/s]Loading weights:  66%|██████▌   | 125/190 [00:01<00:00, 86.20it/s]Loading weights:  72%|███████▏  | 137/190 [00:02<00:01, 42.73it/s]Loading weights:  77%|███████▋  | 146/190 [00:02<00:01, 41.82it/s]Loading weights:  83%|████████▎ | 158/190 [00:02<00:00, 50.20it/s]Loading weights:  87%|████████▋ | 166/190 [00:02<00:00, 46.27it/s]Loading weights: 100%|██████████| 190/190 [00:02<00:00, 69.72it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-Loading weights:   0%|          | 0/282 [00:00<?, ?it/s]Loading weights:  27%|██▋       | 75/282 [00:00<00:00, 703.47it/s]Loading weights:  56%|█████▌    | 158/282 [00:00<00:00, 775.72it/s]Loading weights:  84%|████████▎ | 236/282 [00:00<00:00, 651.43it/s]Loading weights: 100%|██████████| 282/282 [00:00<00:00, 667.45it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-Generating train split:   0%|          | 0/9741 [00:00<?, ? examples/s]Generating train split:  10%|█         | 1000/9741 [00:00<00:01, 6542.99 examples/s]Generating train split: 100%|██████████| 9741/9741 [00:00<00:00, 53933.05 examples/s]
-Generating validation split:   0%|          | 0/1221 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 1221/1221 [00:00<00:00, 84154.88 examples/s]
-Generating test split:   0%|          | 0/1140 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 1140/1140 [00:00<00:00, 76288.06 examples/s]
-INFO: Paraphraser produced 5/20; filling 15 with synonym fallback
-INFO: Paraphraser produced 4/20; filling 16 with synonym fallback
-INFO: Paraphraser produced 4/20; filling 16 with synonym fallback
-INFO: Paraphraser produced 4/20; filling 16 with synonym fallback
-slurmstepd: error: *** JOB 234788 ON s-006 CANCELLED AT 2026-04-07T18:17:30 ***
-slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
-slurmstepd: error: Cannot write to cgroup.procs for (null)
-slurmstepd: error: Unable to move pid 2707419 to init root cgroup (null)

@@ -1,74 +1,0 @@
-Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 23/190 [00:00<00:00, 229.49it/s]Loading weights:  87%|████████▋ | 165/190 [00:00<00:00, 875.34it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 373.23it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 36/292 [00:00<00:00, 353.29it/s]Loading weights:  25%|██▍       | 72/292 [00:00<00:01, 131.35it/s]Loading weights:  32%|███▏      | 92/292 [00:00<00:01, 105.81it/s]Loading weights:  37%|███▋      | 107/292 [00:00<00:01, 98.50it/s]Loading weights:  41%|████      | 119/292 [00:01<00:02, 79.84it/s]Loading weights:  44%|████▍     | 129/292 [00:01<00:02, 71.00it/s]Loading weights:  48%|████▊     | 141/292 [00:01<00:02, 65.54it/s]Loading weights:  52%|█████▏    | 151/292 [00:01<00:02, 62.59it/s]Loading weights:  58%|█████▊    | 169/292 [00:01<00:01, 72.79it/s]Loading weights:  61%|██████    | 177/292 [00:02<00:01, 69.12it/s]Loading weights:  63%|██████▎   | 185/292 [00:02<00:02, 46.73it/s]Loading weights:  66%|██████▌   | 193/292 [00:02<00:01, 50.76it/s]Loading weights:  73%|███████▎  | 214/292 [00:02<00:01, 71.51it/s]Loading weights:  76%|███████▋  | 223/292 [00:03<00:01, 52.98it/s]Loading weights:  83%|████████▎ | 241/292 [00:03<00:00, 54.57it/s]Loading weights:  87%|████████▋ | 253/292 [00:03<00:00, 52.14it/s]Loading weights:  89%|████████▊ | 259/292 [00:03<00:00, 51.84it/s]Loading weights:  95%|█████████▍| 276/292 [00:03<00:00, 63.13it/s]Loading weights: 100%|██████████| 292/292 [00:04<00:00, 72.72it/s]
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 16/20; filling 4 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 15/20; filling 5 with synonym fallback
-INFO: Paraphraser produced 14/20; filling 6 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 18/20; filling 2 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
-slurmstepd: error: Cannot write to cgroup.procs for (null)
-slurmstepd: error: Unable to move pid 743279 to init root cgroup (null)

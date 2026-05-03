@@ -1,5 +1,0 @@
-timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
-20260417_173413,phase_5,flan-t5-large,qasc,paraphrase,0,20,500,105,0.6200,control,0.3434,0.6340
-20260417_173413,phase_5,flan-t5-large,qasc,paraphrase,0,20,500,105,0.6200,metacognition,0.6375,0.3700
-20260417_173413,phase_5,flan-t5-large,qasc,paraphrase,0,20,500,105,0.6200,structure,0.1553,0.2220
-20260417_173413,phase_5,flan-t5-large,qasc,paraphrase,0,20,500,105,0.6200,politeness,0.3469,0.6340

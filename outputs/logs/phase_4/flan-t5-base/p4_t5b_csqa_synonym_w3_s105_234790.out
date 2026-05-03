@@ -1,9 +1,0 @@
-======================================================================
-SENSITIVITY EXPERIMENT: FLAN-T5-BASE on CSQA
-Config: phase=phase_4  model=flan-t5-base  dataset=csqa  samples=500  perturbations=20  method=synonym  seed=105  styles=control,metacognition,structure,politeness
-======================================================================
-
-Device: cuda
-Perturbation method: synonym
-Available seeds for multi-run: (105, 2266, 86379)
-Loading Flan-T5-Base...

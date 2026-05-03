@@ -1,22 +1,0 @@
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/tokenizer_config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/models/EleutherAI/pythia-410m/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/models/EleutherAI/pythia-410m/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/config.json "HTTP/1.1 200 OK"
-Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  91%|█████████▏| 267/292 [00:00<00:00, 2649.57it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 2731.30it/s]
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/generation_config.json "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: HEAD https://huggingface.co/EleutherAI/pythia-410m/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/EleutherAI/pythia-410m/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f/config.json "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/allenai/qasc/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/README.md "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/qasc.py "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/allenai/qasc/allenai/qasc.py "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/revision/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070 "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO: HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=allenai/qasc "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/tree/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/data?recursive=true&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: GET https://huggingface.co/api/datasets/allenai/qasc/tree/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070?recursive=false&expand=false "HTTP/1.1 200 OK"
-INFO: HTTP Request: HEAD https://huggingface.co/datasets/allenai/qasc/resolve/a34ba204eb9a33b919c10cc08f4f1c8dae5ec070/dataset_infos.json "HTTP/1.1 404 Not Found"

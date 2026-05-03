@@ -1,5 +1,0 @@
-timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
-20260417_083054,phase_5,phi-3-mini,csqa,synonym,3,20,500,2266,0.7300,control,0.2849,0.7340
-20260417_083054,phase_5,phi-3-mini,csqa,synonym,3,20,500,2266,0.7300,metacognition,0.4555,0.7280
-20260417_083054,phase_5,phi-3-mini,csqa,synonym,3,20,500,2266,0.7300,structure,0.9092,0.7100
-20260417_083054,phase_5,phi-3-mini,csqa,synonym,3,20,500,2266,0.7300,politeness,0.4092,0.7460

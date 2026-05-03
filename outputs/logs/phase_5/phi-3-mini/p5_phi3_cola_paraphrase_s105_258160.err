@@ -1,59 +1,0 @@
-Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights:  56%|█████▋    | 107/190 [00:00<00:00, 727.91it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 1121.72it/s]
-The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/195 [00:00<?, ?it/s]Loading weights:   1%|          | 1/195 [00:11<37:56, 11.73s/it]Loading weights:   1%|          | 2/195 [00:11<15:45,  4.90s/it]Loading weights:   2%|▏         | 3/195 [00:12<08:47,  2.75s/it]Loading weights:   6%|▌         | 11/195 [00:16<02:46,  1.10it/s]Loading weights:   9%|▊         | 17/195 [00:19<02:14,  1.33it/s]Loading weights:  10%|█         | 20/195 [00:20<01:48,  1.62it/s]Loading weights:  12%|█▏        | 23/195 [00:24<02:18,  1.24it/s]Loading weights:  13%|█▎        | 26/195 [00:25<01:46,  1.58it/s]Loading weights:  15%|█▍        | 29/195 [00:28<02:07,  1.30it/s]Loading weights:  16%|█▋        | 32/195 [00:29<01:40,  1.61it/s]Loading weights:  18%|█▊        | 35/195 [00:32<02:08,  1.25it/s]Loading weights:  18%|█▊        | 36/195 [00:33<01:56,  1.36it/s]Loading weights:  21%|██        | 41/195 [00:36<01:50,  1.39it/s]Loading weights:  23%|██▎       | 44/195 [00:37<01:30,  1.67it/s]Loading weights:  24%|██▍       | 47/195 [00:42<02:08,  1.15it/s]Loading weights:  26%|██▌       | 50/195 [00:42<01:38,  1.47it/s]Loading weights:  27%|██▋       | 53/195 [00:45<01:38,  1.44it/s]Loading weights:  29%|██▊       | 56/195 [00:46<01:32,  1.51it/s]Loading weights:  30%|███       | 59/195 [00:51<02:01,  1.11it/s]Loading weights:  31%|███       | 60/195 [00:51<01:50,  1.23it/s]Loading weights:  33%|███▎      | 65/195 [00:53<01:22,  1.57it/s]Loading weights:  34%|███▍      | 66/195 [00:54<01:19,  1.61it/s]Loading weights:  35%|███▍      | 68/195 [00:55<01:20,  1.58it/s]Loading weights:  36%|███▋      | 71/195 [01:00<02:11,  1.06s/it]Loading weights:  39%|███▉      | 77/195 [01:03<01:25,  1.38it/s]Loading weights:  41%|████      | 80/195 [01:05<01:19,  1.44it/s]Loading weights:  43%|████▎     | 83/195 [01:08<01:30,  1.24it/s]Loading weights:  44%|████▍     | 86/195 [01:10<01:20,  1.35it/s]Loading weights:  46%|████▌     | 89/195 [01:12<01:14,  1.42it/s]Loading weights:  47%|████▋     | 92/195 [01:13<01:11,  1.45it/s]Loading weights:  49%|████▊     | 95/195 [01:16<01:17,  1.29it/s]Loading weights:  50%|█████     | 98/195 [01:17<00:56,  1.71it/s]Loading weights:  51%|█████▏    | 100/195 [01:17<00:47,  2.01it/s]Loading weights:  52%|█████▏    | 101/195 [01:20<01:15,  1.24it/s]Loading weights:  53%|█████▎    | 104/195 [01:21<01:02,  1.46it/s]Loading weights:  55%|█████▍    | 107/195 [01:25<01:11,  1.23it/s]Loading weights:  55%|█████▌    | 108/195 [01:25<01:07,  1.29it/s]Loading weights:  56%|█████▋    | 110/195 [01:26<00:58,  1.45it/s]Loading weights:  57%|█████▋    | 111/195 [01:27<00:58,  1.44it/s]Loading weights:  58%|█████▊    | 113/195 [01:31<01:31,  1.12s/it]Loading weights:  59%|█████▉    | 116/195 [01:35<01:35,  1.21s/it]Loading weights:  61%|██████    | 118/195 [01:35<01:13,  1.05it/s]Loading weights:  61%|██████    | 119/195 [01:44<02:54,  2.29s/it]Loading weights:  63%|██████▎   | 122/195 [01:46<01:50,  1.51s/it]Loading weights:  64%|██████▍   | 125/195 [01:53<02:06,  1.81s/it]Loading weights:  66%|██████▌   | 128/195 [01:55<01:38,  1.48s/it]Loading weights:  67%|██████▋   | 131/195 [02:04<02:06,  1.98s/it]Loading weights:  68%|██████▊   | 132/195 [02:05<01:51,  1.78s/it]Loading weights:  70%|███████   | 137/195 [02:11<01:26,  1.50s/it]Loading weights:  72%|███████▏  | 140/195 [02:13<01:10,  1.28s/it]Loading weights:  73%|███████▎  | 143/195 [02:24<01:44,  2.00s/it]Loading weights:  75%|███████▍  | 146/195 [02:25<01:12,  1.48s/it]Loading weights:  76%|███████▋  | 149/195 [02:31<01:15,  1.64s/it]Loading weights:  78%|███████▊  | 152/195 [02:35<01:05,  1.53s/it]Loading weights:  79%|███████▉  | 155/195 [02:42<01:13,  1.84s/it]Loading weights:  81%|████████  | 158/195 [02:43<00:49,  1.33s/it]Loading weights:  83%|████████▎ | 161/195 [02:48<00:50,  1.49s/it]Loading weights:  84%|████████▍ | 164/195 [02:52<00:44,  1.44s/it]Loading weights:  86%|████████▌ | 167/195 [03:00<00:51,  1.82s/it]Loading weights:  87%|████████▋ | 170/195 [03:02<00:34,  1.39s/it]Loading weights:  89%|████████▊ | 173/195 [03:07<00:32,  1.47s/it]Loading weights:  90%|█████████ | 176/195 [03:10<00:25,  1.35s/it]Loading weights:  92%|█████████▏| 179/195 [03:17<00:26,  1.69s/it]Loading weights:  93%|█████████▎| 182/195 [03:18<00:16,  1.28s/it]Loading weights:  95%|█████████▍| 185/195 [03:24<00:14,  1.45s/it]Loading weights:  96%|█████████▋| 188/195 [03:28<00:09,  1.41s/it]Loading weights:  98%|█████████▊| 191/195 [03:31<00:05,  1.30s/it]Loading weights:  99%|█████████▉| 194/195 [03:31<00:00,  1.05it/s]Loading weights: 100%|██████████| 195/195 [03:31<00:00,  1.09s/it]
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 17/20; filling 3 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-INFO: Paraphraser produced 13/20; filling 7 with synonym fallback
-INFO: Paraphraser produced 19/20; filling 1 with synonym fallback
-Traceback (most recent call last):
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 562, in <module>
-    main()
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 461, in main
-    result = run_sensitivity_experiment(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/run_experiment.py", line 177, in run_sensitivity_experiment
-    responses = model_handler.generate(prompts, max_new_tokens=max_tokens)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/NLP_Stability_by_Design/src/model_handlers.py", line 177, in generate
-    outputs = self.model.generate(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
-    return func(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 2535, in generate
-    result = decoding_method(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 2728, in _sample
-    outputs = self._prefill(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 3776, in _prefill
-    return self(**model_inputs, return_dict=True)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/generic.py", line 843, in wrapper
-    output = func(self, *args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 491, in forward
-    outputs: BaseModelOutputWithPast = self.model(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/generic.py", line 917, in wrapper
-    output = func(self, *args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/utils/output_capturing.py", line 253, in wrapper
-    outputs = func(self, *args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 427, in forward
-    hidden_states = decoder_layer(
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/modeling_layers.py", line 93, in __call__
-    return super().__call__(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 338, in forward
-    hidden_states = self.mlp(hidden_states)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/vol/joberant_nobck/data/NLP_368307701_2526a/avnerf/anaconda3/envs/slm_env/lib/python3.10/site-packages/transformers/models/phi3/modeling_phi3.py", line 62, in forward
-    up_states = up_states * self.activation_fn(gate)
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 114.00 MiB. GPU 0 has a total capacity of 10.57 GiB of which 88.06 MiB is free. Including non-PyTorch memory, this process has 10.48 GiB memory in use. Of the allocated memory 10.19 GiB is allocated by PyTorch, and 76.94 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

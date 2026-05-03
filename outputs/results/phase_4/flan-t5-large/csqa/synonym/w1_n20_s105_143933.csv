@@ -1,5 +1,0 @@
-timestamp,phase,model,dataset,method,words_to_replace,num_perturbations,sample_size,seed,ootb_accuracy,prompt_style,variation_ratio,accuracy
-20260408_143936,phase_4,flan-t5-large,csqa,synonym,1,20,500,105,0.8000,control,0.1100,0.8320
-20260408_143936,phase_4,flan-t5-large,csqa,synonym,1,20,500,105,0.8000,metacognition,0.1464,0.6280
-20260408_143936,phase_4,flan-t5-large,csqa,synonym,1,20,500,105,0.8000,structure,0.0440,0.5080
-20260408_143936,phase_4,flan-t5-large,csqa,synonym,1,20,500,105,0.8000,politeness,0.1011,0.8260
