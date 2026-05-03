@@ -3,6 +3,12 @@
 Advanced Visualization script for Stability by Design.
 Aggregates run CSVs by Phase and creates Control-centric baseline plots
 with unique colors for each prompt style comparison.
+
+Flags:
+    --phase (str): Which phase to visualize (default: "phase_1")
+    --results-dir (str): Directory containing result CSVs (default: "outputs/results")
+    --output-dir (str): Directory to save generated figures (default: "outputs/figures")
+    --summary-only (bool): If set, only generate global and per-model summary plots (default: False)
 """
 
 import pandas as pd
