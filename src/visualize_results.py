@@ -32,6 +32,19 @@ STYLE_COLORS = {
     'Control': '#7f7f7f'         # Gray for the baseline point
 }
 
+# Mapping from method names in CSV to folder names
+METHOD_MAP = {
+    'paraphrase': 'paraphrasing',
+    'synonym': 'synonyms'
+}
+
+def save_plot(fig, output_dir, filename):
+    """Saves the current figure to both PNG and PDF subdirectories."""
+    for fmt in ['png', 'pdf']:
+        fmt_dir = os.path.join(output_dir, fmt)
+        os.makedirs(fmt_dir, exist_ok=True)
+        fig.savefig(os.path.join(fmt_dir, f"{filename}.{fmt}"), bbox_inches='tight')
+
 def load_results_for_phase(base_dir: str, phase: str) -> pd.DataFrame:
     """Find all summary CSVs specifically for one phase."""
     phase_dir = os.path.join(base_dir, phase)
@@ -55,7 +68,7 @@ def load_results_for_phase(base_dir: str, phase: str) -> pd.DataFrame:
             
     return pd.concat(df_list, ignore_index=True)
 
-def create_control_centric_plot(df, model, dataset, phase, output_dir):
+def create_control_centric_plot(df, model, dataset, phase, output_dir, sub_label=""):
     """
     Creates dual-axis plots with unique colored lines from Control to other styles.
     """
@@ -126,7 +139,8 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir):
         ax2.plot(['Control', style], [c_vr, row['vr_mean']], 
                 color=color, alpha=0.7, linestyle='--', linewidth=3)
 
-    plt.title(f"{phase.upper()}: {model.upper()} on {dataset.upper()}\nImpact of Prompt Attributes relative to Control", fontsize=14, pad=20)
+    title_suffix = f" ({sub_label})" if sub_label else ""
+    plt.title(f"{phase.upper()}: {model.upper()} on {dataset.upper()}{title_suffix}\nImpact of Prompt Attributes relative to Control", fontsize=14, pad=20)
     
     # Custom Legend
     from matplotlib.lines import Line2D
@@ -139,19 +153,11 @@ def create_control_centric_plot(df, model, dataset, phase, output_dir):
     ]
     ax1.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.15, 1))
 
-    # Save by phase
-    pdf_phase_fig_dir = os.path.join(output_dir, phase, "pdf")
-    png_phase_fig_dir = os.path.join(output_dir, phase, "png")
-    os.makedirs(pdf_phase_fig_dir, exist_ok=True)
-    os.makedirs(png_phase_fig_dir, exist_ok=True)
-    
-    base_save_path = os.path.join(png_phase_fig_dir, f"impact_plot_{model}_{dataset}")
-    plt.savefig(f"{base_save_path}.png", bbox_inches='tight')
-    base_save_path = os.path.join(pdf_phase_fig_dir, f"impact_plot_{model}_{dataset}")
-    plt.savefig(f"{base_save_path}.pdf", bbox_inches='tight')
+    # Save by phase and category
+    save_plot(fig, output_dir, f"impact_plot_{model}_{dataset}")
     plt.close()
 
-def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str):
+def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str, sub_label=""):
     """
     Creates a global summary bar chart showing the average delta (change) 
     in Accuracy and Variation Ratio relative to the Control for each style.
@@ -161,8 +167,10 @@ def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str):
     df = df[df['prompt_style'].str.lower().isin(valid_styles)].copy()
     df['prompt_style'] = df['prompt_style'].str.capitalize()
     
-    # Calculate deltas per (model, dataset, seed) group
-    groups = df.groupby(['model', 'dataset', 'seed'])
+    # Calculate deltas per (model, dataset, seed, method, words_to_replace, num_perturbations) group
+    # This ensures we compare styles against the exact relevant control baseline
+    group_cols = ['model', 'dataset', 'seed', 'method', 'words_to_replace', 'num_perturbations']
+    groups = df.groupby(group_cols)
     delta_list = []
     
     for name, group in groups:
@@ -184,7 +192,7 @@ def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str):
             })
     
     if not delta_list:
-        print("Warning: No deltas could be calculated for summary plot.")
+        print(f"Warning: No deltas could be calculated for summary plot ({sub_label}).")
         return
         
     delta_df = pd.DataFrame(delta_list)
@@ -197,25 +205,22 @@ def create_summary_impact_plot(df: pd.DataFrame, phase: str, output_dir: str):
         'delta_vr': 'Change in Sensitivity (VR)'
     })
 
-    plt.figure(figsize=(12, 7))
+    fig = plt.figure(figsize=(12, 7))
     sns.barplot(data=plot_df, x='style', y='Delta', hue='Metric', 
                 palette=['#1f77b4', '#ff7f0e'], capsize=.1, errorbar='sd')
     
     plt.axhline(0, color='black', linewidth=1.5, linestyle='--')
-    plt.title(f"Global Summary ({phase.upper()}): Average Impact of Prompt Attributes\nRelative to Control Baseline (N={len(delta_df)})", 
+    title_suffix = f" ({sub_label})" if sub_label else ""
+    plt.title(f"Global Summary ({phase.upper()}){title_suffix}: Average Impact of Prompt Attributes\nRelative to Control Baseline (N={len(delta_df)})", 
               fontsize=16, pad=20)
     plt.ylabel("Absolute Change", fontsize=14)
     plt.xlabel("Prompt Attribute", fontsize=14)
     plt.legend(title="Metric Impact", loc='upper right')
     
-    # Save to phase directory
-    phase_fig_dir = os.path.join(output_dir, phase)
-    os.makedirs(phase_fig_dir, exist_ok=True)
-    base_save_path = os.path.join(phase_fig_dir, "summary_impact")
-    plt.savefig(f"{base_save_path}.png", bbox_inches='tight')
-    plt.savefig(f"{base_save_path}.pdf", bbox_inches='tight')
+    # Save to directory
+    save_plot(fig, output_dir, "summary_impact")
     plt.close()
-    print(f"Summary plots saved to {base_save_path}.png/pdf")
+    print(f"Summary plots saved to {output_dir}/summary_impact.png/pdf")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -237,16 +242,34 @@ def main():
 
     print(f"Generating analytics for: {args.phase}")
 
-    # Global summary plot
-    create_summary_impact_plot(df, args.phase, args.output_dir)
+    # Identify unique methods
+    methods = df['method'].unique()
+    
+    # 1. Process each method individually
+    for method in methods:
+        method_name = METHOD_MAP.get(method, method)
+        method_df = df[df['method'] == method]
+        method_output_dir = os.path.join(args.output_dir, args.phase, method_name)
+        
+        print(f"Processing method: {method} -> {method_output_dir}")
+        create_summary_impact_plot(method_df, args.phase, method_output_dir, sub_label=method_name.capitalize())
+        
+        if not args.summary_only:
+            for model in method_df['model'].unique():
+                for dataset in method_df['dataset'].unique():
+                    create_control_centric_plot(method_df, model, dataset, args.phase, method_output_dir, sub_label=method_name.capitalize())
 
+    # 2. Process "totals" (all methods combined)
+    totals_output_dir = os.path.join(args.output_dir, args.phase, "totals")
+    print(f"Processing totals -> {totals_output_dir}")
+    create_summary_impact_plot(df, args.phase, totals_output_dir, sub_label="Totals")
+    
     if not args.summary_only:
-        # Generate plots for every model/dataset combination
         for model in df['model'].unique():
             for dataset in df['dataset'].unique():
-                create_control_centric_plot(df, model, dataset, args.phase, args.output_dir)
+                create_control_centric_plot(df, model, dataset, args.phase, totals_output_dir, sub_label="Totals")
 
-    print(f"Figures saved to {args.output_dir}/{args.phase}/")
+    print(f"All figures for {args.phase} saved to {args.output_dir}/{args.phase}/")
 
 if __name__ == "__main__":
     main()
