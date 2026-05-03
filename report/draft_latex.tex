@@ -13,6 +13,7 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{array}
 
 \title{Stability by Design: Optimizing Prompt Properties in Small Language Models via Sensitivity Metrics\thanks{Code available at \url{https://github.com/yanivmu/NLP_Stability_by_Design}}}
 
@@ -571,12 +572,42 @@ Prompt properties do not have uniform effects across tasks. The same interventio
 \label{tab:app-failure-modes}
 \end{table}
 
+\section{Detailed Impact Plots}
+\label{app:impact-plots}
 
+This section provides the detailed impact plots for each model-dataset pair that passed the OOTB screening. Each row corresponds to a model, and each column corresponds to a dataset (CoLA, CSQA, QASC). Empty cells indicate model-dataset pairs that did not pass the OOTB accuracy screening threshold.
 
+\begin{figure*}[ht]
+\centering
+\begin{tabular}{>{\centering\arraybackslash}m{0.3\textwidth}>{\centering\arraybackslash}m{0.3\textwidth}>{\centering\arraybackslash}m{0.3\textwidth}}
+\textbf{CoLA} & \textbf{CSQA} & \textbf{QASC} \\
+\midrule
+% Flan-T5-Base
+{\small OOTB Accuracy too low} & \includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_flan-t5-base_csqa.pdf} & \includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_flan-t5-base_qasc.pdf} \\
+ \multicolumn{3}{c}{\small Flan-T5-Base} \\[1.5em]
 
+% Flan-T5-Large
+\includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_flan-t5-large_cola.pdf} & \includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_flan-t5-large_csqa.pdf} & \includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_flan-t5-large_qasc.pdf} \\
+ \multicolumn{3}{c}{\small Flan-T5-Large} \\[1.5em]
 
+% Llama-3.2-1B
+\includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_llama-3.2-1b_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+ \multicolumn{3}{c}{\small Llama-3.2-1B} \\[1.5em]
 
+% Llama-3.2-1B-Instruct
+\includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_llama-3.2-1b-instruct_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+ \multicolumn{3}{c}{\small Llama-3.2-1B-Instruct} \\[1.5em]
 
+% Phi-3-Mini
+\includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_phi-3-mini_cola.pdf} & \includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_phi-3-mini_csqa.pdf} & \includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_phi-3-mini_qasc.pdf} \\
+ \multicolumn{3}{c}{\small Phi-3-Mini} \\[1.5em]
 
+% Pythia-410M
+\includegraphics[width=0.3\textwidth]{../outputs/figures/phase_6/pdf/impact_plot_pythia-410m_cola.pdf} & {\small OOTB Accuracy too low} & {\small OOTB Accuracy too low} \\
+ \multicolumn{3}{c}{\small Pythia-410M} \\
+\end{tabular}
+\caption{Detailed impact plots across all models and datasets.}
+\label{fig:all-impact-plots}
+\end{figure*}
 
 \end{document}
