@@ -255,7 +255,7 @@ Table~\ref{tab:main-results} demonstrates that the effectiveness of a prompt sty
 
 The multiple-choice tasks (CSQA and QASC) show that complex prompts can be actively destructive. While Politeness remains a safe and effective approach as the only style that never degrades accuracy on any task, both Metacognition and Structure cause massive performance degradations, likely because the added reasoning instructions cause the model to generate longer, more variable outputs that drift from the requested answer format.
 
-The most crucial takeaway emerges from the QASC task: applying the Structure prompt severely crashes the accuracy (dropping to 22.1\%), yet it appears highly `stable' due to a reduced variation ratio. This exemplifies the `misleading stability' that motivated our research, demonstrating that a low variation ratio is not a measure of robust competence if the model is merely producing consistent errors.
+The most crucial takeaway emerges from the QASC task: applying the Structure prompt severely crashes the accuracy (dropping to 22.1\%), yet it appears highly `stable' due to a reduced variation ratio. This exemplifies the `misleading stability' discussed in the introduction.
 
 \begin{figure}[t]
 \centering
