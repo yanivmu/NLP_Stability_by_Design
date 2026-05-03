@@ -260,11 +260,11 @@ The most crucial takeaway emerges from the QASC task: applying the Structure pro
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{../outputs/figures/phase_6/summary/summary_impact.pdf}
-\caption{Impact of prompt attributes relative to the Control baseline across all tasks. Accuracy improvements are seen on CoLA, but structured prompting induces a significant trade-off on multiple-choice tasks.}
+\caption{Global summary of the average impact of prompt attributes relative to the Control baseline across all tasks and models. Bars represent the mean absolute change in accuracy and variation ratio (sensitivity), with error bars indicating standard deviation.}
 \label{fig:summary}
 \end{figure}
 
-Figure~\ref{fig:summary} visualizes the clearest positive result in our experiments. The CoLA setting shows that prompt design can improve both performance and robustness, but this effect is not general. The same styles that help on CoLA can harm performance sharply on CSQA and QASC.
+Figure~\ref{fig:summary} provides a high-level overview of the trade-offs associated with each prompt attribute. While specific settings like CoLA show performance gains, the aggregate results reflect the significant accuracy drops encountered in multiple-choice tasks. The visualization confirms that Politeness is the most consistently neutral-to-positive intervention, while Metacognition and Structure often introduce instability or severe performance penalties in less capable models.
 
 \section{Discussion}
 
