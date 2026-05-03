@@ -107,7 +107,7 @@ For each instance, we compare four prompt styles. The \textbf{control} condition
 
 \subsection{Approach}
 
-Our framework is inference-only. We do not fine-tune any model parameters. Instead, we evaluate how the same pretrained model behaves when the same task is presented through different prompt styles and through semantic-preserving input perturbations. The overall evaluation flow is summarized in Algorithm~\ref{alg:pipeline}. The process consists of four main stages: (1) Out-of-the-Box (OOTB) screening to ensure baseline task competence, (2) Perturbation generation to create semantic variants, (3) Model inference across all prompt versions, and (4) Metric calculation to quantify sensitivity and accuracy.
+Our framework is inference-only. We do not fine-tune any model parameters. Instead, we evaluate how the same pretrained model behaves when the same task is presented through different prompt styles and through semantic-preserving input perturbations. The overall evaluation flow is summarized in Algorithm~\ref{alg:pipeline}.
 
 \begin{table*}[t]
 \centering
